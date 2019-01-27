@@ -1,0 +1,19 @@
+LIBRARY bve-autopilot
+
+EXPORTS
+	GetPluginVersion
+	Load
+	Dispose
+	SetVehicleSpec
+	Initialize
+	Elapse
+	SetPower
+	SetBrake
+	SetReverser
+	KeyDown
+	KeyUp
+	HornBlow
+	DoorOpen
+	DoorClose
+	SetSignal
+	SetBeaconData
