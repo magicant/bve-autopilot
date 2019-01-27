@@ -11,6 +11,5 @@
 // Windows ヘッダー ファイル
 #include <windows.h>
 
-
-
-// プログラムに必要な追加ヘッダーをここで参照してください
+#define ATS_EXPORTS
+#include "atsplugin.h"
