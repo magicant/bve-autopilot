@@ -1,6 +1,6 @@
 ﻿// dllmain.cpp : DLL アプリケーションのエントリ ポイントを定義します。
 //
-// Copyright(C) 2019 Watanabe, Yuki
+// Copyright © 2019 Watanabe, Yuki
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
