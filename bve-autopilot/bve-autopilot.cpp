@@ -18,40 +18,59 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #include "stdafx.h"
+#include <memory>
+#include "Main.h"
+
+static std::unique_ptr<autopilot::Main> main;
 
 ATS_API int WINAPI GetPluginVersion() {
     return ATS_VERSION;
 }
 
 ATS_API void WINAPI Load() {
+    main = std::make_unique<autopilot::Main>();
 }
 
 ATS_API void WINAPI Dispose() {
+    main = nullptr;
 }
 
 ATS_API void WINAPI SetVehicleSpec(ATS_VEHICLESPEC spec) {
+    if (main != nullptr) {
+        main->車両仕様設定(spec);
+    }
 }
 
 ATS_API void WINAPI Initialize(int brake) {
+    if (main != nullptr) {
+        main->リセット(brake);
+    }
 }
 
 ATS_API ATS_HANDLES WINAPI Elapse(
     ATS_VEHICLESTATE state, int *panelValues, int *soundStates) {
-    ATS_HANDLES handles;
-    handles.Brake = 0;
-    handles.Power = 0;
-    handles.Reverser = 0;
-    handles.ConstantSpeed = ATS_CONSTANTSPEED_CONTINUE;
-    return handles;
+    if (main != nullptr) {
+        return main->経過(state, panelValues, soundStates);
+    }
+    return ATS_HANDLES{};
 }
 
 ATS_API void WINAPI SetPower(int notch) {
+    if (main != nullptr) {
+        main->力行操作(notch);
+    }
 }
 
 ATS_API void WINAPI SetBrake(int notch) {
+    if (main != nullptr) {
+        main->制動操作(notch);
+    }
 }
 
 ATS_API void WINAPI SetReverser(int notch) {
+    if (main != nullptr) {
+        main->逆転器操作(notch);
+    }
 }
 
 ATS_API void WINAPI KeyDown(int key) {
