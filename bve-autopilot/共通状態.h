@@ -1,4 +1,4 @@
-// Main.h : プラグイン全体を統括します
+// 共通状態.h : プラグイン全体で使用する、ゲーム全体の状態量です
 //
 // Copyright © 2019 Watanabe, Yuki
 //
@@ -18,31 +18,38 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
-#include "共通状態.h"
-#include "tasc.h"
+#include "加速度計.h"
 
-namespace autopilot
-{
+namespace autopilot {
 
-    class Main
+    constexpr double s_from_ms(double ms) {
+        return ms / 1000.0;
+    }
+
+    constexpr double mps_from_kmph(double kmph) {
+        return kmph / 3.6;
+    }
+
+    class 共通状態
     {
     public:
-        Main();
-        ~Main();
+        共通状態() = default;
+        ~共通状態() = default;
 
-        void 車両仕様設定(const ATS_VEHICLESPEC & 車両仕様);
-        void リセット(int 制動状態);
-
+        void リセット();
+        void 経過(const ATS_VEHICLESTATE & 状態);
         void 逆転器操作(int ノッチ);
         void 力行操作(int ノッチ);
         void 制動操作(int ノッチ);
 
-        ATS_HANDLES 経過(const ATS_VEHICLESTATE & 状態, int * 出力値, int * 音声状態);
+        int 逆転器ノッチ() const { return _逆転器ノッチ; }
+        int 力行ノッチ() const { return _力行ノッチ; }
+        int 制動ノッチ() const { return _制動ノッチ; }
+        加速度計::加速度型 加速度() const { return _加速度計.加速度(); }
 
     private:
-        ATS_VEHICLESPEC _車両仕様;
-        共通状態 _状態;
-        tasc _tasc;
+        int _逆転器ノッチ, _力行ノッチ, _制動ノッチ;
+        加速度計 _加速度計;
     };
 
 }

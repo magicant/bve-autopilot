@@ -1,4 +1,4 @@
-// Main.h : プラグイン全体を統括します
+// tasc.cpp : TASC メインモジュール
 //
 // Copyright © 2019 Watanabe, Yuki
 //
@@ -17,32 +17,23 @@
 // Foundation, Inc.,
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
-#pragma once
-#include "共通状態.h"
+#include "stdafx.h"
 #include "tasc.h"
 
-namespace autopilot
-{
+namespace autopilot {
 
-    class Main
+    tasc::tasc(const ATS_VEHICLESPEC & 車両仕様) :
+        _車両仕様(車両仕様), _出力制動ノッチ{}
     {
-    public:
-        Main();
-        ~Main();
+    }
 
-        void 車両仕様設定(const ATS_VEHICLESPEC & 車両仕様);
-        void リセット(int 制動状態);
+    tasc::~tasc()
+    {
+    }
 
-        void 逆転器操作(int ノッチ);
-        void 力行操作(int ノッチ);
-        void 制動操作(int ノッチ);
-
-        ATS_HANDLES 経過(const ATS_VEHICLESTATE & 状態, int * 出力値, int * 音声状態);
-
-    private:
-        ATS_VEHICLESPEC _車両仕様;
-        共通状態 _状態;
-        tasc _tasc;
-    };
+    void tasc::経過(const ATS_VEHICLESTATE & 状態1, const 共通状態 & 状態2)
+    {
+        // TODO
+    }
 
 }

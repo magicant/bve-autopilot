@@ -1,4 +1,4 @@
-// Main.h : プラグイン全体を統括します
+// 共通状態.cpp : プラグイン全体で使用する、ゲーム全体の状態量です
 //
 // Copyright © 2019 Watanabe, Yuki
 //
@@ -17,32 +17,34 @@
 // Foundation, Inc.,
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
-#pragma once
+#include "stdafx.h"
 #include "共通状態.h"
-#include "tasc.h"
 
-namespace autopilot
-{
+namespace autopilot {
 
-    class Main
+    void 共通状態::リセット()
     {
-    public:
-        Main();
-        ~Main();
+        _加速度計.リセット();
+    }
 
-        void 車両仕様設定(const ATS_VEHICLESPEC & 車両仕様);
-        void リセット(int 制動状態);
+    void 共通状態::経過(const ATS_VEHICLESTATE & 状態)
+    {
+        _加速度計.経過({ mps_from_kmph(状態.Speed), s_from_ms(状態.Time) });
+    }
 
-        void 逆転器操作(int ノッチ);
-        void 力行操作(int ノッチ);
-        void 制動操作(int ノッチ);
+    void 共通状態::逆転器操作(int ノッチ)
+    {
+        _逆転器ノッチ = ノッチ;
+    }
 
-        ATS_HANDLES 経過(const ATS_VEHICLESTATE & 状態, int * 出力値, int * 音声状態);
+    void 共通状態::力行操作(int ノッチ)
+    {
+        _力行ノッチ = ノッチ;
+    }
 
-    private:
-        ATS_VEHICLESPEC _車両仕様;
-        共通状態 _状態;
-        tasc _tasc;
-    };
+    void 共通状態::制動操作(int ノッチ)
+    {
+        _制動ノッチ = ノッチ;
+    }
 
 }
