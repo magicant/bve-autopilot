@@ -28,7 +28,7 @@ namespace autopilot
     {
     public:
         Main();
-        ~Main();
+        ~Main() = default;
 
         void 車両仕様設定(const ATS_VEHICLESPEC & 車両仕様);
         void リセット(int 制動状態);
@@ -46,6 +46,7 @@ namespace autopilot
         ATS_VEHICLESPEC _車両仕様;
         共通状態 _状態;
         tasc _tasc;
+        bool _tasc制御中;
     };
 
 }

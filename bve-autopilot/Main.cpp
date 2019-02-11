@@ -23,11 +23,7 @@
 namespace autopilot
 {
 
-    Main::Main() : _車両仕様{}, _状態{}, _tasc{_車両仕様}
-    {
-    }
-
-    Main::~Main()
+    Main::Main() : _車両仕様{}, _状態{}, _tasc{_車両仕様}, _tasc制御中{false}
     {
     }
 
@@ -71,12 +67,19 @@ namespace autopilot
         _状態.経過(状態);
         _tasc.経過(状態, _状態);
 
-        // TODO TASC 有効時に出力変更
         ATS_HANDLES ハンドル位置;
-        ハンドル位置.Brake = _状態.制動ノッチ();
-        ハンドル位置.Power = _状態.力行ノッチ();
-        ハンドル位置.Reverser = _状態.逆転器ノッチ();
-        ハンドル位置.ConstantSpeed = ATS_CONSTANTSPEED_CONTINUE;
+        if (_tasc制御中 && _tasc.制御中()) {
+            ハンドル位置.Brake = _tasc.出力制動ノッチ();
+            ハンドル位置.Power = 0;
+            ハンドル位置.Reverser = _状態.逆転器ノッチ();
+            ハンドル位置.ConstantSpeed = ATS_CONSTANTSPEED_CONTINUE;
+        }
+        else {
+            ハンドル位置.Brake = _状態.制動ノッチ();
+            ハンドル位置.Power = _状態.力行ノッチ();
+            ハンドル位置.Reverser = _状態.逆転器ノッチ();
+            ハンドル位置.ConstantSpeed = ATS_CONSTANTSPEED_CONTINUE;
+        }
         return ハンドル位置;
     }
 
