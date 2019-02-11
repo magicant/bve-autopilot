@@ -103,6 +103,10 @@ namespace autopilot {
         if (_出力制動ノッチ <= 無効ノッチ数) {
             _出力制動ノッチ = 0;
         }
+        else if (_出力制動ノッチ > _車両仕様.BrakeNotches)
+        {
+            _出力制動ノッチ = _車両仕様.BrakeNotches;
+        }
     }
 
 }
