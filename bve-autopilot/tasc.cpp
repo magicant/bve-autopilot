@@ -91,6 +91,10 @@ namespace autopilot {
     void tasc::出力計算(const ATS_VEHICLESTATE & 状態1, const 共通状態 & 状態2)
     {
         距離型 残距離 = _目標停止位置 - 状態1.Location;
+        if (残距離 <= 0) {
+            _出力制動ノッチ = _車両仕様.BrakeNotches;
+            return;
+        }
         加速度型 目標加速度 = 走行モデル::距離と速度による加速度(
             残距離, mps_from_kmph(状態1.Speed), 0);
         加速度型 常用最大減速度 = mps_from_kmph(4.0);
