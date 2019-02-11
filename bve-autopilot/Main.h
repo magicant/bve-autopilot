@@ -36,6 +36,9 @@ namespace autopilot
         void 逆転器操作(int ノッチ);
         void 力行操作(int ノッチ);
         void 制動操作(int ノッチ);
+        void 警笛操作(int 警笛種類);
+        void キー押し(int キー);
+        void キー放し(int キー);
 
         void 戸閉();
         void 戸開();

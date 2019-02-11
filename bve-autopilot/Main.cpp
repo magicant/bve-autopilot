@@ -35,21 +35,73 @@ namespace autopilot
     void Main::リセット(int 制動状態)
     {
         _状態.リセット();
+        _tasc制御中 = false;
     }
 
     void Main::逆転器操作(int ノッチ)
     {
         _状態.逆転器操作(ノッチ);
+        _tasc制御中 = false;
     }
 
     void Main::力行操作(int ノッチ)
     {
         _状態.力行操作(ノッチ);
+        _tasc制御中 = false;
     }
 
     void Main::制動操作(int ノッチ)
     {
         _状態.制動操作(ノッチ);
+        _tasc制御中 = false;
+    }
+
+    void Main::警笛操作(int 警笛種類)
+    {
+    }
+
+    void Main::キー押し(int キー)
+    {
+        switch (キー)
+        {
+        case ATS_KEY_S: // Default: Space
+            break;
+        case ATS_KEY_A1: // Default: Insert
+            break;
+        case ATS_KEY_A2: // Default: Delete
+            break;
+        case ATS_KEY_B1: // Default: Home
+            break;
+        case ATS_KEY_B2: // Default: End
+            break;
+        case ATS_KEY_C1: // Default: Page Up
+            break;
+        case ATS_KEY_C2: // Default: Page Down
+            break;
+        case ATS_KEY_D: // Default: 2
+            break;
+        case ATS_KEY_E: // Default: 3
+            break;
+        case ATS_KEY_F: // Default: 4
+            break;
+        case ATS_KEY_G: // Default: 5
+            break;
+        case ATS_KEY_H: // Default: 6
+            break;
+        case ATS_KEY_I: // Default: 7
+            break;
+        case ATS_KEY_J: // Default: 8
+            break;
+        case ATS_KEY_K: // Default: 9
+            break;
+        case ATS_KEY_L: // Default: 0
+            _tasc制御中 = true;
+            break;
+        }
+    }
+
+    void Main::キー放し(int キー)
+    {
     }
 
     void Main::戸閉()

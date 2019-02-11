@@ -74,18 +74,33 @@ ATS_API void WINAPI SetReverser(int notch) {
 }
 
 ATS_API void WINAPI KeyDown(int key) {
+    if (main != nullptr) {
+        main->キー押し(key);
+    }
 }
 
 ATS_API void WINAPI KeyUp(int key) {
+    if (main != nullptr) {
+        main->キー放し(key);
+    }
 }
 
 ATS_API void WINAPI HornBlow(int type) {
+    if (main != nullptr) {
+        main->警笛操作(type);
+    }
 }
 
 ATS_API void WINAPI DoorOpen() {
+    if (main != nullptr) {
+        main->戸開();
+    }
 }
 
 ATS_API void WINAPI DoorClose() {
+    if (main != nullptr) {
+        main->戸閉();
+    }
 }
 
 ATS_API void WINAPI SetSignal(int aspect) {
