@@ -37,6 +37,9 @@ namespace autopilot
         void 力行操作(int ノッチ);
         void 制動操作(int ノッチ);
 
+        void 戸閉();
+        void 戸開();
+
         ATS_HANDLES 経過(const ATS_VEHICLESTATE & 状態, int * 出力値, int * 音声状態);
 
     private:

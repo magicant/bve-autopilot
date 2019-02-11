@@ -56,6 +56,16 @@ namespace autopilot
         _状態.制動操作(ノッチ);
     }
 
+    void Main::戸閉()
+    {
+        _tasc.駅出発();
+    }
+
+    void Main::戸開()
+    {
+        _tasc.駅到着();
+    }
+
     ATS_HANDLES Main::経過(const ATS_VEHICLESTATE & 状態, int * 出力値, int * 音声状態)
     {
         _状態.経過(状態);
