@@ -84,10 +84,12 @@ namespace autopilot {
             残距離, mps_from_kmph(状態1.Speed), 0);
         加速度型 常用最大減速度 = mps_from_kmph(4.0);
         double 制動ノッチ割合 = std::abs(目標加速度) / 常用最大減速度;
-        int 制動ノッチ数 = _車両仕様.BrakeNotches - _車両仕様.AtsNotch + 1;
-        double 制動ノッチ = std::round(制動ノッチ割合 * 制動ノッチ数);
-        _出力制動ノッチ = static_cast<int>(制動ノッチ);
-        if (_出力制動ノッチ < _車両仕様.AtsNotch) {
+        int 無効ノッチ数 = _車両仕様.AtsNotch - 1;
+        int 実効ノッチ数 = _車両仕様.BrakeNotches - 無効ノッチ数;
+        _出力制動ノッチ =
+            static_cast<int>(std::round(制動ノッチ割合 * 実効ノッチ数)) +
+            無効ノッチ数;
+        if (_出力制動ノッチ <= 無効ノッチ数) {
             _出力制動ノッチ = 0;
         }
     }
