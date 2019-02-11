@@ -43,6 +43,9 @@ namespace autopilot
         void 戸閉();
         void 戸開();
 
+        void 信号現示変化(int 現示);
+        void 地上子通過(const ATS_BEACONDATA & 地上子);
+
         ATS_HANDLES 経過(const ATS_VEHICLESTATE & 状態, int * 出力値, int * 音声状態);
 
     private:

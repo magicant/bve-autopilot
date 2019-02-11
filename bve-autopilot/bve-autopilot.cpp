@@ -104,7 +104,13 @@ ATS_API void WINAPI DoorClose() {
 }
 
 ATS_API void WINAPI SetSignal(int aspect) {
+    if (main != nullptr) {
+        main->信号現示変化(aspect);
+    }
 }
 
 ATS_API void WINAPI SetBeaconData(ATS_BEACONDATA data) {
+    if (main != nullptr) {
+        main->地上子通過(data);
+    }
 }

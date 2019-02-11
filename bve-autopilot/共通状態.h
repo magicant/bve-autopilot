@@ -42,12 +42,14 @@ namespace autopilot {
         void 力行操作(int ノッチ);
         void 制動操作(int ノッチ);
 
+        double 現在位置() const { return _状態.Location; }
         int 逆転器ノッチ() const { return _逆転器ノッチ; }
         int 力行ノッチ() const { return _力行ノッチ; }
         int 制動ノッチ() const { return _制動ノッチ; }
         加速度計::加速度型 加速度() const { return _加速度計.加速度(); }
 
     private:
+        ATS_VEHICLESTATE _状態;
         int _逆転器ノッチ, _力行ノッチ, _制動ノッチ;
         加速度計 _加速度計;
     };

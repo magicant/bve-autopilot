@@ -114,6 +114,15 @@ namespace autopilot
         _tasc.駅到着();
     }
 
+    void Main::信号現示変化(int 現示)
+    {
+    }
+
+    void Main::地上子通過(const ATS_BEACONDATA & 地上子)
+    {
+        _tasc.地上子通過(地上子, _状態);
+    }
+
     ATS_HANDLES Main::経過(const ATS_VEHICLESTATE & 状態, int * 出力値, int * 音声状態)
     {
         _状態.経過(状態);

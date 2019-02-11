@@ -29,6 +29,7 @@ namespace autopilot {
 
     void 共通状態::経過(const ATS_VEHICLESTATE & 状態)
     {
+        _状態 = 状態;
         _加速度計.経過({ mps_from_kmph(状態.Speed), s_from_ms(状態.Time) });
     }
 
