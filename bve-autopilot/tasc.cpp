@@ -77,7 +77,7 @@ namespace autopilot {
         }
     }
 
-    void tasc::駅出発()
+    void tasc::起動()
     {
         _制御状態 = 制御状態::待機;
     }

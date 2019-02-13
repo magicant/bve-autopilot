@@ -34,7 +34,7 @@ namespace autopilot {
 
         void 地上子通過(const ATS_BEACONDATA & 地上子, const 共通状態 & 状態);
         void 経過(const ATS_VEHICLESTATE & 状態1, const 共通状態 & 状態2);
-        void 駅出発();
+        void 起動();
         void 駅到着();
 
         bool 制御中() const { return _制御状態 != 制御状態::待機; }

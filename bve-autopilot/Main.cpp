@@ -96,6 +96,7 @@ namespace autopilot
             break;
         case ATS_KEY_L: // Default: 0
             _tasc制御中 = true;
+            _tasc.起動();
             break;
         }
     }
@@ -106,7 +107,6 @@ namespace autopilot
 
     void Main::戸閉()
     {
-        _tasc.駅出発();
     }
 
     void Main::戸開()
