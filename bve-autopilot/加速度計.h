@@ -25,8 +25,9 @@ namespace autopilot
     class 加速度計
     {
     public:
-        using 加速度型 = double;
         using 速度型 = double;
+        using 加速度型 = double;
+        using 加加速度型 = double;
         using 時刻型 = double;
 
         struct 観測 {
@@ -39,12 +40,15 @@ namespace autopilot
 
         void リセット();
         void 経過(観測 データ);
+
         加速度型 加速度() const { return _加速度; }
+        加加速度型 加加速度() const { return _加加速度; }
 
     private:
         constexpr static unsigned 記録数 = 3;
         観測 _記録[記録数];
         加速度型 _加速度;
+        加加速度型 _加加速度;
     };
 
 }

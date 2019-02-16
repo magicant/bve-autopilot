@@ -142,6 +142,8 @@ namespace autopilot
             ハンドル位置.Reverser = _状態.逆転器ノッチ();
             ハンドル位置.ConstantSpeed = ATS_CONSTANTSPEED_CONTINUE;
         }
+
+        _状態.出力(ハンドル位置);
         return ハンドル位置;
     }
 
