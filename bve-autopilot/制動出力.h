@@ -1,6 +1,4 @@
-﻿// stdafx.h : 標準のシステム インクルード ファイルのインクルード ファイル、
-// または、参照回数が多く、かつあまり変更されない、プロジェクト専用のインクルード ファイル
-// を記述します。
+// 制動出力.h : 期待する減速度を得るために制動ノッチを加減します
 //
 // Copyright © 2019 Watanabe, Yuki
 //
@@ -21,12 +19,27 @@
 
 #pragma once
 
-#include "targetver.h"
+namespace autopilot
+{
 
-#define WIN32_LEAN_AND_MEAN             // Windows ヘッダーからほとんど使用されていない部分を除外する
-#define NOMINMAX // min, max マクロを定義しないようにする
-// Windows ヘッダー ファイル
-#include <windows.h>
+    class 制動出力
+    {
+    public:
+        using 加速度型 = double;
 
-#define ATS_EXPORTS
-#include "atsplugin.h"
+        制動出力() = default;
+        ~制動出力() = default;
+
+        void 性能設定(
+            int 常用ノッチ数, int 無効ノッチ数, 加速度型 標準常用最大減速度);
+
+        /// 所望の減速度を得るために設定すべき常用制動ノッチを得ます。
+        /// 引数の大きさによっては常用最大を超えるノッチを返すことがあります。
+        double ノッチ(加速度型 減速度) const;
+
+    private:
+        int _常用ノッチ数, _無効ノッチ数;
+        加速度型 _標準常用最大減速度;
+    };
+
+}

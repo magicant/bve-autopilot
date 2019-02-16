@@ -159,6 +159,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="tasc.h" />
     <ClInclude Include="共通状態.h" />
+    <ClInclude Include="制動出力.h" />
     <ClInclude Include="加速度計.h" />
     <ClInclude Include="走行モデル.h" />
   </ItemGroup>
@@ -174,6 +175,7 @@
     </ClCompile>
     <ClCompile Include="tasc.cpp" />
     <ClCompile Include="共通状態.cpp" />
+    <ClCompile Include="制動出力.cpp" />
     <ClCompile Include="加速度計.cpp" />
     <ClCompile Include="走行モデル.cpp" />
   </ItemGroup>

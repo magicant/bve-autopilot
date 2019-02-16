@@ -18,6 +18,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #include "stdafx.h"
+#include <algorithm>
 #include "共通状態.h"
 
 namespace autopilot {
@@ -25,6 +26,14 @@ namespace autopilot {
     void 共通状態::リセット()
     {
         _加速度計.リセット();
+    }
+
+    void 共通状態::車両仕様設定(const ATS_VEHICLESPEC & 仕様)
+    {
+        _制動出力.性能設定(
+            仕様.BrakeNotches,
+            std::max(std::min(仕様.AtsNotch, 仕様.BrakeNotches) - 1, 0),
+            mps_from_kmph(4.0));
     }
 
     void 共通状態::経過(const ATS_VEHICLESTATE & 状態)

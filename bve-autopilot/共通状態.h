@@ -18,6 +18,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include "制動出力.h"
 #include "加速度計.h"
 
 namespace autopilot {
@@ -37,6 +38,7 @@ namespace autopilot {
         ~共通状態() = default;
 
         void リセット();
+        void 車両仕様設定(const ATS_VEHICLESPEC & 仕様);
         void 経過(const ATS_VEHICLESTATE & 状態);
         void 逆転器操作(int ノッチ);
         void 力行操作(int ノッチ);
@@ -48,10 +50,15 @@ namespace autopilot {
         int 制動ノッチ() const { return _制動ノッチ; }
         加速度計::加速度型 加速度() const { return _加速度計.加速度(); }
 
+        double 目標制動ノッチ(制動出力::加速度型 減速度) const {
+            return _制動出力.ノッチ(減速度);
+        }
+
     private:
         ATS_VEHICLESTATE _状態;
         int _逆転器ノッチ, _力行ノッチ, _制動ノッチ;
         加速度計 _加速度計;
+        制動出力 _制動出力;
     };
 
 }

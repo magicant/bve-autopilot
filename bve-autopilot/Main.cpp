@@ -30,6 +30,7 @@ namespace autopilot
     void Main::車両仕様設定(const ATS_VEHICLESPEC & 車両仕様)
     {
         _車両仕様 = 車両仕様;
+        _状態.車両仕様設定(車両仕様);
     }
 
     void Main::リセット(int 制動状態)
