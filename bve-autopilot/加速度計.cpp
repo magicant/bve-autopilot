@@ -19,6 +19,7 @@
 
 #include "stdafx.h"
 #include "加速度計.h"
+#include <algorithm>
 
 namespace autopilot
 {
@@ -43,6 +44,10 @@ namespace autopilot
 
     void 加速度計::経過(観測 今回)
     {
+        // 加加速度計算用に取っておく
+        加速度型 旧加速度 = _加速度;
+        時刻型 旧時刻 = _記録[記録数 - 1]._時刻;
+
         // 過去"記録数"回分の記録との速度差から算出した加速度の平均を求める
         加速度型 加速度和 = 0;
 
@@ -62,6 +67,7 @@ namespace autopilot
         }
 
         _加速度 = 加速度和 / 記録数;
+        _加加速度 = (_加速度 - 旧加速度) / std::max(今回._時刻 - 旧時刻, 0.0);
     }
 
 }

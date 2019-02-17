@@ -161,6 +161,7 @@
     <ClInclude Include="共通状態.h" />
     <ClInclude Include="制動出力.h" />
     <ClInclude Include="加速度計.h" />
+    <ClInclude Include="減速パターン.h" />
     <ClInclude Include="走行モデル.h" />
   </ItemGroup>
   <ItemGroup>
@@ -177,6 +178,7 @@
     <ClCompile Include="共通状態.cpp" />
     <ClCompile Include="制動出力.cpp" />
     <ClCompile Include="加速度計.cpp" />
+    <ClCompile Include="減速パターン.cpp" />
     <ClCompile Include="走行モデル.cpp" />
   </ItemGroup>
   <ItemGroup>

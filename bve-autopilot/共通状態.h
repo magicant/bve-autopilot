@@ -40,10 +40,14 @@ namespace autopilot {
         void リセット();
         void 車両仕様設定(const ATS_VEHICLESPEC & 仕様);
         void 経過(const ATS_VEHICLESTATE & 状態);
+        void 出力(const ATS_HANDLES & 出力);
         void 逆転器操作(int ノッチ);
         void 力行操作(int ノッチ);
         void 制動操作(int ノッチ);
 
+        制動出力::加速度型 常用最大減速度() const {
+            return _制動出力.常用最大減速度();
+        }
         double 現在位置() const { return _状態.Location; }
         int 逆転器ノッチ() const { return _逆転器ノッチ; }
         int 力行ノッチ() const { return _力行ノッチ; }
@@ -59,6 +63,7 @@ namespace autopilot {
         int _逆転器ノッチ, _力行ノッチ, _制動ノッチ;
         加速度計 _加速度計;
         制動出力 _制動出力;
+        ATS_HANDLES _前回出力;
     };
 
 }

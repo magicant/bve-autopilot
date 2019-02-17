@@ -1,4 +1,4 @@
-// 加速度計.h : 速度変化から加速度を推定します
+// 減速パターン.h : 等加速度で減速するパターンを表します
 //
 // Copyright © 2019 Watanabe, Yuki
 //
@@ -18,37 +18,30 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include "走行モデル.h"
 
 namespace autopilot
 {
 
-    class 加速度計
+    class 減速パターン
     {
     public:
-        using 速度型 = double;
-        using 加速度型 = double;
-        using 加加速度型 = double;
-        using 時刻型 = double;
+        using 加速度型 = 走行モデル::加速度型;
+        using 速度型 = 走行モデル::速度型;
+        using 距離型 = 走行モデル::距離型;
 
-        struct 観測 {
-            速度型 _速度;
-            時刻型 _時刻;
-        };
+        constexpr 減速パターン(
+            距離型 目標位置, 速度型 目標速度, 加速度型 目標減速度) :
+            _目標位置(目標位置), _目標速度(目標速度), _目標減速度(目標減速度) {}
 
-        加速度計();
-        ~加速度計();
+        ~減速パターン() = default;
 
-        void リセット();
-        void 経過(観測 データ);
-
-        加速度型 加速度() const { return _加速度; }
-        加加速度型 加加速度() const { return _加加速度; }
+        速度型 期待速度(距離型 現在位置) const;
 
     private:
-        constexpr static unsigned 記録数 = 3;
-        観測 _記録[記録数];
-        加速度型 _加速度;
-        加加速度型 _加加速度;
+        距離型 _目標位置;
+        速度型 _目標速度;
+        加速度型 _目標減速度;
     };
 
 }

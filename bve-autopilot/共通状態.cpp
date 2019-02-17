@@ -26,6 +26,7 @@ namespace autopilot {
     void 共通状態::リセット()
     {
         _加速度計.リセット();
+        _制動出力.リセット();
     }
 
     void 共通状態::車両仕様設定(const ATS_VEHICLESPEC & 仕様)
@@ -38,8 +39,15 @@ namespace autopilot {
 
     void 共通状態::経過(const ATS_VEHICLESTATE & 状態)
     {
+        double 時刻 = s_from_ms(状態.Time);
         _状態 = 状態;
-        _加速度計.経過({ mps_from_kmph(状態.Speed), s_from_ms(状態.Time) });
+        _加速度計.経過({ mps_from_kmph(状態.Speed), 時刻 });
+        _制動出力.経過(_加速度計, 時刻, _前回出力.Brake);
+    }
+
+    void 共通状態::出力(const ATS_HANDLES & 出力)
+    {
+        _前回出力 = 出力;
     }
 
     void 共通状態::逆転器操作(int ノッチ)
