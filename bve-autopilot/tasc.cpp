@@ -97,15 +97,15 @@ namespace autopilot {
         }
         加速度型 目標加速度 = 走行モデル::距離と速度による加速度(
             残距離, mps_from_kmph(状態1.Speed), 0);
-        _出力制動ノッチ = static_cast<int>(
-            std::round(状態2.目標制動ノッチ(std::abs(目標加速度))));
-        if (_出力制動ノッチ < _車両仕様.AtsNotch) {
-            _出力制動ノッチ = 0;
+        double 出力制動ノッチ = 状態2.目標制動ノッチ(std::abs(目標加速度));
+        if (出力制動ノッチ < _車両仕様.AtsNotch) {
+            出力制動ノッチ = 0;
         }
-        else if (_出力制動ノッチ > _車両仕様.BrakeNotches)
+        else if (出力制動ノッチ > _車両仕様.BrakeNotches)
         {
-            _出力制動ノッチ = _車両仕様.BrakeNotches;
+            出力制動ノッチ = _車両仕様.BrakeNotches;
         }
+        _出力制動ノッチ = static_cast<int>(std::round(出力制動ノッチ));
     }
 
 }
