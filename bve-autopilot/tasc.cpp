@@ -54,9 +54,9 @@ namespace autopilot {
             _制御状態 = 制御状態::制動;
             break;
         case 制御状態::制動:
-            //if (std::abs(mps_from_kmph(状態1.Speed)) < 0.1) {
-            //    _制御状態 = 制御状態::停車;
-            //}
+            if (std::abs(mps_from_kmph(状態1.Speed)) < 0.05) {
+                _制御状態 = 制御状態::停車;
+            }
             break;
         case 制御状態::停車:
             break;
