@@ -111,13 +111,17 @@ namespace autopilot {
 
         double 出力制動ノッチ = 状態2.目標制動ノッチ(出力減速度);
         if (出力制動ノッチ < _車両仕様.AtsNotch) {
-            出力制動ノッチ = 0;
+            _出力制動ノッチ = 0;
         }
-        else if (出力制動ノッチ > _車両仕様.BrakeNotches)
-        {
-            出力制動ノッチ = _車両仕様.BrakeNotches;
+        else if (出力制動ノッチ > _車両仕様.BrakeNotches) {
+            _出力制動ノッチ = _車両仕様.BrakeNotches;
         }
-        _出力制動ノッチ = static_cast<int>(std::round(出力制動ノッチ));
+        else if (出力減速度 < 目標減速度) {
+            _出力制動ノッチ = static_cast<int>(std::floor(出力制動ノッチ));
+        }
+        else {
+            _出力制動ノッチ = static_cast<int>(std::ceil(出力制動ノッチ));
+        }
     }
 
 }
