@@ -34,7 +34,7 @@ namespace autopilot {
         _制動出力.性能設定(
             仕様.BrakeNotches,
             std::max(std::min(仕様.AtsNotch, 仕様.BrakeNotches) - 1, 0),
-            mps_from_kmph(4.0));
+            mps_from_kmph(3.0));
     }
 
     void 共通状態::経過(const ATS_VEHICLESTATE & 状態)
