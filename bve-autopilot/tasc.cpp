@@ -19,6 +19,7 @@
 
 #include "stdafx.h"
 #include "tasc.h"
+#include <algorithm>
 #include <cmath>
 #include <limits>
 #include "減速パターン.h"
@@ -121,6 +122,11 @@ namespace autopilot {
         }
         else {
             _出力制動ノッチ = static_cast<int>(std::ceil(出力制動ノッチ));
+        }
+
+        if (std::abs(現在速度) < mps_from_kmph(1)) {
+            // 止まりかけたらさっさと止めてしまう
+            _出力制動ノッチ = std::max(_出力制動ノッチ, _車両仕様.AtsNotch);
         }
     }
 
