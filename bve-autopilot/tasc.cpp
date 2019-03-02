@@ -123,7 +123,7 @@ namespace autopilot {
             _出力制動ノッチ = static_cast<int>(std::floor(出力制動ノッチ));
         }
         else {
-            _出力制動ノッチ = static_cast<int>(std::ceil(出力制動ノッチ));
+            _出力制動ノッチ = static_cast<int>(std::round(出力制動ノッチ));
         }
     }
 
