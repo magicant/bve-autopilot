@@ -20,6 +20,7 @@
 #pragma once
 #include "制動出力.h"
 #include "加速度計.h"
+#include "環境設定.h"
 
 namespace autopilot {
 
@@ -38,6 +39,9 @@ namespace autopilot {
         ~共通状態() = default;
 
         void リセット();
+        void 設定ファイル読込(LPCWSTR 設定ファイル名) {
+            _設定.ファイル読込(設定ファイル名);
+        }
         void 車両仕様設定(const ATS_VEHICLESPEC & 仕様);
         void 経過(const ATS_VEHICLESTATE & 状態);
         void 出力(const ATS_HANDLES & 出力);
@@ -45,6 +49,7 @@ namespace autopilot {
         void 力行操作(int ノッチ);
         void 制動操作(int ノッチ);
 
+        const 環境設定 & 設定() const { return _設定; }
         制動出力::加速度型 常用最大減速度() const {
             return _制動出力.常用最大減速度();
         }
@@ -59,6 +64,7 @@ namespace autopilot {
         }
 
     private:
+        環境設定 _設定;
         ATS_VEHICLESTATE _状態;
         int _逆転器ノッチ, _力行ノッチ, _制動ノッチ;
         加速度計 _加速度計;

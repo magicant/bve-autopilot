@@ -25,6 +25,7 @@ namespace autopilot {
 
     void 共通状態::リセット()
     {
+        // _設定.リセット(); // ファイルから読み込むのでリセットしない
         _加速度計.リセット();
         _制動出力.リセット();
     }
@@ -34,7 +35,7 @@ namespace autopilot {
         _制動出力.性能設定(
             仕様.BrakeNotches,
             std::max(std::min(仕様.AtsNotch, 仕様.BrakeNotches) - 1, 0),
-            mps_from_kmph(3.0));
+            _設定.常用最大減速度());
     }
 
     void 共通状態::経過(const ATS_VEHICLESTATE & 状態)

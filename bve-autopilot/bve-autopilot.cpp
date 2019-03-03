@@ -18,10 +18,67 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #include "stdafx.h"
+#include <filesystem>
 #include <memory>
+#include <string>
+#include <utility>
 #include "Main.h"
 
-static std::unique_ptr<autopilot::Main> main;
+namespace {
+
+    std::unique_ptr<autopilot::Main> main;
+
+    std::filesystem::path dll_file_name;
+
+    std::filesystem::path get_module_file_name(HMODULE hModule)
+    {
+        std::wstring name;
+        name.resize(1u << 8);
+        while (name.size() < 1u << 16) {
+            DWORD s = GetModuleFileNameW(hModule, name.data(), name.size());
+            if (0 < s && s < name.size()) {
+                name.resize(s);
+                name.shrink_to_fit();
+                return name;
+            }
+            name.resize(name.size() * 2);
+        }
+        name.clear();
+        name.shrink_to_fit();
+        return std::move(name);
+    }
+
+    std::filesystem::path ini_file_name()
+    {
+        std::filesystem::path name = dll_file_name;
+        if (!name.has_filename()) {
+            name.clear();
+        }
+        else {
+            name.replace_filename(L"autopilot.ini");
+        }
+        return name;
+    }
+
+}
+
+BOOL APIENTRY DllMain(
+    HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
+{
+    switch (ul_reason_for_call)
+    {
+    case DLL_PROCESS_ATTACH:
+        dll_file_name = get_module_file_name(hModule);
+        break;
+    case DLL_THREAD_ATTACH:
+    case DLL_THREAD_DETACH:
+        break;
+    case DLL_PROCESS_DETACH:
+        dll_file_name.clear();
+        break;
+    }
+    return TRUE;
+}
 
 ATS_API int WINAPI GetPluginVersion() {
     return ATS_VERSION;
@@ -37,6 +94,7 @@ ATS_API void WINAPI Dispose() {
 
 ATS_API void WINAPI SetVehicleSpec(ATS_VEHICLESPEC spec) {
     if (main != nullptr) {
+        main->設定ファイル読込(ini_file_name().c_str());
         main->車両仕様設定(spec);
     }
 }

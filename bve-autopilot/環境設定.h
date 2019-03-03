@@ -1,4 +1,4 @@
-﻿// dllmain.cpp : DLL アプリケーションのエントリ ポイントを定義します。
+// 環境設定.h : ライブラリの動作を制御する設定を管理します
 //
 // Copyright © 2019 Watanabe, Yuki
 //
@@ -17,21 +17,26 @@
 // Foundation, Inc.,
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
-#include "stdafx.h"
+#pragma once
 
-BOOL APIENTRY DllMain( HMODULE hModule,
-                       DWORD  ul_reason_for_call,
-                       LPVOID lpReserved
-                     )
+namespace autopilot
 {
-    switch (ul_reason_for_call)
-    {
-    case DLL_PROCESS_ATTACH:
-    case DLL_THREAD_ATTACH:
-    case DLL_THREAD_DETACH:
-    case DLL_PROCESS_DETACH:
-        break;
-    }
-    return TRUE;
-}
 
+    class 環境設定
+    {
+    public:
+        using 加速度型 = double;
+
+        環境設定() { リセット(); }
+        ~環境設定() = default;
+
+        void リセット();
+        void ファイル読込(LPCWSTR 設定ファイル名);
+
+        加速度型 常用最大減速度() const { return _常用最大減速度; }
+
+    private:
+        加速度型 _常用最大減速度;
+    };
+
+}

@@ -32,6 +32,9 @@ namespace autopilot
 
         void 車両仕様設定(const ATS_VEHICLESPEC & 車両仕様);
         void リセット(int 制動状態);
+        void 設定ファイル読込(LPCWSTR 設定ファイル名) {
+            _状態.設定ファイル読込(設定ファイル名);
+        }
 
         void 逆転器操作(int ノッチ);
         void 力行操作(int ノッチ);
