@@ -177,7 +177,6 @@
     </ClCompile>
     <ClCompile Include="tasc.cpp" />
     <ClCompile Include="共通状態.cpp" />
-    <ClCompile Include="制動出力.cpp" />
     <ClCompile Include="加速度計.cpp" />
     <ClCompile Include="減速パターン.cpp" />
     <ClCompile Include="環境設定.cpp" />
