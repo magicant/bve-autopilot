@@ -28,6 +28,8 @@ namespace {
 
     std::unique_ptr<autopilot::Main> main;
 
+    HMODULE dll_module_handle;
+
     std::filesystem::path dll_file_name;
 
     std::filesystem::path get_module_file_name(HMODULE hModule)
@@ -67,13 +69,11 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID)
     switch (ul_reason_for_call)
     {
     case DLL_PROCESS_ATTACH:
-        dll_file_name = get_module_file_name(hModule);
+        dll_module_handle = hModule;
         break;
     case DLL_THREAD_ATTACH:
     case DLL_THREAD_DETACH:
-        break;
     case DLL_PROCESS_DETACH:
-        dll_file_name.clear();
         break;
     }
     return TRUE;
@@ -84,11 +84,13 @@ ATS_API int WINAPI GetPluginVersion() {
 }
 
 ATS_API void WINAPI Load() {
+    dll_file_name = get_module_file_name(dll_module_handle);
     main = std::make_unique<autopilot::Main>();
 }
 
 ATS_API void WINAPI Dispose() {
     main = nullptr;
+    dll_file_name.clear();
 }
 
 ATS_API void WINAPI SetVehicleSpec(ATS_VEHICLESPEC spec) {
