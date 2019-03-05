@@ -33,7 +33,7 @@ namespace autopilot
         _状態.車両仕様設定(車両仕様);
     }
 
-    void Main::リセット(int 制動状態)
+    void Main::リセット(int)
     {
         _状態.リセット();
         _tasc制御中 = false;
@@ -57,7 +57,7 @@ namespace autopilot
         _tasc制御中 = false;
     }
 
-    void Main::警笛操作(int 警笛種類)
+    void Main::警笛操作(int)
     {
     }
 
@@ -102,7 +102,7 @@ namespace autopilot
         }
     }
 
-    void Main::キー放し(int キー)
+    void Main::キー放し(int)
     {
     }
 
@@ -115,7 +115,7 @@ namespace autopilot
         _tasc.駅到着();
     }
 
-    void Main::信号現示変化(int 現示)
+    void Main::信号現示変化(int)
     {
     }
 
@@ -124,7 +124,7 @@ namespace autopilot
         _tasc.地上子通過(地上子, _状態);
     }
 
-    ATS_HANDLES Main::経過(const ATS_VEHICLESTATE & 状態, int * 出力値, int * 音声状態)
+    ATS_HANDLES Main::経過(const ATS_VEHICLESTATE & 状態, int *, int *)
     {
         _状態.経過(状態);
         _tasc.経過(状態, _状態);
