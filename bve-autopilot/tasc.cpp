@@ -71,9 +71,12 @@ namespace autopilot {
         case 制御状態::制動準備:
             _出力制動ノッチ = 0;
             break;
-        case 制御状態::制動:
-            出力計算(状態1, 状態2);
+        case 制御状態::制動: {
+            距離型 残距離 = _目標停止位置 - 状態1.Location;
+            速度型 現在速度 = mps_from_kmph(状態1.Speed);
+            _出力制動ノッチ = 出力計算(残距離, 現在速度, 状態2);
             break;
+        }
         case 制御状態::停車:
             _出力制動ノッチ = _車両仕様.BrakeNotches;
             break;
@@ -91,42 +94,41 @@ namespace autopilot {
         _制御状態 = 制御状態::停車;
     }
 
-    void tasc::出力計算(const ATS_VEHICLESTATE & 状態1, const 共通状態 & 状態2)
+    int tasc::出力計算(距離型 残距離, 速度型 現在速度, const 共通状態 & 状態2)
     {
-        距離型 残距離 = _目標停止位置 - 状態1.Location;
+        int 出力制動ノッチ;
         if (残距離 <= 0) {
             // 過走した!
-            _出力制動ノッチ = _車両仕様.BrakeNotches;
+            出力制動ノッチ = _車両仕様.BrakeNotches;
         }
         else {
-            出力計算_標準(状態1, 状態2);
+            出力制動ノッチ = 出力計算_標準(残距離, 現在速度, 状態2);
         }
 
         // 停止直前はノッチを緩めて衝撃を抑える
-        速度型 現在速度 = mps_from_kmph(状態1.Speed);
         double 緩めノッチ = std::ceil(状態2.目標制動ノッチ(現在速度 / 2.0));
-        _出力制動ノッチ = std::min(_出力制動ノッチ, static_cast<int>(緩めノッチ));
+        出力制動ノッチ = std::min(出力制動ノッチ, static_cast<int>(緩めノッチ));
 
-        if (_出力制動ノッチ < _車両仕様.AtsNotch) {
-            _出力制動ノッチ = 0;
+        if (出力制動ノッチ < _車両仕様.AtsNotch) {
+            出力制動ノッチ = 0;
         }
-        else if (_出力制動ノッチ > _車両仕様.BrakeNotches) {
-            _出力制動ノッチ = _車両仕様.BrakeNotches;
+        else if (出力制動ノッチ > _車両仕様.BrakeNotches) {
+            出力制動ノッチ = _車両仕様.BrakeNotches;
         }
 
         if (std::abs(現在速度) < mps_from_kmph(1)) {
             // 止まりかけたらさっさと止めてしまう
-            _出力制動ノッチ = std::max(_出力制動ノッチ, _車両仕様.AtsNotch);
+            出力制動ノッチ = std::max(出力制動ノッチ, _車両仕様.AtsNotch);
         }
+
+        return 出力制動ノッチ;
     }
 
-    void tasc::出力計算_標準(const ATS_VEHICLESTATE & 状態1, const 共通状態 & 状態2)
+    int tasc::出力計算_標準(距離型 残距離, 速度型 現在速度, const 共通状態 & 状態2)
     {
-        距離型 残距離 = _目標停止位置 - 状態1.Location;
-        速度型 現在速度 = mps_from_kmph(状態1.Speed);
         加速度型 目標減速度 = 状態2.常用最大減速度() * 0.8;
-        減速パターン パターン(_目標停止位置, 0, 目標減速度);
-        速度型 期待速度 = パターン.期待速度(状態1.Location);
+        減速パターン パターン(0, 0, 目標減速度);
+        速度型 期待速度 = パターン.期待速度(-残距離);
 
         加速度型 出力減速度 = std::min({
             // 単純な等加速度運動で減速するパターン
@@ -139,11 +141,12 @@ namespace autopilot {
 
         double 出力制動ノッチ = 状態2.目標制動ノッチ(出力減速度);
         if (出力減速度 < 目標減速度) {
-            _出力制動ノッチ = static_cast<int>(std::floor(出力制動ノッチ));
+            出力制動ノッチ = std::floor(出力制動ノッチ);
         }
         else {
-            _出力制動ノッチ = static_cast<int>(std::round(出力制動ノッチ));
+            出力制動ノッチ = std::round(出力制動ノッチ);
         }
+        return static_cast<int>(出力制動ノッチ);
     }
 
 }

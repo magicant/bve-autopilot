@@ -46,9 +46,9 @@ namespace autopilot {
         制御状態 _制御状態;
         int _出力制動ノッチ;
 
-        void 出力計算(const ATS_VEHICLESTATE & 状態1, const 共通状態 & 状態2);
-        void 出力計算_標準(
-            const ATS_VEHICLESTATE & 状態1, const 共通状態 & 状態2);
+        int 出力計算(距離型 残距離, 速度型 現在速度, const 共通状態 & 状態2);
+        int 出力計算_標準(
+            距離型 残距離, 速度型 現在速度, const 共通状態 & 状態2);
     };
 
 }
