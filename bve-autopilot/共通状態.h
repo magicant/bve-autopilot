@@ -24,14 +24,6 @@
 
 namespace autopilot {
 
-    constexpr double s_from_ms(double ms) {
-        return ms / 1000.0;
-    }
-
-    constexpr double mps_from_kmph(double kmph) {
-        return kmph / 3.6;
-    }
-
     class 共通状態
     {
     public:

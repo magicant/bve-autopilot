@@ -23,6 +23,7 @@
 #include <cstddef>
 #include <cwchar>
 #include "共通状態.h"
+#include "単位.h"
 
 namespace autopilot
 {
