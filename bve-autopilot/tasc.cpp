@@ -48,16 +48,24 @@ namespace autopilot {
 
     void tasc::経過(const ATS_VEHICLESTATE & 状態1, const 共通状態 & 状態2)
     {
+        速度型 現在速度 = mps_from_kmph(状態1.Speed);
+        距離型 残距離 = _目標停止位置 - 状態1.Location;
+
         // 新しい状態を再計算
         switch (_制御状態)
         {
         case 制御状態::待機:
-        case 制御状態::制動準備:
-            _制御状態 = 制御状態::制動;
-            break;
         case 制御状態::制動:
             if (std::abs(mps_from_kmph(状態1.Speed)) < 0.05) {
                 _制御状態 = 制御状態::停車;
+            }
+            else {
+                // もうすぐブレーキをかけ始める必要があるなら制動状態に移行する
+                走行モデル モデル(0, 現在速度, 0);
+                モデル.指定時間走行(5);
+                距離型 空走距離 = モデル.位置();
+                int 予想出力 = 出力計算(残距離 - 空走距離, 現在速度, 状態2);
+                _制御状態 = 予想出力 == 0 ? 制御状態::待機 : 制御状態::制動;
             }
             break;
         case 制御状態::停車:
@@ -68,15 +76,11 @@ namespace autopilot {
         switch (_制御状態)
         {
         case 制御状態::待機:
-        case 制御状態::制動準備:
             _出力制動ノッチ = 0;
             break;
-        case 制御状態::制動: {
-            距離型 残距離 = _目標停止位置 - 状態1.Location;
-            速度型 現在速度 = mps_from_kmph(状態1.Speed);
+        case 制御状態::制動:
             _出力制動ノッチ = 出力計算(残距離, 現在速度, 状態2);
             break;
-        }
         case 制御状態::停車:
             _出力制動ノッチ = _車両仕様.BrakeNotches;
             break;

@@ -39,7 +39,7 @@ namespace autopilot {
         int 出力制動ノッチ() const { return _出力制動ノッチ; }
 
     private:
-        enum class 制御状態 { 待機, 制動準備, 制動, 停車, };
+        enum class 制御状態 { 待機, 制動, 停車, };
 
         const ATS_VEHICLESPEC & _車両仕様;
         距離型 _目標停止位置;
