@@ -18,6 +18,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include "単位.h"
 
 namespace autopilot
 {
@@ -25,8 +26,6 @@ namespace autopilot
     class 環境設定
     {
     public:
-        using 加速度型 = double;
-
         環境設定() { リセット(); }
         ~環境設定() = default;
 

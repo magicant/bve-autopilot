@@ -18,20 +18,16 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include "単位.h"
 
 namespace autopilot {
 
     class 走行モデル
     {
     public:
-        using 加速度型 = double;
-        using 速度型 = double;
-        using 距離型 = double;
-        using 時間型 = double;
-
-        走行モデル(距離型 位置, 速度型 速度, 時間型 時刻) :
+        constexpr 走行モデル(距離型 位置, 速度型 速度, 時間型 時刻) :
             _位置(位置), _速度(速度), _時刻(時刻) { }
-        ~走行モデル() { }
+        ~走行モデル() = default;
 
         距離型 位置() const { return _位置; }
         void 位置変更(距離型 位置) { _位置 = 位置; }

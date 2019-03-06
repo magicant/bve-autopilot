@@ -18,6 +18,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include "単位.h"
 
 namespace autopilot
 {
@@ -25,14 +26,9 @@ namespace autopilot
     class 加速度計
     {
     public:
-        using 速度型 = double;
-        using 加速度型 = double;
-        using 加加速度型 = double;
-        using 時刻型 = double;
-
         struct 観測 {
             速度型 _速度;
-            時刻型 _時刻;
+            時間型 _時刻;
         };
 
         加速度計();

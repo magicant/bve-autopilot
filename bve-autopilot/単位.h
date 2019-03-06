@@ -22,11 +22,22 @@
 namespace autopilot
 {
 
-    constexpr double s_from_ms(double ms) {
+    // 秒
+    using 時間型 = double;
+    // メートル
+    using 距離型 = double;
+    // メートル毎秒
+    using 速度型 = double;
+    // メートル毎秒毎秒
+    using 加速度型 = double;
+    // メートル毎秒毎秒毎秒
+    using 加加速度型 = double;
+
+    constexpr 時間型 s_from_ms(double ms) {
         return ms / 1000.0;
     }
 
-    constexpr double mps_from_kmph(double kmph) {
+    constexpr 速度型 mps_from_kmph(double kmph) {
         return kmph / 3.6;
     }
 

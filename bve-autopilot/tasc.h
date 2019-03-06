@@ -19,6 +19,7 @@
 
 #pragma once
 #include "共通状態.h"
+#include "単位.h"
 #include "走行モデル.h"
 
 namespace autopilot {
@@ -26,9 +27,6 @@ namespace autopilot {
     class tasc
     {
     public:
-        using 距離型 = 走行モデル::距離型;
-        using 加速度型 = 走行モデル::加速度型;
-
         tasc(const ATS_VEHICLESPEC & 車両仕様);
         ~tasc() = default;
 

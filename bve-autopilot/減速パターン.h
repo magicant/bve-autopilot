@@ -18,6 +18,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include "単位.h"
 #include "走行モデル.h"
 
 namespace autopilot
@@ -26,10 +27,6 @@ namespace autopilot
     class 減速パターン
     {
     public:
-        using 加速度型 = 走行モデル::加速度型;
-        using 速度型 = 走行モデル::速度型;
-        using 距離型 = 走行モデル::距離型;
-
         constexpr 減速パターン(
             距離型 目標位置, 速度型 目標速度, 加速度型 目標減速度) :
             _目標位置(目標位置), _目標速度(目標速度), _目標減速度(目標減速度) {}

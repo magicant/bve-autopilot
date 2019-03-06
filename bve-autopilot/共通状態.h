@@ -20,6 +20,7 @@
 #pragma once
 #include "制動出力.h"
 #include "加速度計.h"
+#include "単位.h"
 #include "環境設定.h"
 
 namespace autopilot {
@@ -42,16 +43,16 @@ namespace autopilot {
         void 制動操作(int ノッチ);
 
         const 環境設定 & 設定() const { return _設定; }
-        制動出力::加速度型 常用最大減速度() const {
+        加速度型 常用最大減速度() const {
             return _制動出力.常用最大減速度();
         }
         double 現在位置() const { return _状態.Location; }
         int 逆転器ノッチ() const { return _逆転器ノッチ; }
         int 力行ノッチ() const { return _力行ノッチ; }
         int 制動ノッチ() const { return _制動ノッチ; }
-        加速度計::加速度型 加速度() const { return _加速度計.加速度(); }
+        加速度型 加速度() const { return _加速度計.加速度(); }
 
-        double 目標制動ノッチ(制動出力::加速度型 減速度) const {
+        double 目標制動ノッチ(加速度型 減速度) const {
             return _制動出力.ノッチ(減速度);
         }
 

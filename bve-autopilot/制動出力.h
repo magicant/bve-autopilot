@@ -19,6 +19,7 @@
 
 #pragma once
 #include "加速度計.h"
+#include "単位.h"
 
 namespace autopilot
 {
@@ -29,10 +30,6 @@ namespace autopilot
     class 制動出力
     {
     public:
-        using 加速度型 = 加速度計::加速度型;
-        using 加加速度型 = 加速度計::加加速度型;
-        using 時刻型 = 加速度計::時刻型;
-
         void 性能設定(
             int 常用ノッチ数, int 無効ノッチ数, 加速度型 常用最大減速度)
         {
