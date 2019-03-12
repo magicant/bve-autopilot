@@ -30,7 +30,10 @@ namespace autopilot
         Main();
         ~Main() = default;
 
-        void 車両仕様設定(const ATS_VEHICLESPEC & 車両仕様);
+        void 車両仕様設定(const ATS_VEHICLESPEC & 車両仕様)
+        {
+            _状態.車両仕様設定(車両仕様);
+        }
         void リセット(int 制動状態);
         void 設定ファイル読込(LPCWSTR 設定ファイル名) {
             _状態.設定ファイル読込(設定ファイル名);
@@ -52,7 +55,6 @@ namespace autopilot
         ATS_HANDLES 経過(const ATS_VEHICLESTATE & 状態, int * 出力値, int * 音声状態);
 
     private:
-        ATS_VEHICLESPEC _車両仕様;
         共通状態 _状態;
         tasc _tasc;
         bool _tasc制御中;

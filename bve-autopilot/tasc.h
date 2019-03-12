@@ -27,7 +27,7 @@ namespace autopilot {
     class tasc
     {
     public:
-        tasc(const ATS_VEHICLESPEC & 車両仕様);
+        tasc();
         ~tasc() = default;
 
         void 地上子通過(const ATS_BEACONDATA & 地上子, const 共通状態 & 状態);
@@ -41,7 +41,6 @@ namespace autopilot {
     private:
         enum class 制御状態 { 待機, 制動, 停車, };
 
-        const ATS_VEHICLESPEC & _車両仕様;
         距離型 _目標停止位置;
         制御状態 _制御状態;
         int _出力制動ノッチ;

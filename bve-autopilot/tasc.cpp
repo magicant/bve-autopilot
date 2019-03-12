@@ -27,11 +27,10 @@
 
 namespace autopilot {
 
-    tasc::tasc(const ATS_VEHICLESPEC & 車両仕様) :
-        _車両仕様(車両仕様),
+    tasc::tasc() :
         _目標停止位置(std::numeric_limits<double>::infinity()),
         _制御状態(制御状態::待機),
-        _出力制動ノッチ(車両仕様.BrakeNotches)
+        _出力制動ノッチ(0)
     {
     }
 
@@ -78,7 +77,7 @@ namespace autopilot {
             _出力制動ノッチ = 出力計算(残距離, 現在速度, 状態);
             break;
         case 制御状態::停車:
-            _出力制動ノッチ = _車両仕様.BrakeNotches;
+            _出力制動ノッチ = 状態.車両仕様().BrakeNotches;
             break;
         }
     }
@@ -96,10 +95,12 @@ namespace autopilot {
 
     int tasc::出力計算(距離型 残距離, 速度型 現在速度, const 共通状態 & 状態)
     {
+        auto & 車両仕様 = 状態.車両仕様();
+
         int 出力制動ノッチ;
         if (残距離 <= 0) {
             // 過走した!
-            出力制動ノッチ = _車両仕様.BrakeNotches;
+            出力制動ノッチ = 車両仕様.BrakeNotches;
         }
         else {
             出力制動ノッチ = 出力計算_標準(残距離, 現在速度, 状態);
@@ -109,16 +110,16 @@ namespace autopilot {
         double 緩めノッチ = std::ceil(状態.目標制動ノッチ(現在速度 / 2.0));
         出力制動ノッチ = std::min(出力制動ノッチ, static_cast<int>(緩めノッチ));
 
-        if (出力制動ノッチ < _車両仕様.AtsNotch) {
+        if (出力制動ノッチ < 車両仕様.AtsNotch) {
             出力制動ノッチ = 0;
         }
-        else if (出力制動ノッチ > _車両仕様.BrakeNotches) {
-            出力制動ノッチ = _車両仕様.BrakeNotches;
+        else if (出力制動ノッチ > 車両仕様.BrakeNotches) {
+            出力制動ノッチ = 車両仕様.BrakeNotches;
         }
 
         if (残距離 <= 1 && std::abs(現在速度) < mps_from_kmph(1)) {
             // 止まりかけたらさっさと止めてしまう
-            出力制動ノッチ = std::max(出力制動ノッチ, _車両仕様.AtsNotch);
+            出力制動ノッチ = std::max(出力制動ノッチ, 車両仕様.AtsNotch);
         }
 
         return 出力制動ノッチ;

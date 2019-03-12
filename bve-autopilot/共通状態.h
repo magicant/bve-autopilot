@@ -43,6 +43,7 @@ namespace autopilot {
         void 制動操作(int ノッチ);
 
         const 環境設定 & 設定() const { return _設定; }
+        const ATS_VEHICLESPEC & 車両仕様() const { return _車両仕様; }
         加速度型 常用最大減速度() const {
             return _制動出力.常用最大減速度();
         }
@@ -59,6 +60,7 @@ namespace autopilot {
 
     private:
         環境設定 _設定;
+        ATS_VEHICLESPEC _車両仕様;
         ATS_VEHICLESTATE _状態;
         int _逆転器ノッチ, _力行ノッチ, _制動ノッチ;
         加速度計 _加速度計;

@@ -23,14 +23,8 @@
 namespace autopilot
 {
 
-    Main::Main() : _車両仕様{}, _状態{}, _tasc{_車両仕様}, _tasc制御中{false}
+    Main::Main() : _状態{}, _tasc{}, _tasc制御中{false}
     {
-    }
-
-    void Main::車両仕様設定(const ATS_VEHICLESPEC & 車両仕様)
-    {
-        _車両仕様 = 車両仕様;
-        _状態.車両仕様設定(車両仕様);
     }
 
     void Main::リセット(int)
