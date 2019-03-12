@@ -18,7 +18,9 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include <forward_list>
 #include "制動出力.h"
+#include "制限区間.h"
 #include "加速度計.h"
 #include "単位.h"
 #include "環境設定.h"
@@ -28,9 +30,6 @@ namespace autopilot {
     class 共通状態
     {
     public:
-        共通状態() = default;
-        ~共通状態() = default;
-
         void リセット();
         void 設定ファイル読込(LPCWSTR 設定ファイル名) {
             _設定.ファイル読込(設定ファイル名);
@@ -60,6 +59,7 @@ namespace autopilot {
     private:
         環境設定 _設定;
         ATS_VEHICLESTATE _状態;
+        std::forward_list<制限区間> _制限区間リスト;
         int _逆転器ノッチ, _力行ノッチ, _制動ノッチ;
         加速度計 _加速度計;
         制動出力 _制動出力;
