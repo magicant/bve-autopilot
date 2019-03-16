@@ -44,6 +44,7 @@ namespace autopilot {
 
         const 環境設定 & 設定() const { return _設定; }
         const ATS_VEHICLESPEC & 車両仕様() const { return _車両仕様; }
+        距離型 列車長() const { return _設定.車両長() * _車両仕様.Cars; }
         加速度型 常用最大減速度() const {
             return _制動出力.常用最大減速度();
         }

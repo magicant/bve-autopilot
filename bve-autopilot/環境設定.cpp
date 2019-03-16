@@ -30,6 +30,7 @@ namespace autopilot
 
     void 環境設定::リセット()
     {
+        _車両長 = 20;
         _常用最大減速度 = mps_from_kmph(3.0);
     }
 
@@ -37,9 +38,21 @@ namespace autopilot
     {
         constexpr std::size_t buffer_size = 32;
         WCHAR buffer[buffer_size];
+        DWORD size;
+
+        // 車両長
+        size = GetPrivateProfileStringW(
+            L"dynamics", L"carlength", L"", &buffer[0], buffer_size,
+            設定ファイル名);
+        if (0 < size && size < buffer_size - 1) {
+            距離型 車両長 = std::wcstod(buffer, nullptr);
+            if (0 < 車両長 && std::isfinite(車両長)) {
+                _車両長 = mps_from_kmph(車両長);
+            }
+        }
 
         // 常用最大減速度
-        DWORD size = GetPrivateProfileStringW(
+        size = GetPrivateProfileStringW(
             L"braking", L"maxdeceleration", L"", &buffer[0], buffer_size,
             設定ファイル名);
         if (0 < size && size < buffer_size - 1) {
