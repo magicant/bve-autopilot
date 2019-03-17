@@ -27,6 +27,7 @@ namespace autopilot {
     void 共通状態::リセット()
     {
         // _設定.リセット(); // ファイルから読み込むのでリセットしない
+        _状態 = ATS_VEHICLESTATE{};
         _加速度計.リセット();
     }
 
