@@ -19,6 +19,7 @@
 
 #pragma once
 #include "共通状態.h"
+#include "ato.h"
 #include "tasc.h"
 
 namespace autopilot
@@ -57,7 +58,8 @@ namespace autopilot
     private:
         共通状態 _状態;
         tasc _tasc;
-        bool _tasc制御中;
+        ato _ato;
+        bool _tasc制御中, _ato制御中;
     };
 
 }

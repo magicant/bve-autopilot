@@ -19,36 +19,43 @@
 
 #include "stdafx.h"
 #include "Main.h"
+#include <algorithm>
+#include <limits>
 
 namespace autopilot
 {
 
-    Main::Main() : _状態{}, _tasc{}, _tasc制御中{false}
+    Main::Main() :
+        _状態{},
+        _tasc{},
+        _ato{},
+        _tasc制御中{false},
+        _ato制御中{false}
     {
     }
 
     void Main::リセット(int)
     {
         _状態.リセット();
-        _tasc制御中 = false;
+        _tasc制御中 = _ato制御中 = false;
     }
 
     void Main::逆転器操作(int ノッチ)
     {
         _状態.逆転器操作(ノッチ);
-        _tasc制御中 = false;
+        _tasc制御中 = _ato制御中 = false;
     }
 
     void Main::力行操作(int ノッチ)
     {
         _状態.力行操作(ノッチ);
-        _tasc制御中 = false;
+        _tasc制御中 = _ato制御中 = false;
     }
 
     void Main::制動操作(int ノッチ)
     {
         _状態.制動操作(ノッチ);
-        _tasc制御中 = false;
+        _tasc制御中 = _ato制御中 = false;
     }
 
     void Main::警笛操作(int)
@@ -90,7 +97,7 @@ namespace autopilot
         case ATS_KEY_K: // Default: 9
             break;
         case ATS_KEY_L: // Default: 0
-            _tasc制御中 = true;
+            _tasc制御中 = _ato制御中 = true;
             _tasc.起動();
             break;
         }
@@ -123,6 +130,7 @@ namespace autopilot
     {
         _状態.経過(状態);
         _tasc.経過(_状態);
+        _ato.経過(_状態);
 
         // TASC と ATO の出力ノッチをまとめる
         int 力行 = -1, 制動 = -1;
@@ -134,6 +142,19 @@ namespace autopilot
             else {
                 //力行 = tascノッチ; // TASC が力行することは無い
             }
+        }
+        if (_ato制御中) {
+            int atoノッチ = _ato.出力ノッチ();
+            if (atoノッチ <= 0) {
+                制動 = std::max(制動, -atoノッチ);
+            }
+            else {
+                力行 = atoノッチ;
+            }
+        }
+
+        if (制動 >= 0 || _状態.制動ノッチ() > 0 || _状態.逆転器ノッチ() <= 0) {
+            力行 = -1;
         }
 
         ATS_HANDLES ハンドル位置;

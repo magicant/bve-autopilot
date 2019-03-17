@@ -157,6 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ato.h" />
     <ClInclude Include="atsplugin.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="resource.h" />
@@ -175,6 +176,7 @@
     <ClInclude Include="走行モデル.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ato.cpp" />
     <ClCompile Include="bve-autopilot.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="stdafx.cpp">

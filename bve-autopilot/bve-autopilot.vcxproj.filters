@@ -54,6 +54,9 @@
     <ClInclude Include="resource.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="ato.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
     <ClInclude Include="制限区間.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -90,6 +93,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="環境設定.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ato.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="制限グラフ.cpp">

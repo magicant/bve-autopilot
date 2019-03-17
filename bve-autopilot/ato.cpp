@@ -1,4 +1,4 @@
-// 制限グラフ.h : 区間ごとに定められる制限速度の変化を表します
+// ato.cpp : ATO メインモジュール
 //
 // Copyright © 2019 Watanabe, Yuki
 //
@@ -17,33 +17,24 @@
 // Foundation, Inc.,
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
-#pragma once
-#include <forward_list>
-#include "制限区間.h"
-#include "単位.h"
-
-#pragma warning(push)
-#pragma warning(disable:4819)
+#include "stdafx.h"
+#include "ato.h"
 
 namespace autopilot
 {
 
-    class 制限グラフ
+    void ato::経過(const 共通状態 & 状態)
     {
-    public:
-        void 消去();
-        void 制限区間追加(距離型 始点, 速度型 速度);
-        void 通過(距離型 位置);
+        _出力ノッチ = 状態.車両仕様().PowerNotches;
 
-        // 力行は正の値、制動は負の値
-        int 出力ノッチ(
-            距離型 現在位置, 速度型 現在速度, const 制動出力 & 制動,
-            速度型 速度マージン = mps_from_kmph(1)) const;
-
-    private:
-        std::forward_list<制限区間> _区間リスト;
-    };
+        距離型 現在位置 = 状態.現在位置();
+        速度型 現在速度 = 状態.現在速度();
+        const 制動出力 & 制動パラメーター = 状態.制動パラメーター();
+        for (const 制限グラフ & グラフ : 状態.制限グラフ群()) {
+            int グラフノッチ = グラフ.出力ノッチ(
+                現在位置, 現在速度, 制動パラメーター);
+            _出力ノッチ = std::min(_出力ノッチ, グラフノッチ);
+        }
+    }
 
 }
-
-#pragma warning(pop)
