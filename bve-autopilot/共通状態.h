@@ -46,7 +46,8 @@ namespace autopilot {
         加速度型 常用最大減速度() const {
             return _制動出力.常用最大減速度();
         }
-        double 現在位置() const { return _状態.Location; }
+        距離型 現在位置() const { return _状態.Location; }
+        速度型 現在速度() const { return mps_from_kmph(_状態.Speed); }
         int 逆転器ノッチ() const { return _逆転器ノッチ; }
         int 力行ノッチ() const { return _力行ノッチ; }
         int 制動ノッチ() const { return _制動ノッチ; }

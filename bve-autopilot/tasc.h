@@ -31,7 +31,7 @@ namespace autopilot {
         ~tasc() = default;
 
         void 地上子通過(const ATS_BEACONDATA & 地上子, const 共通状態 & 状態);
-        void 経過(const ATS_VEHICLESTATE & 状態1, const 共通状態 & 状態2);
+        void 経過(const 共通状態 & 状態);
         void 起動();
         void 駅到着();
 
@@ -46,9 +46,9 @@ namespace autopilot {
         制御状態 _制御状態;
         int _出力制動ノッチ;
 
-        int 出力計算(距離型 残距離, 速度型 現在速度, const 共通状態 & 状態2);
+        int 出力計算(距離型 残距離, 速度型 現在速度, const 共通状態 & 状態);
         int 出力計算_標準(
-            距離型 残距離, 速度型 現在速度, const 共通状態 & 状態2);
+            距離型 残距離, 速度型 現在速度, const 共通状態 & 状態);
     };
 
 }

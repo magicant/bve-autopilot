@@ -127,7 +127,7 @@ namespace autopilot
     ATS_HANDLES Main::経過(const ATS_VEHICLESTATE & 状態, int *, int *)
     {
         _状態.経過(状態);
-        _tasc.経過(状態, _状態);
+        _tasc.経過(_状態);
 
         ATS_HANDLES ハンドル位置;
         if (_tasc制御中 && _tasc.制御中()) {
