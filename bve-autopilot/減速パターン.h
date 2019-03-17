@@ -18,6 +18,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include "制動出力.h"
 #include "単位.h"
 #include "走行モデル.h"
 
@@ -37,6 +38,10 @@ namespace autopilot
         ~減速パターン() = default;
 
         速度型 期待速度(距離型 現在位置) const;
+        int 出力制動ノッチ(
+            距離型 現在位置, 速度型 現在速度, const 制動出力 & 制動) const;
+        int 出力ノッチ(
+            距離型 現在位置, 速度型 現在速度, const 制動出力 & 制動) const;
 
     };
 

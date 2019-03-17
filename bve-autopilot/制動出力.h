@@ -38,6 +38,8 @@ namespace autopilot
             _常用最大減速度 = 常用最大減速度;
         }
 
+        int 常用ノッチ数() const { return _常用ノッチ数; }
+        int 無効ノッチ数() const { return _無効ノッチ数; }
         int 実効ノッチ数() const {
             return _常用ノッチ数 - _無効ノッチ数;
         }

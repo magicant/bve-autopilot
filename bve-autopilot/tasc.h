@@ -35,19 +35,15 @@ namespace autopilot {
         void 起動();
         void 駅到着();
 
-        bool 制御中() const { return _制御状態 != 制御状態::待機; }
-        int 出力制動ノッチ() const { return _出力制動ノッチ; }
+        // 力行は正の値、制動は負の値
+        int 出力ノッチ() const { return _出力ノッチ; }
 
     private:
-        enum class 制御状態 { 待機, 制動, 停車, };
+        enum class 制御状態 { 制動, 停車, };
 
         距離型 _目標停止位置;
         制御状態 _制御状態;
-        int _出力制動ノッチ;
-
-        int 出力計算(距離型 残距離, 速度型 現在速度, const 共通状態 & 状態);
-        int 出力計算_標準(
-            距離型 残距離, 速度型 現在速度, const 共通状態 & 状態);
+        int _出力ノッチ;
     };
 
 }

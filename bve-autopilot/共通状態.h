@@ -73,10 +73,7 @@ namespace autopilot {
         int 力行ノッチ() const { return _力行ノッチ; }
         int 制動ノッチ() const { return _制動ノッチ; }
         加速度型 加速度() const { return _加速度計.加速度(); }
-
-        double 目標制動ノッチ(加速度型 減速度) const {
-            return _制動出力.ノッチ(減速度);
-        }
+        const 制動出力 & 制動パラメーター() const { return _制動出力; }
 
     private:
         環境設定 _設定;
