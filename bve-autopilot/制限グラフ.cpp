@@ -1,0 +1,51 @@
+// 制限グラフ.cpp : 区間ごとに定められる制限速度の変化を表します
+//
+// Copyright © 2019 Watanabe, Yuki
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc.,
+// 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
+
+#include "stdafx.h"
+#include "制限グラフ.h"
+#include <algorithm>
+#include <limits>
+
+#pragma warning(disable:4819)
+
+namespace autopilot
+{
+
+    void 制限グラフ::消去()
+    {
+        _区間リスト.clear();
+    }
+
+    void 制限グラフ::制限区間追加(距離型 始点, 速度型 速度)
+    {
+        // 新しい制限区間に上書きされる区間を消す
+        _区間リスト.remove_if([始点](const 制限区間 & 区間) {
+            return 区間.始点 >= 始点;
+        });
+
+        // 新しい制限区間に重なる既存の区間を縮める
+        for (制限区間 & 区間 : _区間リスト) {
+            区間.終点 = std::min(区間.終点, 始点);
+        }
+
+        距離型 終点 = std::numeric_limits<距離型>::infinity();
+        _区間リスト.emplace_front(始点, 終点, 速度);
+    }
+
+}
