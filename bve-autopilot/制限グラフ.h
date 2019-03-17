@@ -33,6 +33,7 @@ namespace autopilot
     public:
         void 消去();
         void 制限区間追加(距離型 始点, 速度型 速度);
+        void 通過(距離型 位置);
 
     private:
         std::forward_list<制限区間> _区間リスト;

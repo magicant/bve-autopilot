@@ -63,6 +63,12 @@ namespace autopilot {
     {
         double 時刻 = s_from_ms(状態.Time);
         _状態 = 状態;
+
+        距離型 最後尾 = 状態.Location - 列車長();
+        for (制限グラフ & グラフ : _制限グラフ群) {
+            グラフ.通過(最後尾);
+        }
+
         _加速度計.経過({ mps_from_kmph(状態.Speed), 時刻 });
     }
 
