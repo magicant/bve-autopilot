@@ -115,6 +115,7 @@ namespace autopilot
 
     void Main::地上子通過(const ATS_BEACONDATA & 地上子)
     {
+        _状態.地上子通過(地上子);
         _tasc.地上子通過(地上子, _状態);
     }
 

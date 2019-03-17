@@ -19,8 +19,11 @@
 
 #include "stdafx.h"
 #include <algorithm>
+#include <limits>
 #include "共通状態.h"
 #include "単位.h"
+
+#pragma warning(disable:4819)
 
 namespace autopilot {
 
@@ -28,6 +31,9 @@ namespace autopilot {
     {
         // _設定.リセット(); // ファイルから読み込むのでリセットしない
         _状態 = ATS_VEHICLESTATE{};
+        for (制限グラフ & グラフ : _制限グラフ群) {
+            グラフ.消去();
+        }
         _加速度計.リセット();
     }
 
@@ -38,6 +44,19 @@ namespace autopilot {
             仕様.BrakeNotches,
             std::max(std::min(仕様.AtsNotch, 仕様.BrakeNotches) - 1, 0),
             _設定.常用最大減速度());
+    }
+
+    void 共通状態::地上子通過(const ATS_BEACONDATA & 地上子)
+    {
+        switch (地上子.Type)
+        {
+        case 1006: // 制限速度設定
+            制限区間追加(制限グラフ群添字::汎用1006, 地上子.Optional);
+            break;
+        case 1007: // 制限速度設定
+            制限区間追加(制限グラフ群添字::汎用1007, 地上子.Optional);
+            break;
+        }
     }
 
     void 共通状態::経過(const ATS_VEHICLESTATE & 状態)
@@ -65,6 +84,20 @@ namespace autopilot {
     void 共通状態::制動操作(int ノッチ)
     {
         _制動ノッチ = ノッチ;
+    }
+
+    void 共通状態::制限区間追加(制限グラフ群添字 添字, int 地上子値)
+    {
+        制限グラフ & グラフ = _制限グラフ群[static_cast<std::size_t>(添字)];
+        距離型 距離 = 地上子値 / 1000;
+        速度型 速度 = mps_from_kmph(地上子値 % 1000);
+        距離型 位置 = _状態.Location + 距離;
+
+        if (速度 == 0) {
+            速度 = std::numeric_limits<速度型>::infinity();
+        }
+
+        グラフ.制限区間追加(位置, 速度);
     }
 
 }
