@@ -92,6 +92,15 @@ namespace autopilot {
         _制動ノッチ = ノッチ;
     }
 
+    速度型 共通状態::現在制限速度() const
+    {
+        速度型 制限速度 = std::numeric_limits<速度型>::infinity();
+        for (const 制限グラフ & グラフ : _制限グラフ群) {
+            制限速度 = std::min(制限速度, グラフ.制限速度(_状態.Location));
+        }
+        return 制限速度;
+    }
+
     void 共通状態::制限区間追加(制限グラフ群添字 添字, int 地上子値)
     {
         制限グラフ & グラフ = _制限グラフ群[static_cast<std::size_t>(添字)];

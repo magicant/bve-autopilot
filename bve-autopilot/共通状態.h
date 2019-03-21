@@ -69,11 +69,13 @@ namespace autopilot {
         const 制限グラフ群型 & 制限グラフ群() const {
             return _制限グラフ群;
         }
+        速度型 現在制限速度() const;
         int 逆転器ノッチ() const { return _逆転器ノッチ; }
         int 力行ノッチ() const { return _力行ノッチ; }
         int 制動ノッチ() const { return _制動ノッチ; }
         加速度型 加速度() const { return _加速度計.加速度(); }
         const 制動出力 & 制動パラメーター() const { return _制動出力; }
+        const ATS_HANDLES & 前回出力() const { return _前回出力; }
 
     private:
         環境設定 _設定;

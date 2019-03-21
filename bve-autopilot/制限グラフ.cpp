@@ -56,6 +56,17 @@ namespace autopilot
         });
     }
 
+    速度型 制限グラフ::制限速度(距離型 位置) const
+    {
+        速度型 制限速度 = std::numeric_limits<速度型>::infinity();
+        for (const 制限区間 & 区間 : _区間リスト) {
+            if (区間.含む(位置)) {
+                制限速度 = std::min(制限速度, 区間.速度);
+            }
+        }
+        return 制限速度;
+    }
+
     int 制限グラフ::出力ノッチ(
         距離型 現在位置, 速度型 現在速度, const 制動出力 & 制動,
         速度型 速度マージン) const
