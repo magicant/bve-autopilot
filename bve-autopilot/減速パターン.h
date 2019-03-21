@@ -25,6 +25,8 @@
 namespace autopilot
 {
 
+    class 共通状態;
+
     struct 減速パターン
     {
         距離型 目標位置;
@@ -41,7 +43,7 @@ namespace autopilot
         int 出力制動ノッチ(
             距離型 現在位置, 速度型 現在速度, const 制動出力 & 制動) const;
         int 出力ノッチ(
-            距離型 現在位置, 速度型 現在速度, const 制動出力 & 制動) const;
+            距離型 現在位置, 速度型 現在速度, const 共通状態 & 状態) const;
 
     };
 

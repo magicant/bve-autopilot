@@ -28,6 +28,8 @@
 namespace autopilot
 {
 
+    class 共通状態;
+
     class 制限グラフ
     {
     public:
@@ -39,7 +41,7 @@ namespace autopilot
 
         // 力行は正の値、制動は負の値
         int 出力ノッチ(
-            距離型 現在位置, 速度型 現在速度, const 制動出力 & 制動,
+            距離型 現在位置, 速度型 現在速度, const 共通状態 & 状態,
             速度型 速度マージン = mps_from_kmph(1)) const;
 
     private:
