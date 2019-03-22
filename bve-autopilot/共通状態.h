@@ -20,7 +20,7 @@
 #pragma once
 #include <array>
 #include <forward_list>
-#include "制動出力.h"
+#include "制動特性.h"
 #include "制限グラフ.h"
 #include "制限区間.h"
 #include "加速度計.h"
@@ -62,7 +62,7 @@ namespace autopilot {
         const ATS_VEHICLESPEC & 車両仕様() const { return _車両仕様; }
         距離型 列車長() const { return _設定.車両長() * _車両仕様.Cars; }
         加速度型 常用最大減速度() const {
-            return _制動出力.常用最大減速度();
+            return _制動特性.常用最大減速度();
         }
         距離型 現在位置() const { return _状態.Location; }
         速度型 現在速度() const { return mps_from_kmph(_状態.Speed); }
@@ -74,7 +74,7 @@ namespace autopilot {
         int 力行ノッチ() const { return _力行ノッチ; }
         int 制動ノッチ() const { return _制動ノッチ; }
         加速度型 加速度() const { return _加速度計.加速度(); }
-        const 制動出力 & 制動パラメーター() const { return _制動出力; }
+        const 制動特性 & 制動() const { return _制動特性; }
         const ATS_HANDLES & 前回出力() const { return _前回出力; }
 
     private:
@@ -84,7 +84,7 @@ namespace autopilot {
         制限グラフ群型 _制限グラフ群;
         int _逆転器ノッチ, _力行ノッチ, _制動ノッチ;
         加速度計 _加速度計;
-        制動出力 _制動出力;
+        制動特性 _制動特性;
         ATS_HANDLES _前回出力;
 
         void 制限区間追加(制限グラフ群添字 添字, int 地上子値);

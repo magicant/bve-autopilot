@@ -40,7 +40,7 @@ namespace autopilot {
     void 共通状態::車両仕様設定(const ATS_VEHICLESPEC & 仕様)
     {
         _車両仕様 = 仕様;
-        _制動出力.性能設定(
+        _制動特性.性能設定(
             仕様.BrakeNotches,
             std::max(std::min(仕様.AtsNotch, 仕様.BrakeNotches) - 1, 0),
             _設定.常用最大減速度());

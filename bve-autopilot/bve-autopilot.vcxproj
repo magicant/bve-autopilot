@@ -165,7 +165,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="tasc.h" />
     <ClInclude Include="共通状態.h" />
-    <ClInclude Include="制動出力.h" />
+    <ClInclude Include="制動特性.h" />
     <ClInclude Include="制限グラフ.h" />
     <ClInclude Include="制限区間.h" />
     <ClInclude Include="加速度計.h" />
