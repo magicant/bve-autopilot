@@ -61,9 +61,6 @@ namespace autopilot {
         const 環境設定 & 設定() const { return _設定; }
         const ATS_VEHICLESPEC & 車両仕様() const { return _車両仕様; }
         距離型 列車長() const { return _設定.車両長() * _車両仕様.Cars; }
-        加速度型 常用最大減速度() const {
-            return _制動特性.常用最大減速度();
-        }
         距離型 現在位置() const { return _状態.Location; }
         速度型 現在速度() const { return mps_from_kmph(_状態.Speed); }
         const 制限グラフ群型 & 制限グラフ群() const {
