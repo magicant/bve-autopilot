@@ -179,7 +179,12 @@ namespace autopilot
 
         ATS_HANDLES ハンドル位置;
         ハンドル位置.Brake = std::max(制動, _状態.制動ノッチ());
-        ハンドル位置.Power = std::max(力行, _状態.力行ノッチ());
+        if (_状態.力行ノッチ() >= 0) {
+            ハンドル位置.Power = std::max(力行, _状態.力行ノッチ());
+        }
+        else {
+            ハンドル位置.Power = _状態.力行ノッチ();
+        }
         ハンドル位置.Reverser = _状態.逆転器ノッチ();
         ハンドル位置.ConstantSpeed = ATS_CONSTANTSPEED_CONTINUE;
 
