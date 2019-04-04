@@ -19,7 +19,6 @@
 
 #pragma once
 #include <array>
-#include <forward_list>
 #include "制動特性.h"
 #include "制限グラフ.h"
 #include "制限区間.h"
