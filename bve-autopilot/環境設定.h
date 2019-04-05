@@ -18,6 +18,8 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include <unordered_map>
+#include "パネル出力.h"
 #include "単位.h"
 
 namespace autopilot
@@ -35,9 +37,16 @@ namespace autopilot
         距離型 車両長() const { return _車両長; }
         加速度型 常用最大減速度() const { return _常用最大減速度; }
 
+        const std::unordered_map<int, パネル出力対象> & パネル出力対象登録簿()
+            const {
+            return _パネル出力対象登録簿;
+        }
+
     private:
         距離型 _車両長;
         加速度型 _常用最大減速度;
+
+        std::unordered_map<int, パネル出力対象> _パネル出力対象登録簿;
     };
 
 }

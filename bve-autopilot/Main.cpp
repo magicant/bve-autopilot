@@ -126,7 +126,8 @@ namespace autopilot
         _tasc.地上子通過(地上子, _状態);
     }
 
-    ATS_HANDLES Main::経過(const ATS_VEHICLESTATE & 状態, int *, int *)
+    ATS_HANDLES Main::経過(
+        const ATS_VEHICLESTATE & 状態, int * 出力値, int *)
     {
         _状態.経過(状態);
         _tasc.経過(_状態);
@@ -164,6 +165,11 @@ namespace autopilot
         ハンドル位置.ConstantSpeed = ATS_CONSTANTSPEED_CONTINUE;
 
         _状態.出力(ハンドル位置);
+
+        for (auto パネル出力 : _状態.設定().パネル出力対象登録簿()) {
+            出力値[パネル出力.first] = パネル出力.second.出力(*this);
+        }
+
         return ハンドル位置;
     }
 

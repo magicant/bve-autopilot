@@ -1,4 +1,4 @@
-// tasc.h : TASC メインモジュール
+// パネル出力.h : 運転台パネルへ出力する値を定義します
 //
 // Copyright © 2019 Watanabe, Yuki
 //
@@ -18,34 +18,28 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
-#include "共通状態.h"
-#include "単位.h"
-#include "走行モデル.h"
+#include <functional>
+#include <string>
+#include <utility>
 
-namespace autopilot {
+namespace autopilot
+{
 
-    class tasc
-    {
+    class Main;
+
+    class パネル出力対象 {
     public:
-        tasc();
-        ~tasc() = default;
+        パネル出力対象(const std::function<int(const Main &)> & 出力) :
+            _出力(出力) { }
+        パネル出力対象(std::function<int(const Main &)> && 出力) :
+            _出力(std::move(出力)) { }
 
-        void 地上子通過(const ATS_BEACONDATA & 地上子, const 共通状態 & 状態);
-        void 経過(const 共通状態 & 状態);
-        void 起動();
-        void 駅到着();
+        int 出力(const Main & main) const { return _出力(main); }
 
-        bool 制御中() const;
-
-        // 力行は正の値、制動は負の値
-        int 出力ノッチ() const { return _出力ノッチ; }
+        static パネル出力対象 対象(const std::wstring & 名前);
 
     private:
-        enum class 制御状態 { 制動, 停車, };
-
-        距離型 _目標停止位置;
-        制御状態 _制御状態;
-        int _出力ノッチ;
+        std::function<int(const Main &)> _出力;
     };
 
 }

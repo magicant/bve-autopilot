@@ -80,4 +80,9 @@ namespace autopilot {
         _制御状態 = 制御状態::停車;
     }
 
+    bool tasc::制御中() const
+    {
+        return std::isfinite(_目標停止位置);
+    }
+
 }

@@ -31,6 +31,12 @@ namespace autopilot
         Main();
         ~Main() = default;
 
+        const 共通状態 & 状態() const { return _状態; }
+        const tasc & tasc状態() const { return _tasc; }
+        const ato & ato状態() const { return _ato; }
+        bool tasc制御中() const { return _tasc制御中; }
+        bool ato制御中() const { return _ato制御中; }
+
         void 車両仕様設定(const ATS_VEHICLESPEC & 車両仕様)
         {
             _状態.車両仕様設定(車両仕様);
