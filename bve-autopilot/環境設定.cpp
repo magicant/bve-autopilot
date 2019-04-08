@@ -70,6 +70,7 @@ namespace autopilot
     {
         _車両長 = 20;
         _常用最大減速度 = mps_from_kmph(3.0);
+        _制動緩解時間 = 1;
 
         _パネル出力対象登録簿.clear();
     }
@@ -99,6 +100,20 @@ namespace autopilot
             加速度型 減速度 = std::wcstod(buffer, nullptr);
             if (0 < 減速度 && std::isfinite(減速度)) {
                 _常用最大減速度 = mps_from_kmph(減速度);
+            }
+        }
+
+        // 制動緩解時間
+        size = GetPrivateProfileStringW(
+            L"braking", L"releasedelay", L"", buffer, buffer_size,
+            設定ファイル名);
+        if (0 < size && size < buffer_size - 1) {
+            時間型 緩解時間 = std::wcstod(buffer, nullptr);
+            if (緩解時間 == 0) {
+                _制動緩解時間 = 0; // 負の 0 は正の 0 にする
+            }
+            else if (0 < 緩解時間 && std::isfinite(緩解時間)) {
+                _制動緩解時間 = 緩解時間;
             }
         }
 

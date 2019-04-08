@@ -43,7 +43,8 @@ namespace autopilot {
         _制動特性.性能設定(
             仕様.BrakeNotches,
             std::max(std::min(仕様.AtsNotch, 仕様.BrakeNotches) - 1, 0),
-            _設定.常用最大減速度());
+            _設定.常用最大減速度(),
+            _設定.制動緩解時間());
     }
 
     void 共通状態::地上子通過(const ATS_BEACONDATA & 地上子)

@@ -36,6 +36,7 @@ namespace autopilot
 
         距離型 車両長() const { return _車両長; }
         加速度型 常用最大減速度() const { return _常用最大減速度; }
+        時間型 制動緩解時間() const { return _制動緩解時間; }
 
         const std::unordered_map<int, パネル出力対象> & パネル出力対象登録簿()
             const {
@@ -45,6 +46,7 @@ namespace autopilot
     private:
         距離型 _車両長;
         加速度型 _常用最大減速度;
+        時間型 _制動緩解時間;
 
         std::unordered_map<int, パネル出力対象> _パネル出力対象登録簿;
     };
