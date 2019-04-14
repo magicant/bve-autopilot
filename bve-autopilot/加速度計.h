@@ -32,7 +32,6 @@ namespace autopilot
         };
 
         加速度計();
-        ~加速度計();
 
         void リセット();
         void 経過(観測 データ);

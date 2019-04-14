@@ -28,8 +28,8 @@ namespace autopilot
     class 環境設定
     {
     public:
-        環境設定() { リセット(); }
-        ~環境設定() = default;
+        環境設定();
+        ~環境設定();
 
         void リセット();
         void ファイル読込(LPCWSTR 設定ファイル名);

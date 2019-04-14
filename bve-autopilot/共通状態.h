@@ -75,13 +75,13 @@ namespace autopilot {
 
     private:
         環境設定 _設定;
-        ATS_VEHICLESPEC _車両仕様;
-        ATS_VEHICLESTATE _状態;
+        ATS_VEHICLESPEC _車両仕様 = {};
+        ATS_VEHICLESTATE _状態 = {};
         制限グラフ群型 _制限グラフ群;
-        int _逆転器ノッチ, _力行ノッチ, _制動ノッチ;
+        int _逆転器ノッチ = 0, _力行ノッチ = 0, _制動ノッチ = 0;
         加速度計 _加速度計;
         制動特性 _制動特性;
-        ATS_HANDLES _前回出力;
+        ATS_HANDLES _前回出力 = {};
 
         void 制限区間追加(制限グラフ群添字 添字, int 地上子値);
     };
