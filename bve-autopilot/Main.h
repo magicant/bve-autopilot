@@ -34,8 +34,8 @@ namespace autopilot
         const 共通状態 & 状態() const { return _状態; }
         const tasc & tasc状態() const { return _tasc; }
         const ato & ato状態() const { return _ato; }
-        bool tasc制御中() const { return _tasc制御中; }
-        bool ato制御中() const { return _ato制御中; }
+        bool tasc有効() const { return _tasc有効; }
+        bool ato有効() const { return _ato有効; }
 
         void 車両仕様設定(const ATS_VEHICLESPEC & 車両仕様)
         {
@@ -65,7 +65,7 @@ namespace autopilot
         共通状態 _状態;
         tasc _tasc;
         ato _ato;
-        bool _tasc制御中, _ato制御中;
+        bool _tasc有効, _ato有効;
     };
 
 }

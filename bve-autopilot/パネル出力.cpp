@@ -38,19 +38,19 @@ namespace autopilot
             })},
 
             {L"tascenabled", パネル出力対象([](const Main & main) {
-                return main.tasc制御中();
+                return main.tasc有効();
             })},
             {L"tascmonitor", パネル出力対象([](const Main & main) {
-                return main.tasc制御中() && main.tasc状態().制御中();
+                return main.tasc有効() && main.tasc状態().制御中();
             })},
             {L"tascbrake", パネル出力対象([](const Main & main) {
-                if (!main.tasc制御中()) {
+                if (!main.tasc有効()) {
                     return 0;
                 }
                 return std::max(-main.tasc状態().出力ノッチ(), 0);
             })},
             {L"atoenabled", パネル出力対象([](const Main & main) {
-                return main.ato制御中();
+                return main.ato有効();
             })},
         };
 
