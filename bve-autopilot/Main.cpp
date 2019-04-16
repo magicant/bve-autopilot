@@ -37,25 +37,22 @@ namespace autopilot
     void Main::リセット(int)
     {
         _状態.リセット();
-        _tasc有効 = _ato有効 = false;
+        _tasc有効 = _ato有効 = true;
     }
 
     void Main::逆転器操作(int ノッチ)
     {
         _状態.逆転器操作(ノッチ);
-        _tasc有効 = _ato有効 = false;
     }
 
     void Main::力行操作(int ノッチ)
     {
         _状態.力行操作(ノッチ);
-        _tasc有効 = _ato有効 = false;
     }
 
     void Main::制動操作(int ノッチ)
     {
         _状態.制動操作(ノッチ);
-        _tasc有効 = _ato有効 = false;
     }
 
     void Main::警笛操作(int)
@@ -97,8 +94,23 @@ namespace autopilot
         case ATS_KEY_K: // Default: 9
             break;
         case ATS_KEY_L: // Default: 0
-            _tasc有効 = _ato有効 = true;
-            _tasc.起動();
+            if (_状態.逆転器ノッチ() == 0 &&
+                _状態.制動ノッチ() > _状態.制動().常用ノッチ数())
+            {
+                // ATO/TASC 有効・無効切り替え
+                if (_ato有効) {
+                    _ato有効 = false;
+                }
+                else if (_tasc有効) {
+                    _tasc有効 = false;
+                }
+                else {
+                    _ato有効 = _tasc有効 = true;
+                }
+            }
+            if (_状態.逆転器ノッチ() > 0 && _状態.制動ノッチ() == 0) {
+                _tasc.起動();
+            }
             break;
         }
     }
