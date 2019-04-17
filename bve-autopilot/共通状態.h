@@ -53,6 +53,7 @@ namespace autopilot {
         void 地上子通過(const ATS_BEACONDATA & 地上子);
         void 経過(const ATS_VEHICLESTATE & 状態);
         void 出力(const ATS_HANDLES & 出力);
+        void 戸閉(bool 戸閉);
         void 逆転器操作(int ノッチ);
         void 力行操作(int ノッチ);
         void 制動操作(int ノッチ);
@@ -66,6 +67,7 @@ namespace autopilot {
             return _制限グラフ群;
         }
         速度型 現在制限速度() const;
+        bool 戸閉() const { return _戸閉; }
         int 逆転器ノッチ() const { return _逆転器ノッチ; }
         int 力行ノッチ() const { return _力行ノッチ; }
         int 制動ノッチ() const { return _制動ノッチ; }
@@ -78,6 +80,7 @@ namespace autopilot {
         ATS_VEHICLESPEC _車両仕様 = {};
         ATS_VEHICLESTATE _状態 = {};
         制限グラフ群型 _制限グラフ群;
+        bool _戸閉 = false;
         int _逆転器ノッチ = 0, _力行ノッチ = 0, _制動ノッチ = 0;
         加速度計 _加速度計;
         制動特性 _制動特性;

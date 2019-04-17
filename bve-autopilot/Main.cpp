@@ -43,16 +43,19 @@ namespace autopilot
     void Main::逆転器操作(int ノッチ)
     {
         _状態.逆転器操作(ノッチ);
+        _tasc.レバー操作(_状態);
     }
 
     void Main::力行操作(int ノッチ)
     {
         _状態.力行操作(ノッチ);
+        _tasc.レバー操作(_状態);
     }
 
     void Main::制動操作(int ノッチ)
     {
         _状態.制動操作(ノッチ);
+        _tasc.レバー操作(_状態);
     }
 
     void Main::警笛操作(int)
@@ -108,9 +111,6 @@ namespace autopilot
                     _ato有効 = _tasc有効 = true;
                 }
             }
-            if (_状態.逆転器ノッチ() > 0 && _状態.制動ノッチ() == 0) {
-                _tasc.起動();
-            }
             break;
         }
     }
@@ -121,11 +121,13 @@ namespace autopilot
 
     void Main::戸閉()
     {
+        _状態.戸閉(true);
+        _tasc.戸閉();
     }
 
     void Main::戸開()
     {
-        _tasc.駅到着();
+        _状態.戸閉(false);
     }
 
     void Main::信号現示変化(int)
