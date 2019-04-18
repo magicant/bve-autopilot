@@ -26,16 +26,15 @@ namespace autopilot
     class ato
     {
     public:
-        ato() : _出力ノッチ(0) { }
-        ~ato() = default;
-
+        void 発進() { _発進中 = true; }
         void 経過(const 共通状態 & 状態);
 
         // 力行は正の値、制動は負の値
         int 出力ノッチ() const { return _出力ノッチ; }
 
     private:
-        int _出力ノッチ;
+        bool _発進中 = false;
+        int _出力ノッチ = 0;
     };
 
 }

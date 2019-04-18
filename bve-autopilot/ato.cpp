@@ -19,12 +19,26 @@
 
 #include "stdafx.h"
 #include "ato.h"
+#include "単位.h"
 
 namespace autopilot
 {
 
     void ato::経過(const 共通状態 & 状態)
     {
+        if (状態.現在速度() > mps_from_kmph(1) ||
+            状態.逆転器ノッチ() <= 0 ||
+            状態.制動ノッチ() > 0 ||
+            !状態.戸閉())
+        {
+            _発進中 = false;
+        }
+        if (!_発進中 && 状態.現在速度() <= mps_from_kmph(0.05)) {
+            // 停車中は制動し続ける
+            _出力ノッチ = -状態.車両仕様().BrakeNotches;
+            return;
+        }
+
         _出力ノッチ = 状態.車両仕様().PowerNotches;
 
         距離型 現在位置 = 状態.現在位置();

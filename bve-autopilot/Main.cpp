@@ -111,6 +111,9 @@ namespace autopilot
                     _ato有効 = _tasc有効 = true;
                 }
             }
+            if (_ato有効) {
+                _ato.発進();
+            }
             break;
         }
     }
