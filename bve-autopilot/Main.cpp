@@ -34,6 +34,11 @@ namespace autopilot
     {
     }
 
+    速度型 Main::現在制限速度() const
+    {
+        return _状態.現在制限速度();
+    }
+
     void Main::リセット(int)
     {
         _状態.リセット();

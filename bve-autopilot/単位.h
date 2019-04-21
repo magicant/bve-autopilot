@@ -40,5 +40,8 @@ namespace autopilot
     constexpr 速度型 mps_from_kmph(double kmph) {
         return kmph / 3.6;
     }
+    constexpr double kmph_from_mps(速度型 mps) {
+        return mps * 3.6;
+    }
 
 }
