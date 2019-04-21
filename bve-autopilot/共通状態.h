@@ -69,6 +69,7 @@ namespace autopilot {
             return _制限グラフ群;
         }
         速度型 現在制限速度() const;
+        速度型 現在常用パターン速度() const;
         bool 戸閉() const { return _戸閉; }
         int 逆転器ノッチ() const { return _逆転器ノッチ; }
         int 力行ノッチ() const { return _力行ノッチ; }

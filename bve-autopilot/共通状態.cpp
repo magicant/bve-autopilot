@@ -113,6 +113,16 @@ namespace autopilot {
         return 制限速度;
     }
 
+    速度型 共通状態::現在常用パターン速度() const
+    {
+        速度型 速度 = std::numeric_limits<速度型>::infinity();
+        for (const 制限グラフ &グラフ : _制限グラフ群) {
+            速度 = std::min(速度,
+                グラフ.パターン速度(現在位置(), _制動特性.常用最大減速度()));
+        }
+        return 速度;
+    }
+
     void 共通状態::制限区間追加(制限グラフ群添字 添字, int 地上子値)
     {
         制限グラフ & グラフ = _制限グラフ群[static_cast<std::size_t>(添字)];

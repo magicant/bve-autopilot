@@ -40,6 +40,7 @@ namespace autopilot
 
         ~減速パターン() = default;
 
+        速度型 単純期待速度(距離型 位置) const;
         std::pair<速度型, 加速度型> 期待速度と期待減速度(距離型 現在位置)
             const;
         int 出力制動ノッチ(
