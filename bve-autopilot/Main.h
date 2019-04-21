@@ -36,6 +36,8 @@ namespace autopilot
         const ato & ato状態() const { return _ato; }
         bool tasc有効() const { return _tasc有効; }
         bool ato有効() const { return _ato有効; }
+        速度型 現在制限速度() const;
+        速度型 現在常用パターン速度() const;
 
         void 車両仕様設定(const ATS_VEHICLESPEC & 車両仕様)
         {

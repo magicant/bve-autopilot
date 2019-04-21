@@ -98,13 +98,29 @@ namespace autopilot {
         _制動ノッチ = ノッチ;
     }
 
+    区間 共通状態::現在範囲() const
+    {
+        return 区間{ _状態.Location - 列車長(), _状態.Location };
+    }
+
     速度型 共通状態::現在制限速度() const
     {
         速度型 制限速度 = std::numeric_limits<速度型>::infinity();
+        区間 列車範囲 = 現在範囲();
         for (const 制限グラフ & グラフ : _制限グラフ群) {
-            制限速度 = std::min(制限速度, グラフ.制限速度(_状態.Location));
+            制限速度 = std::min(制限速度, グラフ.制限速度(列車範囲));
         }
         return 制限速度;
+    }
+
+    速度型 共通状態::現在常用パターン速度() const
+    {
+        速度型 速度 = std::numeric_limits<速度型>::infinity();
+        for (const 制限グラフ &グラフ : _制限グラフ群) {
+            速度 = std::min(速度,
+                グラフ.パターン速度(現在位置(), _制動特性.常用最大減速度()));
+        }
+        return 速度;
     }
 
     void 共通状態::制限区間追加(制限グラフ群添字 添字, int 地上子値)

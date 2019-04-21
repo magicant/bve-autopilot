@@ -190,6 +190,7 @@
     <ClCompile Include="パネル出力.cpp" />
     <ClCompile Include="共通状態.cpp" />
     <ClCompile Include="制限グラフ.cpp" />
+    <ClCompile Include="制限区間.cpp" />
     <ClCompile Include="加速度計.cpp" />
     <ClCompile Include="減速パターン.cpp" />
     <ClCompile Include="環境設定.cpp" />

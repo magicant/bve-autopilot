@@ -20,8 +20,10 @@
 #include "stdafx.h"
 #include "パネル出力.h"
 #include <algorithm>
+#include <cmath>
 #include <unordered_map>
 #include "Main.h"
+#include "単位.h"
 
 namespace autopilot
 {
@@ -51,6 +53,22 @@ namespace autopilot
             })},
             {L"atoenabled", パネル出力対象([](const Main & main) {
                 return main.ato有効();
+            })},
+            {L"speedlimit", パネル出力対象([](const Main & main) {
+                速度型 制限速度 = main.現在制限速度();
+                double 出力 = kmph_from_mps(制限速度);
+                if (!std::isfinite(出力)) {
+                    出力 = -20;
+                }
+                return static_cast<int>(出力);
+            })},
+            {L"speedpattern", パネル出力対象([](const Main & main) {
+                速度型 制限速度 = main.現在常用パターン速度();
+                double 出力 = kmph_from_mps(制限速度) * 100;
+                if (!std::isfinite(出力)) {
+                    出力 = -20.0 * 100;
+                }
+                return static_cast<int>(出力);
             })},
         };
 

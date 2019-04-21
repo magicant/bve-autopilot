@@ -1,4 +1,4 @@
-// 制限区間.h : 列車の速度が制限されている区間を表します
+// 制限区間.cpp : 列車の速度が制限されている区間を表します
 //
 // Copyright © 2019 Watanabe, Yuki
 //
@@ -17,30 +17,20 @@
 // Foundation, Inc.,
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
-#pragma once
-#include "区間.h"
-#include "単位.h"
-#include "減速パターン.h"
+#include "stdafx.h"
+#include "制限区間.h"
+#include <cmath>
 
 namespace autopilot
 {
 
-    struct 制限区間 : 区間
+    減速パターン 制限区間::対応パターン(
+        加速度型 目標減速度, 速度型 速度マージン, 時間型 時間マージン) const
     {
-        速度型 速度;
-
-        制限区間(距離型 始点, 距離型 終点, 速度型 速度) :
-            区間{ 始点, 終点 }, 速度{ 速度 } { }
-        ~制限区間() = default;
-
-        constexpr bool 通過済(距離型 列車最後尾位置) const {
-            return 終点 < 列車最後尾位置;
-        }
-
-        減速パターン 対応パターン(
-            加速度型 目標減速度,
-            速度型 速度マージン = mps_from_kmph(1),
-            時間型 時間マージン = 2) const;
-    };
+        速度型 目標速度 = 速度 - 速度マージン;
+        距離型 距離マージン = 目標速度 * 時間マージン;
+        距離型 目標位置 = 始点 - (std::isnan(距離マージン) ? 0 : 距離マージン);
+        return 減速パターン{ 目標位置, 目標速度, 目標減速度 };
+    }
 
 }
