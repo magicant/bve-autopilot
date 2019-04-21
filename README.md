@@ -21,6 +21,8 @@ Bve trainsim 5.7.6224.40815 で動作確認しています。BVE4 や OpenBVE �
 
 ## 使用法
 
+プラグイン本体は[リリースページ](https://github.com/magicant/bve-autopilot/releases)からダウンロードできます。また[テスト用シナリオ](https://github.com/magicant/bve-autopilot-scenario)にも含まれています。
+
 停止位置や制限速度をプラグインに伝えるために、[所定の地上子](https://github.com/magicant/bve-autopilot/wiki/%E5%9C%B0%E4%B8%8A%E5%AD%90%E4%BB%95%E6%A7%98)を路線に配置する必要があります。
 
 保安装置 L のキー (デフォルトはテンキーでない方の `0`) でプラグインの状態を切り替えます。
