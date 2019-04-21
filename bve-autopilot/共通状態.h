@@ -23,6 +23,7 @@
 #include "制限グラフ.h"
 #include "制限区間.h"
 #include "加速度計.h"
+#include "区間.h"
 #include "単位.h"
 #include "環境設定.h"
 
@@ -62,6 +63,7 @@ namespace autopilot {
         const ATS_VEHICLESPEC & 車両仕様() const { return _車両仕様; }
         距離型 列車長() const { return _設定.車両長() * _車両仕様.Cars; }
         距離型 現在位置() const { return _状態.Location; }
+        区間 現在範囲() const;
         速度型 現在速度() const { return mps_from_kmph(_状態.Speed); }
         const 制限グラフ群型 & 制限グラフ群() const {
             return _制限グラフ群;
