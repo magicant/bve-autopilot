@@ -39,7 +39,7 @@ namespace autopilot
 
         減速パターン 対応パターン(
             加速度型 目標減速度,
-            速度型 速度マージン = mps_from_kmph(1),
+            速度型 速度マージン = mps_from_kmph(0.5),
             時間型 時間マージン = 2) const;
     };
 
