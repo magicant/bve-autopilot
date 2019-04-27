@@ -19,6 +19,7 @@
 
 #pragma once
 #include "単位.h"
+#include <algorithm>
 
 namespace autopilot
 {
@@ -26,6 +27,10 @@ namespace autopilot
     struct 区間
     {
         距離型 始点, 終点;
+
+        constexpr 距離型 長さ() const {
+            return 終点 - 始点;
+        }
 
         constexpr bool 含む(距離型 点) const {
             return 始点 <= 点 && 点 <= 終点;
@@ -42,6 +47,10 @@ namespace autopilot
 
     constexpr bool 重なる(const 区間 & 区間1, const 区間 & 区間2) {
         return 区間1.始点 <= 区間2.終点 && 区間2.始点 <= 区間1.終点;
+    }
+    constexpr 区間 重なり(const 区間 &区間1, const 区間 &区間2) {
+        return { std::max(区間1.始点, 区間2.始点),
+            std::min(区間1.終点, 区間2.終点) };
     }
 
 }
