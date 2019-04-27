@@ -53,7 +53,7 @@ namespace autopilot
     {
         // 通過済みの区間を消す
         _区間リスト.remove_if([位置](const 制限区間 & 区間) {
-            return 区間.終点 < 位置;
+            return 区間.通過済(位置);
         });
     }
 

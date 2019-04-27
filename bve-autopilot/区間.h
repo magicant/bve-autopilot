@@ -33,6 +33,11 @@ namespace autopilot
         constexpr bool 空である() const {
             return 始点 >= 終点;
         }
+
+        constexpr bool 通過済(距離型 列車最後尾位置) const {
+            return 終点 < 列車最後尾位置;
+        }
+
     };
 
     constexpr bool 重なる(const 区間 & 区間1, const 区間 & 区間2) {

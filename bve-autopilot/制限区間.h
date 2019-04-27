@@ -33,10 +33,6 @@ namespace autopilot
             区間{ 始点, 終点 }, 速度{ 速度 } { }
         ~制限区間() = default;
 
-        constexpr bool 通過済(距離型 列車最後尾位置) const {
-            return 終点 < 列車最後尾位置;
-        }
-
         減速パターン 対応パターン(
             加速度型 目標減速度,
             速度型 速度マージン = mps_from_kmph(0.5),
