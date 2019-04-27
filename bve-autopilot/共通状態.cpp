@@ -35,6 +35,7 @@ namespace autopilot {
             グラフ.消去();
         }
         _加速度計.リセット();
+        _勾配特性.消去();
     }
 
     void 共通状態::車両仕様設定(const ATS_VEHICLESPEC & 仕様)
@@ -56,6 +57,9 @@ namespace autopilot {
             break;
         case 1007: // 制限速度設定
             制限区間追加(制限グラフ群添字::汎用1007, 地上子.Optional);
+            break;
+        case 1008: // 勾配設定
+            勾配追加(地上子.Optional);
             break;
         }
     }
@@ -135,6 +139,12 @@ namespace autopilot {
         }
 
         グラフ.制限区間追加(位置, 速度);
+    }
+
+    void 共通状態::勾配追加(int 地上子値)
+    {
+        double 勾配 = 地上子値 * 0.001;
+        _勾配特性.勾配区間追加(現在位置(), 勾配);
     }
 
 }

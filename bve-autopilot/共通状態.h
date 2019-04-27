@@ -23,6 +23,7 @@
 #include "制限グラフ.h"
 #include "制限区間.h"
 #include "加速度計.h"
+#include "勾配特性.h"
 #include "区間.h"
 #include "単位.h"
 #include "環境設定.h"
@@ -76,6 +77,7 @@ namespace autopilot {
         int 制動ノッチ() const { return _制動ノッチ; }
         加速度型 加速度() const { return _加速度計.加速度(); }
         const 制動特性 & 制動() const { return _制動特性; }
+        const 勾配特性 &勾配() const { return _勾配特性; }
         const ATS_HANDLES & 前回出力() const { return _前回出力; }
 
     private:
@@ -87,9 +89,11 @@ namespace autopilot {
         int _逆転器ノッチ = 0, _力行ノッチ = 0, _制動ノッチ = 0;
         加速度計 _加速度計;
         制動特性 _制動特性;
+        勾配特性 _勾配特性;
         ATS_HANDLES _前回出力 = {};
 
         void 制限区間追加(制限グラフ群添字 添字, int 地上子値);
+        void 勾配追加(int 地上子値);
     };
 
 }
