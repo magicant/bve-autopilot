@@ -44,7 +44,8 @@ namespace autopilot
         std::pair<速度型, 加速度型> 期待速度と期待減速度(距離型 現在位置)
             const;
         int 出力制動ノッチ(
-            距離型 現在位置, 速度型 現在速度, const 制動特性 & 制動) const;
+            距離型 現在位置, 速度型 現在速度, const 制動特性 & 制動,
+            加速度型 勾配影響) const;
         int 出力ノッチ(
             距離型 現在位置, 速度型 現在速度, const 共通状態 & 状態) const;
 

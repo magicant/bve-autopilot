@@ -78,6 +78,7 @@ namespace autopilot {
         加速度型 加速度() const { return _加速度計.加速度(); }
         const 制動特性 & 制動() const { return _制動特性; }
         const 勾配特性 &勾配() const { return _勾配特性; }
+        加速度型 勾配加速度() const;
         const ATS_HANDLES & 前回出力() const { return _前回出力; }
 
     private:

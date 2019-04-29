@@ -127,6 +127,11 @@ namespace autopilot {
         return 速度;
     }
 
+    加速度型 共通状態::勾配加速度() const
+    {
+        return _勾配特性.勾配加速度(現在範囲());
+    }
+
     void 共通状態::制限区間追加(制限グラフ群添字 添字, int 地上子値)
     {
         制限グラフ & グラフ = _制限グラフ群[static_cast<std::size_t>(添字)];
