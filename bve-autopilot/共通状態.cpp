@@ -19,6 +19,7 @@
 
 #include "stdafx.h"
 #include <algorithm>
+#include <cstdlib>
 #include <limits>
 #include "共通状態.h"
 #include "単位.h"
@@ -152,8 +153,19 @@ namespace autopilot {
 
     void 共通状態::勾配追加(int 地上子値)
     {
-        double 勾配 = 地上子値 * 0.001;
-        _勾配特性.勾配区間追加(現在位置(), 勾配);
+        if (地上子値 < -std::numeric_limits<int>::max()) {
+            return; // std::abs でのオーバーフローを防止
+        }
+
+        bool 下り = 地上子値 < 0;
+        地上子値 = std::abs(地上子値);
+
+        double 距離 = 地上子値 / 1000;
+        double 勾配 = (地上子値 % 1000) * 0.001;
+        if (下り) {
+            勾配 = -勾配;
+        }
+        _勾配特性.勾配区間追加(現在位置() + 距離, 勾配);
     }
 
 }
