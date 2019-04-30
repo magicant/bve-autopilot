@@ -33,11 +33,6 @@ namespace autopilot
 
         constexpr 加速度型 重力加速度 = 9.80665; // m/s/s
 
-        double sin_from_tan(double tan) {
-            double sin絶対値 = std::sqrt(1 - 1 / (1 + tan * tan));
-            return tan >= 0 ? sin絶対値 : -sin絶対値;
-        }
-
     }
 
     struct 勾配特性::勾配区間 : 区間
@@ -48,7 +43,8 @@ namespace autopilot
         勾配区間(距離型 始点, 距離型 終点, double 勾配) :
             区間{ 始点, 終点 },
             勾配{ 勾配 },
-            影響加速度{ -sin_from_tan(勾配) * 重力加速度 } { }
+            影響加速度{ -0.75 * 重力加速度 * 勾配 } { }
+        // 本当は tan を sin に変換すべきだがほとんど違わないので無視する
 
     };
 
