@@ -32,9 +32,6 @@ namespace autopilot {
     {
         // _設定.リセット(); // ファイルから読み込むのでリセットしない
         _状態 = ATS_VEHICLESTATE{};
-        for (制限グラフ & グラフ : _制限グラフ群) {
-            グラフ.消去();
-        }
         _加速度計.リセット();
         _勾配特性.消去();
     }
@@ -53,12 +50,6 @@ namespace autopilot {
     {
         switch (地上子.Type)
         {
-        case 1006: // 制限速度設定
-            制限区間追加(制限グラフ群添字::汎用1006, 地上子.Optional);
-            break;
-        case 1007: // 制限速度設定
-            制限区間追加(制限グラフ群添字::汎用1007, 地上子.Optional);
-            break;
         case 1008: // 勾配設定
             勾配追加(地上子.Optional);
             break;
@@ -69,12 +60,6 @@ namespace autopilot {
     {
         double 時刻 = s_from_ms(状態.Time);
         _状態 = 状態;
-
-        距離型 最後尾 = 状態.Location - 列車長();
-        for (制限グラフ & グラフ : _制限グラフ群) {
-            グラフ.通過(最後尾);
-        }
-
         _加速度計.経過({ mps_from_kmph(状態.Speed), 時刻 });
     }
 
@@ -108,25 +93,6 @@ namespace autopilot {
         return 区間{ _状態.Location - 列車長(), _状態.Location };
     }
 
-    速度型 共通状態::現在制限速度() const
-    {
-        速度型 制限速度 = std::numeric_limits<速度型>::infinity();
-        区間 列車範囲 = 現在範囲();
-        for (const 制限グラフ & グラフ : _制限グラフ群) {
-            制限速度 = std::min(制限速度, グラフ.制限速度(列車範囲));
-        }
-        return 制限速度;
-    }
-
-    速度型 共通状態::現在常用パターン速度() const
-    {
-        速度型 速度 = std::numeric_limits<速度型>::infinity();
-        for (const 制限グラフ &グラフ : _制限グラフ群) {
-            速度 = std::min(速度, グラフ.現在常用パターン速度(*this));
-        }
-        return 速度;
-    }
-
     加速度型 共通状態::進路勾配加速度(距離型 目標位置) const
     {
         return _勾配特性.勾配加速度({ 現在位置(), 目標位置 });
@@ -135,20 +101,6 @@ namespace autopilot {
     加速度型 共通状態::車両勾配加速度() const
     {
         return _勾配特性.勾配加速度(現在範囲());
-    }
-
-    void 共通状態::制限区間追加(制限グラフ群添字 添字, int 地上子値)
-    {
-        制限グラフ & グラフ = _制限グラフ群[static_cast<std::size_t>(添字)];
-        距離型 距離 = 地上子値 / 1000;
-        速度型 速度 = mps_from_kmph(地上子値 % 1000);
-        距離型 位置 = _状態.Location + 距離;
-
-        if (速度 == 0) {
-            速度 = std::numeric_limits<速度型>::infinity();
-        }
-
-        グラフ.制限区間追加(位置, 速度);
     }
 
     void 共通状態::勾配追加(int 地上子値)

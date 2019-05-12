@@ -36,17 +36,18 @@ namespace autopilot
 
     速度型 Main::現在制限速度() const
     {
-        return _状態.現在制限速度();
+        return _ato.現在制限速度(_状態);
     }
 
     速度型 Main::現在常用パターン速度() const
     {
-        return _状態.現在常用パターン速度();
+        return _ato.現在常用パターン速度(_状態);
     }
 
     void Main::リセット(int)
     {
         _状態.リセット();
+        _ato.リセット();
         _tasc有効 = _ato有効 = true;
     }
 
@@ -151,6 +152,7 @@ namespace autopilot
     {
         _状態.地上子通過(地上子);
         _tasc.地上子通過(地上子, _状態);
+        _ato.地上子通過(地上子, _状態);
     }
 
     ATS_HANDLES Main::経過(

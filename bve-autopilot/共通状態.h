@@ -18,9 +18,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
-#include <array>
 #include "制動特性.h"
-#include "制限グラフ.h"
 #include "制限区間.h"
 #include "加速度計.h"
 #include "勾配特性.h"
@@ -36,17 +34,6 @@ namespace autopilot {
     class 共通状態
     {
     public:
-        enum class 制限グラフ群添字
-        {
-            汎用1006,
-            汎用1007,
-            N,
-        };
-
-        using 制限グラフ群型 = std::array<
-            制限グラフ,
-            static_cast<std::size_t>(制限グラフ群添字::N)>;
-
         void リセット();
         void 設定ファイル読込(LPCWSTR 設定ファイル名) {
             _設定.ファイル読込(設定ファイル名);
@@ -66,11 +53,6 @@ namespace autopilot {
         距離型 現在位置() const { return _状態.Location; }
         区間 現在範囲() const;
         速度型 現在速度() const { return mps_from_kmph(_状態.Speed); }
-        const 制限グラフ群型 & 制限グラフ群() const {
-            return _制限グラフ群;
-        }
-        速度型 現在制限速度() const;
-        速度型 現在常用パターン速度() const;
         bool 戸閉() const { return _戸閉; }
         int 逆転器ノッチ() const { return _逆転器ノッチ; }
         int 力行ノッチ() const { return _力行ノッチ; }
@@ -86,7 +68,6 @@ namespace autopilot {
         環境設定 _設定;
         ATS_VEHICLESPEC _車両仕様 = {};
         ATS_VEHICLESTATE _状態 = {};
-        制限グラフ群型 _制限グラフ群;
         bool _戸閉 = false;
         int _逆転器ノッチ = 0, _力行ノッチ = 0, _制動ノッチ = 0;
         加速度計 _加速度計;
@@ -94,7 +75,6 @@ namespace autopilot {
         勾配特性 _勾配特性;
         ATS_HANDLES _前回出力 = {};
 
-        void 制限区間追加(制限グラフ群添字 添字, int 地上子値);
         void 勾配追加(int 地上子値);
     };
 
