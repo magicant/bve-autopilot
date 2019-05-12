@@ -123,6 +123,8 @@ namespace autopilot
             {111, mps_from_kmph(110)},
             {112, mps_from_kmph(120)},
         };
+
+        _現在閉塞 = _次閉塞 = 閉塞型{};
     }
 
     void ato::地上子通過(const ATS_BEACONDATA &地上子, const 共通状態 &状態)
@@ -139,7 +141,18 @@ namespace autopilot
             信号速度設定(_信号速度表, 地上子.Optional);
             break;
         case 1012: // 信号現示受信
-            //TODO
+            if (地上子.Distance > 0) {
+                if (_次閉塞.始点 < 状態.現在位置()) {
+                    _現在閉塞 = _次閉塞;
+                }
+                _次閉塞.状態更新(地上子, 状態, _信号速度表);
+            }
+            else {
+                _現在閉塞.状態更新(地上子, 状態, _信号速度表);
+                if (_次閉塞.始点 < 状態.現在位置()) {
+                    _次閉塞 = 閉塞型{};
+                }
+            }
             break;
         }
     }
@@ -185,6 +198,20 @@ namespace autopilot
         return std::min(
             _制限速度1006.現在常用パターン速度(状態),
             _制限速度1007.現在常用パターン速度(状態));
+    }
+
+    void ato::閉塞型::状態更新(
+        const ATS_BEACONDATA &地上子,
+        const 共通状態 &状態,
+        const std::map<信号インデックス, 速度型> 速度表)
+    {
+        信号指示 = 地上子.Signal;
+        始点 = 状態.現在位置() + 地上子.Distance;
+
+        auto i = 速度表.find(信号指示);
+        if (i != 速度表.end()) {
+            信号速度 = i->second;
+        }
     }
 
 }

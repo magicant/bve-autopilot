@@ -18,6 +18,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include <limits>
 #include <map>
 #include "制限グラフ.h"
 #include "単位.h"
@@ -44,8 +45,20 @@ namespace autopilot
         int 出力ノッチ() const { return _出力ノッチ; }
 
     private:
+        struct 閉塞型 {
+            信号インデックス 信号指示 = 0;
+            速度型 信号速度 = std::numeric_limits<速度型>::infinity();
+            距離型 始点 = std::numeric_limits<距離型>::infinity();
+
+            void 状態更新(
+                const ATS_BEACONDATA &地上子,
+                const 共通状態 &状態,
+                const std::map<信号インデックス, 速度型> 速度表);
+        };
+
         制限グラフ _制限速度1006, _制限速度1007;
         std::map<信号インデックス, 速度型> _信号速度表;
+        閉塞型 _現在閉塞, _次閉塞;
         bool _発進中 = false;
         int _出力ノッチ = 0;
     };
