@@ -43,12 +43,86 @@ namespace autopilot
             グラフ.制限区間追加(位置, 速度);
         }
 
+        void 信号速度設定(
+            std::map<ato::信号インデックス, 速度型> &速度表, int 地上子値)
+        {
+            ato::信号インデックス 指示 = 地上子値 / 1000;
+            if (指示 < 0 || 256 <= 指示) {
+                return;
+            }
+
+            速度型 速度 = mps_from_kmph(地上子値 % 1000);
+            速度表[指示] = 速度;
+        }
+
     }
 
     void ato::リセット()
     {
         _制限速度1006.消去();
         _制限速度1007.消去();
+
+        _信号速度表 = {
+            {0, mps_from_kmph(0)},
+            {1, mps_from_kmph(25)},
+            {2, mps_from_kmph(40)},
+            {3, mps_from_kmph(65)},
+            {4, mps_from_kmph(85)},
+            {5, mps_from_kmph(160)},
+            {9, mps_from_kmph(0)},
+            {10, mps_from_kmph(0)},
+            {11, mps_from_kmph(10)},
+            {12, mps_from_kmph(10)},
+            {13, mps_from_kmph(15)},
+            {14, mps_from_kmph(20)},
+            {15, mps_from_kmph(25)},
+            {16, mps_from_kmph(30)},
+            {17, mps_from_kmph(35)},
+            {18, mps_from_kmph(40)},
+            {19, mps_from_kmph(45)},
+            {20, mps_from_kmph(50)},
+            {21, mps_from_kmph(55)},
+            {22, mps_from_kmph(60)},
+            {23, mps_from_kmph(65)},
+            {24, mps_from_kmph(70)},
+            {25, mps_from_kmph(75)},
+            {26, mps_from_kmph(80)},
+            {27, mps_from_kmph(85)},
+            {28, mps_from_kmph(90)},
+            {29, mps_from_kmph(95)},
+            {30, mps_from_kmph(100)},
+            {31, mps_from_kmph(105)},
+            {32, mps_from_kmph(110)},
+            {33, mps_from_kmph(120)},
+            {36, mps_from_kmph(0)},
+            {39, mps_from_kmph(45)},
+            {40, mps_from_kmph(40)},
+            {41, mps_from_kmph(35)},
+            {42, mps_from_kmph(30)},
+            {43, mps_from_kmph(25)},
+            {44, mps_from_kmph(20)},
+            {45, mps_from_kmph(15)},
+            {46, mps_from_kmph(10)},
+            {47, mps_from_kmph(10)},
+            {48, mps_from_kmph(01)},
+            {50, mps_from_kmph(0)},
+            {51, mps_from_kmph(25)},
+            {52, mps_from_kmph(40)},
+            {53, mps_from_kmph(65)},
+            {54, mps_from_kmph(100)},
+            {101, mps_from_kmph(0)},
+            {102, mps_from_kmph(0)},
+            {103, mps_from_kmph(15)},
+            {104, mps_from_kmph(25)},
+            {105, mps_from_kmph(45)},
+            {106, mps_from_kmph(55)},
+            {107, mps_from_kmph(65)},
+            {108, mps_from_kmph(75)},
+            {109, mps_from_kmph(90)},
+            {110, mps_from_kmph(100)},
+            {111, mps_from_kmph(110)},
+            {112, mps_from_kmph(120)},
+        };
     }
 
     void ato::地上子通過(const ATS_BEACONDATA &地上子, const 共通状態 &状態)
@@ -60,6 +134,12 @@ namespace autopilot
             break;
         case 1007: // 制限速度設定
             制限区間追加(_制限速度1007, 地上子.Optional, 状態);
+            break;
+        case 1011: // 信号速度設定
+            信号速度設定(_信号速度表, 地上子.Optional);
+            break;
+        case 1012: // 信号現示受信
+            //TODO
             break;
         }
     }

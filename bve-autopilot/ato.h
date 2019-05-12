@@ -18,6 +18,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include <map>
 #include "制限グラフ.h"
 #include "単位.h"
 
@@ -29,6 +30,8 @@ namespace autopilot
     class ato
     {
     public:
+        using 信号インデックス = int;
+
         void リセット();
         void 発進() { _発進中 = true; }
         void 地上子通過(const ATS_BEACONDATA &地上子, const 共通状態 &状態);
@@ -42,6 +45,7 @@ namespace autopilot
 
     private:
         制限グラフ _制限速度1006, _制限速度1007;
+        std::map<信号インデックス, 速度型> _信号速度表;
         bool _発進中 = false;
         int _出力ノッチ = 0;
     };
