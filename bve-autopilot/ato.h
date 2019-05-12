@@ -35,6 +35,7 @@ namespace autopilot
 
         void リセット();
         void 発進() { _発進中 = true; }
+        void 信号現示変化(信号インデックス 指示, const 共通状態 &状態);
         void 地上子通過(const ATS_BEACONDATA &地上子, const 共通状態 &状態);
         void 経過(const 共通状態 & 状態);
 
@@ -50,6 +51,9 @@ namespace autopilot
             速度型 信号速度 = std::numeric_limits<速度型>::infinity();
             距離型 始点 = std::numeric_limits<距離型>::infinity();
 
+            void 信号指示設定(
+                信号インデックス 指示,
+                const std::map<信号インデックス, 速度型> 速度表);
             void 状態更新(
                 const ATS_BEACONDATA &地上子,
                 const 共通状態 &状態,
