@@ -47,7 +47,8 @@ namespace autopilot
         // 力行は正の値、制動は負の値
         int 出力ノッチ(
             距離型 現在位置, 速度型 現在速度, const 共通状態 & 状態,
-            速度型 速度マージン = mps_from_kmph(0.5)) const;
+            時間型 時間マージン = 2, 速度型 速度マージン = mps_from_kmph(0.5))
+            const;
 
     private:
         std::forward_list<制限区間> _区間リスト;
