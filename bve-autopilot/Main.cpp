@@ -30,7 +30,8 @@ namespace autopilot
         _tasc{},
         _ato{},
         _tasc有効{false},
-        _ato有効{false}
+        _ato有効{false},
+        _通過済地上子{}
     {
     }
 
@@ -151,15 +152,28 @@ namespace autopilot
 
     void Main::地上子通過(const ATS_BEACONDATA & 地上子)
     {
-        _状態.地上子通過(地上子);
-        _tasc.地上子通過(地上子, _状態);
-        _ato.地上子通過(地上子, _状態);
+        if (_状態.現在速度() == 0) {
+            // 「停車場へ移動」の時は、移動先地点までの地上子をそれぞれ
+            // 通過するがまだ経過メソッドが呼ばれていないので位置計算が
+            // 狂う。通過メソッドが呼ばれるまで地上子を処理せず溜めておく。
+            _通過済地上子.push_back(地上子);
+        }
+        else
+        {
+            地上子通過執行(地上子);
+        }
     }
 
     ATS_HANDLES Main::経過(
         const ATS_VEHICLESTATE & 状態, int * 出力値, int *)
     {
         _状態.経過(状態);
+        for (const ATS_BEACONDATA &地上子 : _通過済地上子) {
+            地上子通過執行(地上子);
+        }
+        _通過済地上子.clear();
+        _通過済地上子.shrink_to_fit();
+
         _tasc.経過(_状態);
         _ato.経過(_状態, _tasc);
 
@@ -202,6 +216,13 @@ namespace autopilot
         }
 
         return ハンドル位置;
+    }
+
+    void Main::地上子通過執行(const ATS_BEACONDATA &地上子)
+    {
+        _状態.地上子通過(地上子);
+        _tasc.地上子通過(地上子, _状態);
+        _ato.地上子通過(地上子, _状態);
     }
 
 }

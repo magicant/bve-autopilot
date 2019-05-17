@@ -18,6 +18,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include <vector>
 #include "共通状態.h"
 #include "ato.h"
 #include "tasc.h"
@@ -68,6 +69,9 @@ namespace autopilot
         tasc _tasc;
         ato _ato;
         bool _tasc有効, _ato有効;
+        std::vector<ATS_BEACONDATA> _通過済地上子;
+
+        void 地上子通過執行(const ATS_BEACONDATA &地上子);
     };
 
 }
