@@ -20,6 +20,8 @@
 #include "stdafx.h"
 #include "ato.h"
 #include <algorithm>
+#include <limits>
+#include "tasc.h"
 #include "共通状態.h"
 #include "単位.h"
 
@@ -170,7 +172,7 @@ namespace autopilot
         }
     }
 
-    void ato::経過(const 共通状態 & 状態)
+    void ato::経過(const 共通状態 &状態, const tasc &tasc)
     {
         距離型 最後尾 = 状態.現在位置() - 状態.列車長();
         _制限速度1006.通過(最後尾);
@@ -195,11 +197,12 @@ namespace autopilot
             return;
         }
 
+        距離型 停止マージン = tasc.目標停止位置() < 停止信号位置() ? 0 : 51;
         _出力ノッチ = std::min({
             状態.車両仕様().PowerNotches,
             _制限速度1006.出力ノッチ(状態),
             _制限速度1007.出力ノッチ(状態),
-            _信号グラフ.出力ノッチ(状態, 5, 51),
+            _信号グラフ.出力ノッチ(状態, 5, 停止マージン),
             });
     }
 
@@ -229,6 +232,17 @@ namespace autopilot
             _信号グラフ.制限区間追加(_現在閉塞.始点, _現在閉塞.信号速度);
         }
         _信号グラフ.制限区間追加(_次閉塞.始点, _次閉塞.信号速度);
+    }
+
+    距離型 ato::停止信号位置() const
+    {
+        if (_現在閉塞.信号速度 == 0) {
+            return _現在閉塞.始点;
+        }
+        if (_次閉塞.信号速度 == 0) {
+            return _次閉塞.始点;
+        }
+        return std::numeric_limits<距離型>::infinity();
     }
 
     void ato::閉塞型::信号指示設定(

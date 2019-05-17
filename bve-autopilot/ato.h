@@ -26,6 +26,7 @@
 namespace autopilot
 {
 
+    class tasc;
     class 共通状態;
 
     class ato
@@ -37,7 +38,7 @@ namespace autopilot
         void 発進() { _発進中 = true; }
         void 信号現示変化(信号インデックス 指示, const 共通状態 &状態);
         void 地上子通過(const ATS_BEACONDATA &地上子, const 共通状態 &状態);
-        void 経過(const 共通状態 & 状態);
+        void 経過(const 共通状態 &状態, const tasc &tasc);
 
         速度型 現在制限速度(const 共通状態 &状態) const;
         速度型 現在常用パターン速度(const 共通状態 &状態) const;
@@ -67,6 +68,8 @@ namespace autopilot
         int _出力ノッチ = 0;
 
         void 信号グラフ再計算(const 共通状態 &状態);
+
+        距離型 停止信号位置() const;
     };
 
 }

@@ -161,7 +161,7 @@ namespace autopilot
     {
         _状態.経過(状態);
         _tasc.経過(_状態);
-        _ato.経過(_状態);
+        _ato.経過(_状態, _tasc);
 
         // TASC と ATO の出力ノッチをまとめる
         int 力行 = -1, 制動 = -1;
