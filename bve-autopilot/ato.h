@@ -35,7 +35,7 @@ namespace autopilot
         using 信号インデックス = int;
 
         void リセット();
-        void 発進() { _発進中 = true; }
+        void 発進(const 共通状態 & 状態);
         void 信号現示変化(信号インデックス 指示, const 共通状態 &状態);
         void 地上子通過(const ATS_BEACONDATA &地上子, const 共通状態 &状態);
         void 経過(const 共通状態 &状態, const tasc &tasc);

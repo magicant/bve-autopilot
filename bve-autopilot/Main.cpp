@@ -123,7 +123,7 @@ namespace autopilot
                 }
             }
             if (_ato有効) {
-                _ato.発進();
+                _ato.発進(_状態);
             }
             break;
         }

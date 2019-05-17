@@ -130,6 +130,15 @@ namespace autopilot
         _信号グラフ.消去();
     }
 
+    void ato::発進(const 共通状態 &状態)
+    {
+        _発進中 = true;
+
+        _現在閉塞.信号速度 = std::max(_現在閉塞.信号速度, mps_from_kmph(10));
+        _次閉塞.信号速度 = std::max(_次閉塞.信号速度, mps_from_kmph(10));
+        信号グラフ再計算(状態);
+    }
+
     void ato::信号現示変化(信号インデックス 指示, const 共通状態 &状態)
     {
         if (状態.現在位置() >= _次閉塞.始点) {
