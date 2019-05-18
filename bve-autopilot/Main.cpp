@@ -30,23 +30,25 @@ namespace autopilot
         _tasc{},
         _ato{},
         _tasc有効{false},
-        _ato有効{false}
+        _ato有効{false},
+        _通過済地上子{}
     {
     }
 
     速度型 Main::現在制限速度() const
     {
-        return _状態.現在制限速度();
+        return _ato.現在制限速度(_状態);
     }
 
     速度型 Main::現在常用パターン速度() const
     {
-        return _状態.現在常用パターン速度();
+        return _ato.現在常用パターン速度(_状態);
     }
 
     void Main::リセット(int)
     {
         _状態.リセット();
+        _ato.リセット();
         _tasc有効 = _ato有効 = true;
     }
 
@@ -122,7 +124,7 @@ namespace autopilot
                 }
             }
             if (_ato有効) {
-                _ato.発進();
+                _ato.発進(_状態);
             }
             break;
         }
@@ -143,22 +145,37 @@ namespace autopilot
         _状態.戸閉(false);
     }
 
-    void Main::信号現示変化(int)
+    void Main::信号現示変化(int 信号指示)
     {
+        _ato.信号現示変化(信号指示, _状態);
     }
 
     void Main::地上子通過(const ATS_BEACONDATA & 地上子)
     {
-        _状態.地上子通過(地上子);
-        _tasc.地上子通過(地上子, _状態);
+        if (_状態.現在速度() == 0) {
+            // 「停車場へ移動」の時は、移動先地点までの地上子をそれぞれ
+            // 通過するがまだ経過メソッドが呼ばれていないので位置計算が
+            // 狂う。通過メソッドが呼ばれるまで地上子を処理せず溜めておく。
+            _通過済地上子.push_back(地上子);
+        }
+        else
+        {
+            地上子通過執行(地上子);
+        }
     }
 
     ATS_HANDLES Main::経過(
         const ATS_VEHICLESTATE & 状態, int * 出力値, int *)
     {
         _状態.経過(状態);
+        for (const ATS_BEACONDATA &地上子 : _通過済地上子) {
+            地上子通過執行(地上子);
+        }
+        _通過済地上子.clear();
+        _通過済地上子.shrink_to_fit();
+
         _tasc.経過(_状態);
-        _ato.経過(_状態);
+        _ato.経過(_状態, _tasc);
 
         // TASC と ATO の出力ノッチをまとめる
         int 力行 = -1, 制動 = -1;
@@ -199,6 +216,13 @@ namespace autopilot
         }
 
         return ハンドル位置;
+    }
+
+    void Main::地上子通過執行(const ATS_BEACONDATA &地上子)
+    {
+        _状態.地上子通過(地上子);
+        _tasc.地上子通過(地上子, _状態);
+        _ato.地上子通過(地上子, _状態);
     }
 
 }

@@ -18,6 +18,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include <vector>
 #include "共通状態.h"
 #include "ato.h"
 #include "tasc.h"
@@ -58,7 +59,7 @@ namespace autopilot
         void 戸閉();
         void 戸開();
 
-        void 信号現示変化(int 現示);
+        void 信号現示変化(int 信号指示);
         void 地上子通過(const ATS_BEACONDATA & 地上子);
 
         ATS_HANDLES 経過(const ATS_VEHICLESTATE & 状態, int * 出力値, int * 音声状態);
@@ -68,6 +69,9 @@ namespace autopilot
         tasc _tasc;
         ato _ato;
         bool _tasc有効, _ato有効;
+        std::vector<ATS_BEACONDATA> _通過済地上子;
+
+        void 地上子通過執行(const ATS_BEACONDATA &地上子);
     };
 
 }

@@ -35,6 +35,7 @@ namespace autopilot {
         void 地上子通過(const ATS_BEACONDATA & 地上子, const 共通状態 & 状態);
         void 経過(const 共通状態 & 状態);
 
+        距離型 目標停止位置() const { return _目標停止位置; }
         bool 制御中() const;
 
         // 力行は正の値、制動は負の値
