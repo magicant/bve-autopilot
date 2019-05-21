@@ -51,6 +51,7 @@ namespace autopilot
             信号インデックス 信号指示 = 0;
             速度型 信号速度 = std::numeric_limits<速度型>::infinity();
             距離型 始点 = std::numeric_limits<距離型>::infinity();
+            int 信号インデックス一覧 = 0; // 信号現示受信地上子の値
 
             void 信号指示設定(
                 信号インデックス 指示,
@@ -67,6 +68,7 @@ namespace autopilot
         bool _発進中 = false;
         int _出力ノッチ = 0;
 
+        void 次閉塞指示を推定();
         void 信号グラフ再計算(const 共通状態 &状態);
 
         距離型 停止信号位置() const;
