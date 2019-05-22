@@ -34,9 +34,12 @@ namespace autopilot
     public:
         using 信号インデックス = int;
 
+        ato();
+        ~ato();
+
         void リセット();
-        void 発進(const 共通状態 & 状態);
-        void 信号現示変化(信号インデックス 指示, const 共通状態 &状態);
+        void 発進();
+        void 信号現示変化(信号インデックス 指示);
         void 地上子通過(const ATS_BEACONDATA &地上子, const 共通状態 &状態);
         void 経過(const 共通状態 &状態, const tasc &tasc);
 
@@ -52,6 +55,8 @@ namespace autopilot
             速度型 信号速度 = std::numeric_limits<速度型>::infinity();
             距離型 始点 = std::numeric_limits<距離型>::infinity();
 
+            bool 通過済(距離型 位置) const { return 始点 < 位置; }
+
             void 信号指示設定(
                 信号インデックス 指示,
                 const std::map<信号インデックス, 速度型> 速度表);
@@ -59,15 +64,17 @@ namespace autopilot
                 const ATS_BEACONDATA &地上子,
                 const 共通状態 &状態,
                 const std::map<信号インデックス, 速度型> 速度表);
+            void 統合(const 閉塞型 &統合元);
         };
 
         制限グラフ _制限速度1006, _制限速度1007, _信号グラフ;
         std::map<信号インデックス, 速度型> _信号速度表;
-        閉塞型 _現在閉塞, _次閉塞;
+        閉塞型 _現在閉塞;
+        std::map<距離型, 閉塞型> _前方閉塞一覧;
         bool _発進中 = false;
         int _出力ノッチ = 0;
 
-        void 信号グラフ再計算(const 共通状態 &状態);
+        void 信号グラフ再計算();
 
         距離型 停止信号位置() const;
     };
