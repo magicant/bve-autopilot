@@ -54,8 +54,10 @@ namespace autopilot
             信号インデックス 信号指示 = 0;
             速度型 信号速度 = std::numeric_limits<速度型>::infinity();
             距離型 始点 = std::numeric_limits<距離型>::infinity();
+            int 信号インデックス一覧 = 0; // 信号現示受信地上子の値
 
             bool 通過済(距離型 位置) const { return 始点 < 位置; }
+            int 先行列車位置() const;
 
             void 信号指示設定(
                 信号インデックス 指示,
@@ -65,6 +67,8 @@ namespace autopilot
                 const 共通状態 &状態,
                 const std::map<信号インデックス, 速度型> &速度表);
             void 統合(const 閉塞型 &統合元);
+            void 先行列車位置から信号指示を推定(
+                int 閉塞数, const std::map<信号インデックス, 速度型> &速度表);
         };
 
         制限グラフ _制限速度1006, _制限速度1007, _信号グラフ;
@@ -74,6 +78,7 @@ namespace autopilot
         bool _発進中 = false;
         int _出力ノッチ = 0;
 
+        void 前方閉塞信号を推定();
         void 信号グラフ再計算();
 
         距離型 停止信号位置() const;
