@@ -267,7 +267,7 @@ namespace autopilot
 
     void ato::閉塞型::信号指示設定(
         信号インデックス 指示,
-        const std::map<信号インデックス, 速度型> 速度表)
+        const std::map<信号インデックス, 速度型> &速度表)
     {
         信号指示 = 指示;
 
@@ -280,7 +280,7 @@ namespace autopilot
     void ato::閉塞型::状態更新(
         const ATS_BEACONDATA &地上子,
         const 共通状態 &状態,
-        const std::map<信号インデックス, 速度型> 速度表)
+        const std::map<信号インデックス, 速度型> &速度表)
     {
         始点 = 状態.現在位置() + 地上子.Distance;
         信号指示設定(地上子.Signal, 速度表);

@@ -59,11 +59,11 @@ namespace autopilot
 
             void 信号指示設定(
                 信号インデックス 指示,
-                const std::map<信号インデックス, 速度型> 速度表);
+                const std::map<信号インデックス, 速度型> &速度表);
             void 状態更新(
                 const ATS_BEACONDATA &地上子,
                 const 共通状態 &状態,
-                const std::map<信号インデックス, 速度型> 速度表);
+                const std::map<信号インデックス, 速度型> &速度表);
             void 統合(const 閉塞型 &統合元);
         };
 
