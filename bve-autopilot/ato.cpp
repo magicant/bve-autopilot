@@ -152,6 +152,7 @@ namespace autopilot
     void ato::信号現示変化(信号インデックス 指示)
     {
         _現在閉塞.信号指示設定(指示, _信号速度表);
+        _現在閉塞.始点 = -std::numeric_limits<距離型>::infinity();
         前方閉塞信号を推定();
         信号グラフ再計算();
     }
