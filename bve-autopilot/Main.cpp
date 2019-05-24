@@ -50,6 +50,7 @@ namespace autopilot
         _状態.リセット();
         _ato.リセット();
         _tasc有効 = _ato有効 = true;
+        _通過済地上子.clear();
     }
 
     void Main::逆転器操作(int ノッチ)
