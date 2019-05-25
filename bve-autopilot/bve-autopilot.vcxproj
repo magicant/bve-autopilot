@@ -165,6 +165,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="tasc.h" />
     <ClInclude Include="パネル出力.h" />
+    <ClInclude Include="信号順守.h" />
     <ClInclude Include="共通状態.h" />
     <ClInclude Include="制動特性.h" />
     <ClInclude Include="制限グラフ.h" />
@@ -189,6 +190,7 @@
     </ClCompile>
     <ClCompile Include="tasc.cpp" />
     <ClCompile Include="パネル出力.cpp" />
+    <ClCompile Include="信号順守.cpp" />
     <ClCompile Include="共通状態.cpp" />
     <ClCompile Include="制限グラフ.cpp" />
     <ClCompile Include="制限区間.cpp" />

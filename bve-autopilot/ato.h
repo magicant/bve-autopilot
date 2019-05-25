@@ -20,6 +20,7 @@
 #pragma once
 #include <limits>
 #include <map>
+#include "信号順守.h"
 #include "制限グラフ.h"
 #include "単位.h"
 
@@ -39,9 +40,8 @@ namespace autopilot
 
         void リセット();
         void 発進();
-        void 信号現示変化(信号インデックス 指示);
+        void 信号現示変化(信号インデックス 指示) { _信号.信号現示変化(指示); }
         void 地上子通過(const ATS_BEACONDATA &地上子, const 共通状態 &状態);
-        void 信号速度更新();
         void 経過(const 共通状態 &状態, const tasc &tasc);
 
         速度型 現在制限速度(const 共通状態 &状態) const;
@@ -51,38 +51,10 @@ namespace autopilot
         int 出力ノッチ() const { return _出力ノッチ; }
 
     private:
-        struct 閉塞型 {
-            信号インデックス 信号指示 = -1;
-            速度型 信号速度 = std::numeric_limits<速度型>::infinity();
-            距離型 始点 = std::numeric_limits<距離型>::infinity();
-            int 信号インデックス一覧 = 0; // 信号現示受信地上子の値
-
-            bool 通過済(距離型 位置) const { return 始点 < 位置; }
-            int 先行列車位置() const;
-
-            void 信号指示設定(
-                信号インデックス 指示,
-                const std::map<信号インデックス, 速度型> &速度表);
-            void 状態更新(
-                const ATS_BEACONDATA &地上子,
-                const 共通状態 &状態,
-                const std::map<信号インデックス, 速度型> &速度表);
-            void 統合(const 閉塞型 &統合元);
-            void 先行列車位置から信号指示を推定(
-                int 閉塞数, const std::map<信号インデックス, 速度型> &速度表);
-        };
-
-        制限グラフ _制限速度1006, _制限速度1007, _信号グラフ;
-        std::map<信号インデックス, 速度型> _信号速度表;
-        閉塞型 _現在閉塞;
-        std::map<距離型, 閉塞型> _前方閉塞一覧;
+        制限グラフ _制限速度1006, _制限速度1007;
+        信号順守 _信号;
         bool _発進中 = false;
         int _出力ノッチ = 0;
-
-        void 前方閉塞信号を推定();
-        void 信号グラフ再計算();
-
-        距離型 停止信号位置() const;
     };
 
 }
