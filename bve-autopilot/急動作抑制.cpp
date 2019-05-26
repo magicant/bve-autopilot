@@ -19,12 +19,54 @@
 
 #include "stdafx.h"
 #include "急動作抑制.h"
+#include <cmath>
+#include "共通状態.h"
 
 namespace autopilot
 {
 
-    void 急動作抑制::経過(int 入力ノッチ, const 共通状態 &)
+    namespace
     {
+
+        bool 停車中(const autopilot::共通状態 &状態)
+        {
+            return 状態.現在速度() < mps_from_kmph(0.05);
+        }
+
+    }
+
+    void 急動作抑制::リセット()
+    {
+        *this = 急動作抑制{};
+    }
+
+    void 急動作抑制::経過(int 入力ノッチ, const 共通状態 &状態)
+    {
+        if (入力ノッチ == _出力ノッチ) {
+            return;
+        }
+        if (停車中(状態)) {
+            _出力ノッチ = 入力ノッチ;
+            return;
+        }
+
+        時間型 現在時刻 = 状態.現在時刻();
+
+        if (入力ノッチ < 0 || _出力ノッチ < 0) { // 制動中
+            時間型 閾 = 1.5 / 状態.制動().実効ノッチ数();
+            if (std::abs(現在時刻 - _最終制動操作時刻) < 閾) {
+                return;
+            }
+            _最終制動操作時刻 = 現在時刻;
+            if (入力ノッチ > _出力ノッチ) {
+                _出力ノッチ++;
+            }
+            else {
+                _出力ノッチ--;
+            }
+            return;
+        }
+
         _出力ノッチ = 入力ノッチ;
     }
 

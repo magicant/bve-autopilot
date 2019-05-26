@@ -18,6 +18,8 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include <limits>
+#include "単位.h"
 
 namespace autopilot
 {
@@ -27,12 +29,16 @@ namespace autopilot
     class 急動作抑制
     {
     public:
+        void リセット();
         void 経過(int 入力ノッチ, const 共通状態 &状態);
 
         int 出力ノッチ() const { return _出力ノッチ; }
 
     private:
         int _出力ノッチ = 0;
+
+        時間型 _最終制動操作時刻 =
+            -std::numeric_limits<時間型>::infinity();
     };
 
 }
