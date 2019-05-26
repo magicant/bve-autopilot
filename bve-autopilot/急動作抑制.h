@@ -30,13 +30,15 @@ namespace autopilot
     {
     public:
         void リセット();
-        void 経過(int 入力ノッチ, const 共通状態 &状態);
+        void 経過(int 入力ノッチ, const 共通状態 &状態, bool is_atc);
 
         int 出力ノッチ() const { return _出力ノッチ; }
 
     private:
         int _出力ノッチ = 0;
 
+        時間型 _最終力行操作時刻 =
+            -std::numeric_limits<時間型>::infinity();
         時間型 _最終制動操作時刻 =
             -std::numeric_limits<時間型>::infinity();
     };
