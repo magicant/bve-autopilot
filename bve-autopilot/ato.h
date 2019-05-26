@@ -23,6 +23,7 @@
 #include "信号順守.h"
 #include "制限グラフ.h"
 #include "単位.h"
+#include "急動作抑制.h"
 
 namespace autopilot
 {
@@ -48,13 +49,13 @@ namespace autopilot
         速度型 現在常用パターン速度(const 共通状態 &状態) const;
 
         // 力行は正の値、制動は負の値
-        int 出力ノッチ() const { return _出力ノッチ; }
+        int 出力ノッチ() const { return _急動作抑制.出力ノッチ(); }
 
     private:
         制限グラフ _制限速度1006, _制限速度1007;
         信号順守 _信号;
         bool _発進中 = false;
-        int _出力ノッチ = 0;
+        急動作抑制 _急動作抑制;
     };
 
 }
