@@ -52,6 +52,7 @@ namespace autopilot {
         距離型 列車長() const { return _設定.車両長() * _車両仕様.Cars; }
         距離型 現在位置() const { return _状態.Location; }
         区間 現在範囲() const;
+        時間型 現在時刻() const { return s_from_ms(_状態.Time); }
         速度型 現在速度() const { return mps_from_kmph(_状態.Speed); }
         bool 戸閉() const { return _戸閉; }
         int 逆転器ノッチ() const { return _逆転器ノッチ; }
