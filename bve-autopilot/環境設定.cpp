@@ -68,6 +68,7 @@ namespace autopilot
 
     環境設定::環境設定() :
         _車両長(20),
+        _加速終了遅延(1),
         _常用最大減速度(mps_from_kmph(3)),
         _制動緩解時間(1),
         _パネル出力対象登録簿()
@@ -95,6 +96,17 @@ namespace autopilot
             距離型 車両長 = std::wcstod(buffer, nullptr);
             if (0 < 車両長 && std::isfinite(車両長)) {
                 _車両長 = mps_from_kmph(車両長);
+            }
+        }
+
+        // 加速終了遅延
+        size = GetPrivateProfileStringW(
+            L"power", L"offdelay", L"", buffer, buffer_size,
+            設定ファイル名);
+        if (0 < size && size < buffer_size - 1) {
+            時間型 遅延 = std::wcstod(buffer, nullptr);
+            if (0 <= 遅延 && std::isfinite(遅延)) {
+                _加速終了遅延 = 遅延;
             }
         }
 
