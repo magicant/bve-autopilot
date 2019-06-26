@@ -31,6 +31,7 @@ namespace autopilot {
     void 共通状態::リセット()
     {
         // _設定.リセット(); // ファイルから読み込むのでリセットしない
+        _互換モード = 互換モード型::無効;
         _状態 = ATS_VEHICLESTATE{};
         _加速度計.リセット();
         _勾配特性.消去();
@@ -50,6 +51,9 @@ namespace autopilot {
     {
         switch (地上子.Type)
         {
+        case 1001: // 互換モード設定
+            _互換モード = static_cast<互換モード型>(地上子.Optional);
+            break;
         case 1008: // 勾配設定
             勾配追加(地上子.Optional);
             break;

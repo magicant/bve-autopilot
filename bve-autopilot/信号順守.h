@@ -85,6 +85,7 @@ namespace autopilot
         制限グラフ _信号グラフ;
 
         void 信号速度更新();
+        void 信号現示受信(const ATS_BEACONDATA &地上子, const 共通状態 &状態);
         void 前方閉塞信号を推定();
         void 信号グラフ再計算();
 

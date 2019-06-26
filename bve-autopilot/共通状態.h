@@ -31,6 +31,13 @@
 
 namespace autopilot {
 
+    enum class 互換モード型
+    {
+        無効,
+        汎用ats,
+        メトロ総合,
+    };
+
     class 共通状態
     {
     public:
@@ -48,6 +55,7 @@ namespace autopilot {
         void 制動操作(int ノッチ);
 
         const 環境設定 & 設定() const { return _設定; }
+        互換モード型 互換モード() const { return _互換モード; }
         const ATS_VEHICLESPEC & 車両仕様() const { return _車両仕様; }
         距離型 列車長() const { return _設定.車両長() * _車両仕様.Cars; }
         距離型 現在位置() const { return _状態.Location; }
@@ -67,6 +75,7 @@ namespace autopilot {
 
     private:
         環境設定 _設定;
+        互換モード型 _互換モード = 互換モード型::無効;
         ATS_VEHICLESPEC _車両仕様 = {};
         ATS_VEHICLESTATE _状態 = {};
         bool _戸閉 = false;
