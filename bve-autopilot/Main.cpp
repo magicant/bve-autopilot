@@ -125,7 +125,7 @@ namespace autopilot
                 }
             }
             if (_ato有効) {
-                _ato.発進();
+                _ato.発進(_状態);
             }
             break;
         }
@@ -148,7 +148,7 @@ namespace autopilot
 
     void Main::信号現示変化(int 信号指示)
     {
-        _ato.信号現示変化(信号指示);
+        _ato.信号現示変化(信号指示, _状態);
     }
 
     void Main::地上子通過(const ATS_BEACONDATA & 地上子)

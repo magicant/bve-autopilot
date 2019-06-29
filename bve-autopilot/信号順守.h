@@ -51,6 +51,7 @@ namespace autopilot
         int 出力ノッチ(const 共通状態 &状態, const tasc &tasc) const;
 
         bool is_atc() const { return _現在閉塞.信号指示 >= 10; }
+        速度型 制限速度(距離型 位置) const;
         速度型 現在制限速度(const 共通状態 &状態) const;
         速度型 現在常用パターン速度(const 共通状態 &状態) const;
 
