@@ -52,6 +52,9 @@ namespace autopilot
         // 力行は正の値、制動は負の値
         int 出力ノッチ(const 共通状態 &状態) const;
 
+        速度型 制限速度(距離型 位置) const {
+            return _制限グラフ.制限速度(位置);
+        }
         速度型 現在制限速度(区間 現在範囲) const {
             return _制限グラフ.制限速度(現在範囲);
         }

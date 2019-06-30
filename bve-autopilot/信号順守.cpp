@@ -20,6 +20,7 @@
 #include "stdafx.h"
 #include "信号順守.h"
 #include "tasc.h"
+#include "信号前照査順守.h"
 #include "共通状態.h"
 
 #pragma warning(disable:4819)
@@ -183,10 +184,26 @@ namespace autopilot
         }
     }
 
-    int 信号順守::出力ノッチ(const 共通状態 &状態, const tasc &tasc) const
+    int 信号順守::出力ノッチ(const 共通状態 &状態,
+        const tasc &tasc, const 信号前照査順守 &照査) const
     {
-        距離型 停止マージン = tasc.目標停止位置() < 停止信号位置() ? 0 : 51;
-        時間型 時間マージン = is_atc() ? 0 : 5;
+        距離型 停止マージン;
+        時間型 時間マージン;
+        if (is_atc()) {
+            停止マージン = -1;
+            時間マージン = 0;
+        }
+        else {
+            if (tasc.目標停止位置() < 停止信号位置() ||
+                照査.制限速度(停止信号位置()) == 0)
+            {
+                停止マージン = 0;
+            }
+            else {
+                停止マージン = 51;
+            }
+            時間マージン = 5;
+        }
         return _信号グラフ.出力ノッチ(状態, 時間マージン, 停止マージン);
     }
 

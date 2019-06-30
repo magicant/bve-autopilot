@@ -31,6 +31,7 @@ namespace autopilot
 
     class 共通状態;
     class tasc;
+    class 信号前照査順守;
 
     class 信号順守
     {
@@ -48,7 +49,8 @@ namespace autopilot
         void 経過(const 共通状態 &状態);
 
         // 力行は正の値、制動は負の値
-        int 出力ノッチ(const 共通状態 &状態, const tasc &tasc) const;
+        int 出力ノッチ(const 共通状態 &状態,
+            const tasc &tasc, const 信号前照査順守 &照査) const;
 
         bool is_atc() const { return _現在閉塞.信号指示 >= 10; }
         速度型 制限速度(距離型 位置) const;
