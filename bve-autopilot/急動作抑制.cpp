@@ -28,7 +28,7 @@ namespace autopilot
     namespace
     {
 
-        bool 停車中(const autopilot::共通状態 &状態)
+        bool 停車中(const 共通状態 &状態)
         {
             return 状態.現在速度() < mps_from_kmph(0.05);
         }
