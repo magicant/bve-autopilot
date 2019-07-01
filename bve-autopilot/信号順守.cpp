@@ -233,6 +233,11 @@ namespace autopilot
     void 信号順守::信号現示受信(
         const ATS_BEACONDATA &地上子, const 共通状態 &状態)
     {
+        if (地上子.Distance == 0 && 状態.現在速度() != 0) {
+            // マップファイルのバージョンが古いとおかしなデータが来ることがある
+            return;
+        }
+
         距離型 位置 = 状態.現在位置() + 地上子.Distance;
         auto i = _前方閉塞一覧.lower_bound(位置 - 許容誤差);
         閉塞型 &閉塞 =
