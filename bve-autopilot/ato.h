@@ -50,13 +50,14 @@ namespace autopilot
         速度型 現在常用パターン速度(const 共通状態 &状態) const;
 
         // 力行は正の値、制動は負の値
-        int 出力ノッチ() const { return _急動作抑制.出力ノッチ(); }
+        int 出力ノッチ() const { return _出力ノッチ; }
 
     private:
         制限グラフ _制限速度1006, _制限速度1007;
         信号順守 _信号;
         信号前照査順守 _照査;
         bool _発進中 = false;
+        int _出力ノッチ;
         急動作抑制 _急動作抑制;
     };
 
