@@ -43,6 +43,7 @@ namespace autopilot {
 
     private:
         距離型 _目標停止位置;
+        時間型 _目標停止位置を仮想的に近付け始める時刻;
         int _出力ノッチ;
 
         void 緩解();
