@@ -20,6 +20,7 @@
 #pragma once
 #include <limits>
 #include <map>
+#include "信号前照査順守.h"
 #include "信号順守.h"
 #include "制限グラフ.h"
 #include "単位.h"
@@ -40,8 +41,8 @@ namespace autopilot
         ~ato();
 
         void リセット();
-        void 発進();
-        void 信号現示変化(信号インデックス 指示) { _信号.信号現示変化(指示); }
+        void 発進(const 共通状態 &状態);
+        void 信号現示変化(信号インデックス 指示, const 共通状態 &状態);
         void 地上子通過(const ATS_BEACONDATA &地上子, const 共通状態 &状態);
         void 経過(const 共通状態 &状態, const tasc &tasc);
 
@@ -49,12 +50,14 @@ namespace autopilot
         速度型 現在常用パターン速度(const 共通状態 &状態) const;
 
         // 力行は正の値、制動は負の値
-        int 出力ノッチ() const { return _急動作抑制.出力ノッチ(); }
+        int 出力ノッチ() const { return _出力ノッチ; }
 
     private:
         制限グラフ _制限速度1006, _制限速度1007;
         信号順守 _信号;
+        信号前照査順守 _照査;
         bool _発進中 = false;
+        int _出力ノッチ;
         急動作抑制 _急動作抑制;
     };
 

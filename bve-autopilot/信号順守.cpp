@@ -20,6 +20,7 @@
 #include "stdafx.h"
 #include "信号順守.h"
 #include "tasc.h"
+#include "信号前照査順守.h"
 #include "共通状態.h"
 
 #pragma warning(disable:4819)
@@ -150,7 +151,8 @@ namespace autopilot
     {
         switch (地上子.Type)
         {
-        case 31: { // 信号現示受信 (メトロ総合プラグイン互換)
+        case 31: // 信号現示受信 (メトロ総合プラグイン互換)
+        case 1016: { // 停止信号前速度設定
             ATS_BEACONDATA 地上子2 = 地上子;
             地上子2.Optional = 0;
             信号現示受信(地上子2, 状態);
@@ -182,11 +184,31 @@ namespace autopilot
         }
     }
 
-    int 信号順守::出力ノッチ(const 共通状態 &状態, const tasc &tasc) const
+    int 信号順守::出力ノッチ(const 共通状態 &状態,
+        const tasc &tasc, const 信号前照査順守 &照査) const
     {
-        距離型 停止マージン = tasc.目標停止位置() < 停止信号位置() ? 0 : 51;
-        時間型 時間マージン = is_atc() ? 0 : 5;
+        距離型 停止マージン;
+        時間型 時間マージン;
+        if (is_atc()) {
+            停止マージン = -1;
+            時間マージン = 0;
+        }
+        else {
+            if (tasc.目標停止位置() < 停止信号位置() ||
+                照査.制限速度(停止信号位置()) == 0)
+            {
+                停止マージン = 0;
+            }
+            else {
+                停止マージン = 51;
+            }
+            時間マージン = 5;
+        }
         return _信号グラフ.出力ノッチ(状態, 時間マージン, 停止マージン);
+    }
+
+    速度型 信号順守::制限速度(距離型 位置) const {
+        return _信号グラフ.制限速度(位置 + 許容誤差);
     }
 
     速度型 信号順守::現在制限速度(const 共通状態 &状態) const
@@ -211,6 +233,11 @@ namespace autopilot
     void 信号順守::信号現示受信(
         const ATS_BEACONDATA &地上子, const 共通状態 &状態)
     {
+        if (地上子.Distance == 0 && 状態.現在速度() != 0) {
+            // マップファイルのバージョンが古いとおかしなデータが来ることがある
+            return;
+        }
+
         距離型 位置 = 状態.現在位置() + 地上子.Distance;
         auto i = _前方閉塞一覧.lower_bound(位置 - 許容誤差);
         閉塞型 &閉塞 =
