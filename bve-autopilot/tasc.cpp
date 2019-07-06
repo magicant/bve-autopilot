@@ -35,16 +35,23 @@ namespace autopilot {
     {
     }
 
+    void tasc::リセット()
+    {
+        _目標停止位置 = std::numeric_limits<double>::infinity();
+        _目標停止位置を仮想的に近付け始める時刻 =
+            std::numeric_limits<double>::infinity();
+    }
+
     void tasc::制動操作(const 共通状態 &状態)
     {
         if (!状態.戸閉() && 状態.制動ノッチ() >= -_出力ノッチ) {
-            緩解();
+            リセット();
         }
     }
 
     void tasc::戸閉()
     {
-        緩解();
+        リセット();
     }
 
     void tasc::地上子通過(const ATS_BEACONDATA & 地上子, const 共通状態 & 状態)
@@ -110,13 +117,6 @@ namespace autopilot {
     bool tasc::制御中() const
     {
         return std::isfinite(_目標停止位置);
-    }
-
-    void tasc::緩解()
-    {
-        _目標停止位置 = std::numeric_limits<double>::infinity();
-        _目標停止位置を仮想的に近付け始める時刻 =
-            std::numeric_limits<double>::infinity();
     }
 
 }

@@ -30,6 +30,7 @@ namespace autopilot {
         tasc();
         ~tasc() = default;
 
+        void リセット();
         void 制動操作(const 共通状態 &状態);
         void 戸閉();
         void 地上子通過(const ATS_BEACONDATA & 地上子, const 共通状態 & 状態);
@@ -45,8 +46,6 @@ namespace autopilot {
         距離型 _目標停止位置;
         時間型 _目標停止位置を仮想的に近付け始める時刻;
         int _出力ノッチ;
-
-        void 緩解();
     };
 
 }

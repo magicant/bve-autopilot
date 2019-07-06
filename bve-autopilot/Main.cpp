@@ -48,6 +48,7 @@ namespace autopilot
     void Main::リセット(int)
     {
         _状態.リセット();
+        _tasc.リセット();
         _ato.リセット();
         _通過済地上子.clear();
     }
