@@ -56,19 +56,17 @@ namespace autopilot
     void Main::逆転器操作(int ノッチ)
     {
         _状態.逆転器操作(ノッチ);
-        _tasc.レバー操作(_状態);
     }
 
     void Main::力行操作(int ノッチ)
     {
         _状態.力行操作(ノッチ);
-        _tasc.レバー操作(_状態);
     }
 
     void Main::制動操作(int ノッチ)
     {
         _状態.制動操作(ノッチ);
-        _tasc.レバー操作(_状態);
+        _tasc.制動操作(_状態);
     }
 
     void Main::警笛操作(int)

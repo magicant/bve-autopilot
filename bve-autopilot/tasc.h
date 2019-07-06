@@ -30,7 +30,7 @@ namespace autopilot {
         tasc();
         ~tasc() = default;
 
-        void レバー操作(const 共通状態 &状態);
+        void 制動操作(const 共通状態 &状態);
         void 戸閉();
         void 地上子通過(const ATS_BEACONDATA & 地上子, const 共通状態 & 状態);
         void 経過(const 共通状態 & 状態);

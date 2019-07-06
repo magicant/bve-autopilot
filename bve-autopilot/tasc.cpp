@@ -35,9 +35,9 @@ namespace autopilot {
     {
     }
 
-    void tasc::レバー操作(const 共通状態 &状態)
+    void tasc::制動操作(const 共通状態 &状態)
     {
-        if (!状態.戸閉()) {
+        if (!状態.戸閉() && 状態.制動ノッチ() >= -_出力ノッチ) {
             緩解();
         }
     }
