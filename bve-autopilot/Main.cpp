@@ -29,8 +29,8 @@ namespace autopilot
         _状態{},
         _tasc{},
         _ato{},
-        _tasc有効{false},
-        _ato有効{false},
+        _tasc有効{true},
+        _ato有効{true},
         _通過済地上子{}
     {
     }
@@ -49,7 +49,6 @@ namespace autopilot
     {
         _状態.リセット();
         _ato.リセット();
-        _tasc有効 = _ato有効 = true;
         _通過済地上子.clear();
     }
 
