@@ -22,6 +22,7 @@
 #include <cmath>
 #include <cstddef>
 #include <cwchar>
+#include <initializer_list>
 #include <stdexcept>
 #include <string>
 #include <utility>
@@ -71,6 +72,9 @@ namespace autopilot
         _加速終了遅延(1),
         _常用最大減速度(mps_from_kmph(3)),
         _制動緩解時間(1),
+        _キー割り当て{
+            {キー操作::モード切替, ATS_KEY_L},
+            {キー操作::ato発進, ATS_KEY_L}, },
         _パネル出力対象登録簿()
     {
     }
@@ -132,6 +136,28 @@ namespace autopilot
             }
             else if (0 < 緩解時間 && std::isfinite(緩解時間)) {
                 _制動緩解時間 = 緩解時間;
+            }
+        }
+
+        // キー割り当て
+        for (auto &i : std::initializer_list<std::pair<キー操作, LPCWSTR>>
+            { {キー操作::モード切替, L"mode"},
+              {キー操作::ato発進, L"atostart"} })
+        {
+            size = GetPrivateProfileStringW(
+                L"key", i.second, L"", buffer, buffer_size, 設定ファイル名);
+            if (0 < size && size < buffer_size - 1) {
+                try {
+                    int key = std::stoi(buffer);
+                    if (key < ATS_KEY_S || ATS_KEY_L < key) {
+                        key = -1;
+                    }
+                    _キー割り当て[i.first] = key;
+                }
+                catch (const std::invalid_argument &) {
+                }
+                catch (const std::out_of_range &) {
+                }
             }
         }
 

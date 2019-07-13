@@ -22,8 +22,19 @@
 #include "パネル出力.h"
 #include "単位.h"
 
+#pragma warning(push)
+#pragma warning(disable:4819)
+
 namespace autopilot
 {
+
+    enum class キー操作
+    {
+        モード切替,
+        ato発進,
+    };
+
+    using キー番号 = int;
 
     class 環境設定
     {
@@ -39,6 +50,10 @@ namespace autopilot
         加速度型 常用最大減速度() const { return _常用最大減速度; }
         時間型 制動緩解時間() const { return _制動緩解時間; }
 
+        const std::unordered_map<キー操作, キー番号> &キー割り当て() const {
+            return _キー割り当て;
+        }
+
         const std::unordered_map<int, パネル出力対象> & パネル出力対象登録簿()
             const {
             return _パネル出力対象登録簿;
@@ -50,7 +65,10 @@ namespace autopilot
         加速度型 _常用最大減速度;
         時間型 _制動緩解時間;
 
+        std::unordered_map<キー操作, キー番号> _キー割り当て;
         std::unordered_map<int, パネル出力対象> _パネル出力対象登録簿;
     };
 
 }
+
+#pragma warning(pop)
