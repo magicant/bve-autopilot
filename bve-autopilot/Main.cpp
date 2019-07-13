@@ -75,43 +75,11 @@ namespace autopilot
 
     void Main::キー押し(int キー)
     {
-        switch (キー)
-        {
-        case ATS_KEY_S: // Default: Space
-            break;
-        case ATS_KEY_A1: // Default: Insert
-            break;
-        case ATS_KEY_A2: // Default: Delete
-            break;
-        case ATS_KEY_B1: // Default: Home
-            break;
-        case ATS_KEY_B2: // Default: End
-            break;
-        case ATS_KEY_C1: // Default: Page Up
-            break;
-        case ATS_KEY_C2: // Default: Page Down
-            break;
-        case ATS_KEY_D: // Default: 2
-            break;
-        case ATS_KEY_E: // Default: 3
-            break;
-        case ATS_KEY_F: // Default: 4
-            break;
-        case ATS_KEY_G: // Default: 5
-            break;
-        case ATS_KEY_H: // Default: 6
-            break;
-        case ATS_KEY_I: // Default: 7
-            break;
-        case ATS_KEY_J: // Default: 8
-            break;
-        case ATS_KEY_K: // Default: 9
-            break;
-        case ATS_KEY_L: // Default: 0
+        // モード切替
+        if (キー == _状態.設定().キー割り当て().at(キー操作::モード切替)) {
             if (_状態.逆転器ノッチ() == 0 &&
                 _状態.制動ノッチ() > _状態.制動().常用ノッチ数())
             {
-                // ATO/TASC 有効・無効切り替え
                 if (_ato有効) {
                     _ato有効 = false;
                 }
@@ -122,10 +90,13 @@ namespace autopilot
                     _ato有効 = _tasc有効 = true;
                 }
             }
+        }
+
+        // ATO 発進
+        if (キー == _状態.設定().キー割り当て().at(キー操作::ato発進)) {
             if (_ato有効) {
                 _ato.発進(_状態);
             }
-            break;
         }
     }
 
