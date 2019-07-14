@@ -25,6 +25,7 @@
 #include "区間.h"
 #include "単位.h"
 #include "環境設定.h"
+#include "走行モデル.h"
 
 #pragma warning(push)
 #pragma warning(disable:4819)
@@ -62,6 +63,9 @@ namespace autopilot {
         区間 現在範囲() const;
         時間型 現在時刻() const { return s_from_ms(_状態.Time); }
         速度型 現在速度() const { return mps_from_kmph(_状態.Speed); }
+        走行モデル 現在走行状態() const {
+            return { 現在位置(), 現在速度(), 現在時刻() };
+        }
         bool 戸閉() const { return _戸閉; }
         int 逆転器ノッチ() const { return _逆転器ノッチ; }
         int 力行ノッチ() const { return _力行ノッチ; }

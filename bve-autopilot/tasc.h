@@ -44,6 +44,7 @@ namespace autopilot {
 
     private:
         距離型 _名目の目標停止位置;
+        距離型 _調整した目標停止位置;
         int _出力ノッチ;
     };
 
