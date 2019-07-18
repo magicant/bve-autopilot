@@ -36,15 +36,15 @@ namespace autopilot {
         void 地上子通過(const ATS_BEACONDATA & 地上子, const 共通状態 & 状態);
         void 経過(const 共通状態 & 状態);
 
-        距離型 目標停止位置() const { return _目標停止位置; }
+        距離型 目標停止位置() const { return _名目の目標停止位置; }
         bool 制御中() const;
 
         // 力行は正の値、制動は負の値
         int 出力ノッチ() const { return _出力ノッチ; }
 
     private:
-        距離型 _目標停止位置;
-        時間型 _目標停止位置を仮想的に近付け始める時刻;
+        距離型 _名目の目標停止位置;
+        距離型 _調整した目標停止位置;
         int _出力ノッチ;
     };
 
