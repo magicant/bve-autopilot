@@ -52,7 +52,12 @@ namespace autopilot
         int 出力ノッチ(const 共通状態 &状態,
             const tasc &tasc, const 信号前照査順守 &照査) const;
 
-        bool is_atc() const { return _現在閉塞.信号指示 >= 10; }
+        bool is_atc() const {
+            return 10 <= _現在閉塞.信号指示 &&
+                _現在閉塞.信号指示 < std::numeric_limits<int>::max();
+            // リセット前後に std::numeric_limits<int>::max() が
+            // 信号インデックスとして送られてくることがあるが無視する
+        }
         速度型 制限速度(距離型 位置) const;
         速度型 現在制限速度(const 共通状態 &状態) const;
         速度型 現在常用パターン速度(const 共通状態 &状態) const;
