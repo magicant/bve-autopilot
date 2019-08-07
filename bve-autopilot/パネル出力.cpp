@@ -23,6 +23,7 @@
 #include <cmath>
 #include <unordered_map>
 #include "Main.h"
+#include "共通状態.h"
 #include "単位.h"
 
 namespace autopilot
@@ -69,6 +70,10 @@ namespace autopilot
                     出力 = -20.0 * 100;
                 }
                 return static_cast<int>(出力);
+            })},
+            {L"compatmode", パネル出力対象([](const Main &main) {
+                互換モード型 モード = main.状態().互換モード();
+                return static_cast<int>(モード);
             })},
         };
 
