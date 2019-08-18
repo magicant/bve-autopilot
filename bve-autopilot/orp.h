@@ -44,16 +44,19 @@ namespace autopilot
 
         void 経過(const 共通状態 &状態);
 
+        bool 制御中() const;
+        bool 照査中() const;
+
         // 力行は正の値、制動は負の値
         int 出力ノッチ() const { return _出力ノッチ; }
 
-        速度型 照査速度(距離型 位置) const {
-            return _照査パターン.期待速度(位置);
-        }
+        速度型 照査速度() const { return _照査速度; }
 
     private:
+        信号インデックス _信号指示;
         減速パターン _照査パターン, _運転パターン;
         int _出力ノッチ;
+        速度型 _照査速度;
     };
 
 }

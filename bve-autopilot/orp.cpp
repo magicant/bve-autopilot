@@ -42,9 +42,11 @@ namespace autopilot
     }
 
     orp::orp() :
+        _信号指示{-1},
         _照査パターン{無限遠, 照査速度下限, 0, 0},
         _運転パターン{無限遠, 最終目標速度, 0, 0},
-        _出力ノッチ{std::numeric_limits<int>::max()}
+        _出力ノッチ{std::numeric_limits<int>::max()},
+        _照査速度{std::numeric_limits<速度型>::infinity()}
     {
     }
 
@@ -80,6 +82,8 @@ namespace autopilot
 
     void orp::信号現示変化(信号インデックス 指示)
     {
+        _信号指示 = 指示;
+
         if (指示 != orp信号インデックス) {
             リセット();
         }
@@ -117,9 +121,20 @@ namespace autopilot
     void orp::経過(const 共通状態 &状態)
     {
         _出力ノッチ =
-            std::isfinite(_運転パターン.目標位置) ?
+            制御中() ?
             _運転パターン.出力ノッチ(状態.現在位置(), 状態.現在速度(), 状態) :
             std::numeric_limits<int>::max();
+        _照査速度 = _照査パターン.期待速度(状態.現在位置());
+    }
+
+    bool orp::制御中() const
+    {
+        return std::isfinite(_運転パターン.目標位置);
+    }
+
+    bool orp::照査中() const
+    {
+        return _信号指示 == orp信号インデックス && 制御中();
     }
 
 }

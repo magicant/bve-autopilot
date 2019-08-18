@@ -133,22 +133,41 @@ namespace autopilot
     速度型 ato::現在制限速度(const 共通状態 &状態) const
     {
         区間 列車範囲 = 状態.現在範囲();
-        return std::min({
+        速度型 速度 = std::min({
             _制限速度1006.制限速度(列車範囲),
             _制限速度1007.制限速度(列車範囲),
             _信号.現在制限速度(状態),
             _照査.現在制限速度(列車範囲),
             });
+
+        if (_orp.照査中() && _orp.照査速度() <= 速度) {
+            return std::numeric_limits<速度型>::infinity();
+        }
+        return 速度;
     }
 
     速度型 ato::現在常用パターン速度(const 共通状態 &状態) const
     {
-        return std::min({
+        速度型 速度 = std::min({
             _制限速度1006.現在常用パターン速度(状態),
             _制限速度1007.現在常用パターン速度(状態),
             _信号.現在常用パターン速度(状態),
             _照査.現在常用パターン速度(状態),
             });
+
+        if (_orp.照査中()) {
+            速度 = std::min(速度, _orp.照査速度());
+        }
+        return 速度;
+    }
+
+    速度型 ato::現在orp照査速度() const
+    {
+        if (!_orp.照査中()) {
+            return std::numeric_limits<速度型>::infinity();
+        }
+
+        return _orp.照査速度();
     }
 
 }
