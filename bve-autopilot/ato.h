@@ -57,7 +57,7 @@ namespace autopilot
         信号順守 _信号;
         信号前照査順守 _照査;
         bool _発進中 = false;
-        int _出力ノッチ;
+        int _出力ノッチ = 0;
         急動作抑制 _急動作抑制;
     };
 
