@@ -157,6 +157,10 @@ namespace autopilot
         switch (地上子.Type)
         {
         case 31: // 信号現示受信 (メトロ総合プラグイン互換)
+            if (状態.互換モード() != 互換モード型::メトロ総合) {
+                break;
+            }
+            // FALLS THRU
         case 1016: { // 停止信号前速度設定
             ATS_BEACONDATA 地上子2 = 地上子;
             地上子2.Optional = 0;
