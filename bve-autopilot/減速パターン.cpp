@@ -96,8 +96,9 @@ namespace autopilot
         if (制動.実効ノッチ数() > 1) {
             int d = 制動.無効ノッチ数() + 1;
             int n = 制動.実効ノッチ数();
+            int n1 = n - 1;
             出力制動ノッチ相当 =
-                std::floor((出力制動ノッチ相当 - d) / (n - 1) * n + d);
+                std::floor((出力制動ノッチ相当 - d) / n1 * n + d);
         }
         else {
             出力制動ノッチ相当 = std::round(出力制動ノッチ相当);
