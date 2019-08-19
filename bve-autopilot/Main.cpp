@@ -45,6 +45,11 @@ namespace autopilot
         return _ato.現在常用パターン速度(_状態);
     }
 
+    速度型 Main::現在orp照査速度() const
+    {
+        return _ato.現在orp照査速度();
+    }
+
     void Main::リセット(int)
     {
         _状態.リセット();

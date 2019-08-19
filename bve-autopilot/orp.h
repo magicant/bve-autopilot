@@ -1,4 +1,4 @@
-// ato.h : ATO メインモジュール
+// orp.h : ORP の照査に抵触しないように減速します
 //
 // Copyright © 2019 Watanabe, Yuki
 //
@@ -18,50 +18,45 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
-#include <limits>
-#include <map>
-#include "orp.h"
-#include "信号前照査順守.h"
-#include "信号順守.h"
-#include "制限グラフ.h"
 #include "単位.h"
-#include "急動作抑制.h"
+#include "減速パターン.h"
 
 namespace autopilot
 {
 
-    class tasc;
     class 共通状態;
+    class 信号順守;
 
-    class ato
+    class orp
     {
     public:
         using 信号インデックス = int;
 
-        ato();
-        ~ato();
+        orp();
+        ~orp() = default;
 
         void リセット();
-        void 発進(const 共通状態 &状態);
-        void 信号現示変化(信号インデックス 指示, const 共通状態 &状態);
-        void 地上子通過(const ATS_BEACONDATA &地上子, const 共通状態 &状態);
-        void 経過(const 共通状態 &状態, const tasc &tasc);
+        void 設定(速度型 初期照査速度, 距離型 初期位置, 距離型 限界位置);
 
-        速度型 現在制限速度(const 共通状態 &状態) const;
-        速度型 現在常用パターン速度(const 共通状態 &状態) const;
-        速度型 現在orp照査速度() const;
+        void 信号現示変化(信号インデックス 指示);
+        void 地上子通過(const ATS_BEACONDATA &地上子,
+            const 共通状態 &状態, const 信号順守 &信号);
+
+        void 経過(const 共通状態 &状態);
+
+        bool 制御中() const;
+        bool 照査中() const;
 
         // 力行は正の値、制動は負の値
         int 出力ノッチ() const { return _出力ノッチ; }
 
+        速度型 照査速度() const { return _照査速度; }
+
     private:
-        制限グラフ _制限速度1006, _制限速度1007;
-        信号順守 _信号;
-        信号前照査順守 _照査;
-        orp _orp;
-        bool _発進中 = false;
-        int _出力ノッチ = 0;
-        急動作抑制 _急動作抑制;
+        信号インデックス _信号指示;
+        減速パターン _照査パターン, _運転パターン;
+        int _出力ノッチ;
+        速度型 _照査速度;
     };
 
 }
