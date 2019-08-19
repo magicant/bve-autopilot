@@ -25,7 +25,8 @@ namespace autopilot {
     class 走行モデル
     {
     public:
-        constexpr 走行モデル(距離型 位置, 速度型 速度, 時間型 時刻) :
+        constexpr explicit 走行モデル(
+            距離型 位置 = 0, 速度型 速度 = 0, 時間型 時刻 = 0) :
             _位置(位置), _速度(速度), _時刻(時刻) { }
         ~走行モデル() = default;
 

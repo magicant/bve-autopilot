@@ -64,7 +64,7 @@ namespace autopilot {
         時間型 現在時刻() const { return s_from_ms(_状態.Time); }
         速度型 現在速度() const { return mps_from_kmph(_状態.Speed); }
         走行モデル 現在走行状態() const {
-            return { 現在位置(), 現在速度(), 現在時刻() };
+            return 走行モデル{ 現在位置(), 現在速度(), 現在時刻() };
         }
         bool 戸閉() const { return _戸閉; }
         int 逆転器ノッチ() const { return _逆転器ノッチ; }
