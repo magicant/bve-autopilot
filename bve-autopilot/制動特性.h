@@ -18,6 +18,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include <vector>
 #include "加速度計.h"
 #include "単位.h"
 
@@ -30,15 +31,12 @@ namespace autopilot
     class 制動特性
     {
     public:
+        制動特性();
+        ~制動特性();
+
         void 性能設定(
-            int 常用ノッチ数, int 無効ノッチ数,
-            加速度型 常用最大減速度, 時間型 緩解時間)
-        {
-            _常用ノッチ数 = 常用ノッチ数;
-            _無効ノッチ数 = 無効ノッチ数;
-            _常用最大減速度 = 常用最大減速度;
-            _緩解時間 = 緩解時間;
-        }
+            int 常用ノッチ数, int 無効ノッチ数, 加速度型 常用最大減速度,
+            時間型 緩解時間, const std::vector<double> &pressure_rates);
 
         int 常用ノッチ数() const { return _常用ノッチ数; }
         int 無効ノッチ数() const { return _無効ノッチ数; }
@@ -50,23 +48,22 @@ namespace autopilot
 
         /// 所望の減速度を得るために設定すべき常用制動ノッチを得ます。
         /// 引数の大きさによっては常用最大を超えるノッチを返すことがあります。
-        double ノッチ(加速度型 減速度) const
-        {
-            double 割合 = 減速度 / _常用最大減速度;
-            return 割合 * 実効ノッチ数() + _無効ノッチ数;
-        }
+        double ノッチ(加速度型 減速度) const;
 
-        // 常用制動ノッチに対して得られるであろう減速度を得ます。
-        加速度型 減速度(double ノッチ) const
-        {
-            double 割合 = (ノッチ - _無効ノッチ数) / 実効ノッチ数();
-            return _常用最大減速度 * 割合;
-        }
+        /// 常用制動ノッチに対して得られるであろう減速度を得ます。
+        加速度型 減速度(double ノッチ) const;
 
     private:
-        int _常用ノッチ数, _無効ノッチ数;
-        加速度型 _常用最大減速度;
-        時間型 _緩解時間;
+        int _常用ノッチ数 = 0, _無効ノッチ数 = 0;
+        加速度型 _常用最大減速度 = 0;
+        時間型 _緩解時間 = 0;
+
+        /// 車両パラメーターファイルの PressureRates に同じ。
+        /// 少なくとも (_常用ノッチ数 + 1) 個の要素を持ちます。
+        std::vector<double> _pressure_rates;
+
+        /// _pressure_rates の要素数が足りないときに穴埋めします。
+        void pressure_rates_を穴埋め();
     };
 
 }

@@ -36,6 +36,21 @@ namespace autopilot
     namespace
     {
 
+        std::vector<double> 実数列(LPCWSTR s) {
+            std::vector<double> values;
+            while (*s != L'\0') {
+                LPWSTR s2;
+                double value = std::wcstod(s, &s2);
+                if (s2 == s) {
+                    ++s;
+                    continue;
+                }
+                values.push_back(value);
+                s = s2;
+            }
+            return values;
+        }
+
         std::vector<std::pair<std::wstring, std::wstring>>
             セクション内全設定(LPCWSTR 設定ファイル名, LPCWSTR セクション名) {
 
@@ -72,6 +87,7 @@ namespace autopilot
         _加速終了遅延(1),
         _常用最大減速度(mps_from_kmph(3)),
         _制動緩解時間(1),
+        _pressure_rates{},
         _キー割り当て{
             {キー操作::モード切替, ATS_KEY_L},
             {キー操作::ato発進, ATS_KEY_L}, },
@@ -88,7 +104,7 @@ namespace autopilot
 
     void 環境設定::ファイル読込(LPCWSTR 設定ファイル名)
     {
-        constexpr std::size_t buffer_size = 32;
+        constexpr std::size_t buffer_size = 256;
         WCHAR buffer[buffer_size];
         DWORD size;
 
@@ -137,6 +153,14 @@ namespace autopilot
             else if (0 < 緩解時間 && std::isfinite(緩解時間)) {
                 _制動緩解時間 = 緩解時間;
             }
+        }
+
+        // ブレーキ指令の強さ (pressure rates)
+        size = GetPrivateProfileStringW(
+            L"braking", L"pressurerates", L"", buffer, buffer_size,
+            設定ファイル名);
+        if (0 < size && size < buffer_size - 1) {
+            _pressure_rates = 実数列(buffer);
         }
 
         // キー割り当て

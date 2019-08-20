@@ -197,6 +197,7 @@
     <ClCompile Include="信号前照査順守.cpp" />
     <ClCompile Include="信号順守.cpp" />
     <ClCompile Include="共通状態.cpp" />
+    <ClCompile Include="制動特性.cpp" />
     <ClCompile Include="制限グラフ.cpp" />
     <ClCompile Include="制限区間.cpp" />
     <ClCompile Include="加速度計.cpp" />
