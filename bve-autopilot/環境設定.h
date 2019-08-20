@@ -19,6 +19,7 @@
 
 #pragma once
 #include <unordered_map>
+#include <vector>
 #include "パネル出力.h"
 #include "単位.h"
 
@@ -49,6 +50,9 @@ namespace autopilot
         時間型 加速終了遅延() const { return _加速終了遅延; }
         加速度型 常用最大減速度() const { return _常用最大減速度; }
         時間型 制動緩解時間() const { return _制動緩解時間; }
+        const std::vector<double> &pressure_rates() const {
+            return _pressure_rates;
+        }
 
         const std::unordered_map<キー操作, キー番号> &キー割り当て() const {
             return _キー割り当て;
@@ -64,6 +68,7 @@ namespace autopilot
         時間型 _加速終了遅延;
         加速度型 _常用最大減速度;
         時間型 _制動緩解時間;
+        std::vector<double> _pressure_rates;
 
         std::unordered_map<キー操作, キー番号> _キー割り当て;
         std::unordered_map<int, パネル出力対象> _パネル出力対象登録簿;
