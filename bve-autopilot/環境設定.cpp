@@ -86,7 +86,7 @@ namespace autopilot
         _車両長(20),
         _加速終了遅延(1),
         _常用最大減速度(mps_from_kmph(3)),
-        _制動緩解時間(1),
+        _制動反応時間(0.2),
         _pressure_rates{},
         _キー割り当て{
             {キー操作::モード切替, ATS_KEY_L},
@@ -141,17 +141,17 @@ namespace autopilot
             }
         }
 
-        // 制動緩解時間
+        // 制動反応時間
         size = GetPrivateProfileStringW(
-            L"braking", L"releasedelay", L"", buffer, buffer_size,
+            L"braking", L"effectlag", L"", buffer, buffer_size,
             設定ファイル名);
         if (0 < size && size < buffer_size - 1) {
-            時間型 緩解時間 = std::wcstod(buffer, nullptr);
-            if (緩解時間 == 0) {
-                _制動緩解時間 = 0; // 負の 0 は正の 0 にする
+            時間型 反応時間 = std::wcstod(buffer, nullptr);
+            if (反応時間 == 0) {
+                _制動反応時間 = 0; // 負の 0 は正の 0 にする
             }
-            else if (0 < 緩解時間 && std::isfinite(緩解時間)) {
-                _制動緩解時間 = 緩解時間;
+            else if (0 < 反応時間 && std::isfinite(反応時間)) {
+                _制動反応時間 = 反応時間;
             }
         }
 

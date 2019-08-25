@@ -44,7 +44,7 @@ namespace autopilot {
             仕様.BrakeNotches,
             std::max(std::min(仕様.AtsNotch, 仕様.BrakeNotches) - 1, 0),
             _設定.常用最大減速度(),
-            _設定.制動緩解時間(),
+            _設定.制動反応時間(),
             _設定.pressure_rates());
     }
 
