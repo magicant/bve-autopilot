@@ -56,7 +56,7 @@ namespace autopilot
 
         int 出力制動ノッチ(
             距離型 現在位置, 速度型 現在速度, int 現在制動ノッチ,
-            const 制動特性 & 制動, 加速度型 勾配影響) const;
+            加速度型 勾配影響, const 共通状態 &状態) const;
         int 出力ノッチ(
             距離型 現在位置, 速度型 現在速度, const 共通状態 & 状態) const;
 

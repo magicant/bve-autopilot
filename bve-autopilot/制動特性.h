@@ -36,7 +36,7 @@ namespace autopilot
 
         void 性能設定(
             int 常用ノッチ数, int 無効ノッチ数, 加速度型 常用最大減速度,
-            時間型 緩解時間, const std::vector<double> &pressure_rates);
+            時間型 反応時間, const std::vector<double> &pressure_rates);
 
         int 常用ノッチ数() const { return _常用ノッチ数; }
         int 無効ノッチ数() const { return _無効ノッチ数; }
@@ -44,7 +44,7 @@ namespace autopilot
             return _常用ノッチ数 - _無効ノッチ数;
         }
         加速度型 常用最大減速度() const { return _常用最大減速度; }
-        時間型 緩解時間() const { return _緩解時間; }
+        時間型 反応時間() const { return _反応時間; }
 
         /// 所望の減速度を得るために設定すべき常用制動ノッチを得ます。
         /// 引数の大きさによっては常用最大を超えるノッチを返すことがあります。
@@ -56,7 +56,7 @@ namespace autopilot
     private:
         int _常用ノッチ数 = 0, _無効ノッチ数 = 0;
         加速度型 _常用最大減速度 = 0;
-        時間型 _緩解時間 = 0;
+        時間型 _反応時間 = 0;
 
         /// 車両パラメーターファイルの PressureRates に同じ。
         /// 少なくとも (_常用ノッチ数 + 1) 個の要素を持ちます。
