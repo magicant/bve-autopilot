@@ -19,6 +19,7 @@
 
 #include "stdafx.h"
 #include "制限区間.h"
+#include <algorithm>
 #include <cmath>
 
 namespace autopilot
@@ -28,7 +29,7 @@ namespace autopilot
         加速度型 初期減速度, 加速度型 最終減速度,
         時間型 時間マージン, 速度型 速度マージン) const
     {
-        速度型 目標速度 = 速度 - 速度マージン;
+        速度型 目標速度 = std::max(速度 - 速度マージン, 0.0);
         距離型 距離マージン = 目標速度 * 時間マージン;
         距離型 目標位置 = 始点 - (std::isnan(距離マージン) ? 0 : 距離マージン);
         return 減速パターン{ 目標位置, 目標速度, 初期減速度, 最終減速度 };
