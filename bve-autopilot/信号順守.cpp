@@ -19,6 +19,8 @@
 
 #include "stdafx.h"
 #include "信号順守.h"
+#include <algorithm>
+#include <cmath>
 #include "tasc.h"
 #include "信号前照査順守.h"
 #include "共通状態.h"
@@ -43,6 +45,17 @@ namespace autopilot
 
             速度型 速度 = mps_from_kmph(地上子値 % 1000);
             速度表[指示] = 速度;
+        }
+
+        int atc停止出力ノッチ(const 共通状態 &状態)
+        {
+            加速度型 目標減速度 = 状態.現在速度() / 2.0;
+            加速度型 勾配影響 = 状態.車両勾配加速度();
+            加速度型 出力減速度 =
+                std::max(目標減速度 + 勾配影響, mps_from_kmph(1.0));
+            double 制動ノッチd = 状態.制動().ノッチ(出力減速度);
+            int 制動ノッチi = static_cast<int>(std::ceil(制動ノッチd));
+            return -std::min(制動ノッチi, 状態.制動().常用ノッチ数());
         }
 
     }
@@ -199,6 +212,10 @@ namespace autopilot
         距離型 停止マージン;
         時間型 時間マージン;
         if (is_atc()) {
+            if (_現在閉塞.信号速度 == 0) {
+                return atc停止出力ノッチ(状態);
+            }
+
             停止マージン = -1;
             時間マージン = 0;
         }
