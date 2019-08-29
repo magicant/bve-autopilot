@@ -31,6 +31,7 @@ namespace autopilot {
     tasc::tasc() :
         _名目の目標停止位置(std::numeric_limits<double>::infinity()),
         _調整した目標停止位置(std::numeric_limits<double>::infinity()),
+        _直前目標停止位置受信位置(std::numeric_limits<距離型>::quiet_NaN()),
         _出力ノッチ(std::numeric_limits<int>::max())
     {
     }
@@ -39,6 +40,7 @@ namespace autopilot {
     {
         _名目の目標停止位置 = std::numeric_limits<double>::infinity();
         _調整した目標停止位置 = std::numeric_limits<double>::infinity();
+        _直前目標停止位置受信位置 = std::numeric_limits<距離型>::quiet_NaN();
     }
 
     void tasc::制動操作(const 共通状態 &状態)
@@ -59,17 +61,15 @@ namespace autopilot {
         {
         case 17: // TASC 目標停止位置設定 (メトロ総合プラグイン互換)
             if (状態.互換モード() == 互換モード型::メトロ総合) {
-                _名目の目標停止位置 = 状態.現在位置() + 11;
+                目標停止位置を設定(11, 状態);
             }
             break;
-        case 30: { // TASC 目標停止位置設定
-            double 残距離 = 地上子.Optional / 1000;
-            _名目の目標停止位置 = 状態.現在位置() + 残距離;
+        case 30: // TASC 目標停止位置設定
+            目標停止位置を設定(地上子.Optional / 1000, 状態);
             break;
-        }
         case 32: // TASC 目標停止位置設定 (メトロ総合プラグイン互換)
             if (状態.互換モード() == 互換モード型::メトロ総合) {
-                _名目の目標停止位置 = 状態.現在位置() + 500;
+                目標停止位置を設定(500, 状態);
             }
             break;
         }
@@ -77,6 +77,8 @@ namespace autopilot {
 
     void tasc::経過(const 共通状態 & 状態)
     {
+        目標停止位置を補正(状態);
+
         距離型 残距離 = _名目の目標停止位置 - 状態.現在位置();
         if (残距離 <= 0.5) {
             // 目標停止位置に近付いたらさっさと車両を止めるように
@@ -114,6 +116,32 @@ namespace autopilot {
     bool tasc::制御中() const
     {
         return std::isfinite(_名目の目標停止位置);
+    }
+
+    void tasc::目標停止位置を設定(距離型 残距離, const 共通状態 &状態)
+    {
+        距離型 現在位置 = 状態.現在位置();
+        _名目の目標停止位置 = 現在位置 + 残距離;
+        _直前目標停止位置受信位置 = 現在位置;
+    }
+
+    void tasc::目標停止位置を補正(const 共通状態 &状態)
+    {
+        if (std::isnan(_直前目標停止位置受信位置)) {
+            return;
+        }
+
+        距離型 直前位置 = _直前目標停止位置受信位置;
+        距離型 現在位置 = 状態.現在位置();
+        距離型 最大誤差 = 現在位置 - 直前位置;
+        距離型 補正前の目標停止位置 = _名目の目標停止位置;
+        距離型 補正した目標停止位置 = std::ceil(補正前の目標停止位置);
+        距離型 補正距離 = 補正した目標停止位置 - 補正前の目標停止位置;
+        if (補正距離 <= 最大誤差) {
+            _名目の目標停止位置 = 補正した目標停止位置;
+        }
+
+        _直前目標停止位置受信位置 = std::numeric_limits<距離型>::quiet_NaN();
     }
 
     加速度型 tasc::出力減速度(
