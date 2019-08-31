@@ -32,6 +32,37 @@ namespace autopilot
     namespace
     {
 
+        class tasc残距離桁
+        {
+        public:
+            static constexpr int 無効値 = 11;
+
+            tasc残距離桁(int 桁) : _桁{桁} { }
+            ~tasc残距離桁() = default;
+
+            int operator()(const Main &main) const;
+
+        private:
+            int _桁;
+        };
+
+        int tasc残距離桁::operator()(const Main &main) const
+        {
+            距離型 残距離 =
+                main.tasc状態().目標停止位置() - main.状態().現在位置();
+            if (!std::isfinite(残距離)) {
+                return 無効値;
+            }
+            int v = static_cast<int>(std::abs(残距離) * 100);
+            for (int i = 0; i < _桁; ++i) {
+                v /= 10;
+            }
+            if (v == 0) {
+                return 10;
+            }
+            return v % 10;
+        }
+
         const std::unordered_map<std::wstring, パネル出力対象> 対象名簿 = {
             {L"brake", パネル出力対象([](const Main & main) {
                 return main.状態().前回出力().Brake;
@@ -52,6 +83,30 @@ namespace autopilot
                 }
                 return std::max(-main.tasc状態().出力ノッチ(), 0);
             })},
+            {L"tascdistance", パネル出力対象([](const Main &main) {
+                距離型 残距離 =
+                    main.tasc状態().目標停止位置() - main.状態().現在位置();
+                if (!std::isfinite(残距離)) {
+                    return 0;
+                }
+                return static_cast<int>(残距離 * 100);
+            })},
+            {L"tascdistancesign", パネル出力対象([](const Main &main) {
+                距離型 残距離 =
+                    main.tasc状態().目標停止位置() - main.状態().現在位置();
+                if (!std::isfinite(残距離)) {
+                    return 0;
+                }
+                return 残距離 >= 0 ? 1 : 2;
+            })},
+            {L"tascdistancedm2", パネル出力対象(tasc残距離桁(0))},
+            {L"tascdistancedm1", パネル出力対象(tasc残距離桁(1))},
+            {L"tascdistanced0", パネル出力対象(tasc残距離桁(2))},
+            {L"tascdistanced1", パネル出力対象(tasc残距離桁(3))},
+            {L"tascdistanced2", パネル出力対象(tasc残距離桁(4))},
+            {L"tascdistanced3", パネル出力対象(tasc残距離桁(5))},
+            {L"tascdistanced4", パネル出力対象(tasc残距離桁(6))},
+            {L"tascdistanced5", パネル出力対象(tasc残距離桁(7))},
             {L"atoenabled", パネル出力対象([](const Main & main) {
                 return main.ato有効();
             })},
