@@ -57,6 +57,9 @@ namespace autopilot {
 
     void tasc::地上子通過(const ATS_BEACONDATA & 地上子, const 共通状態 & 状態)
     {
+        if (!状態.戸閉()) {
+            return; // 「停車場へ移動」時は無視する
+        }
         switch (地上子.Type)
         {
         case 17: // TASC 目標停止位置設定 (メトロ総合プラグイン互換)
