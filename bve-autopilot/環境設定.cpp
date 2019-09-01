@@ -25,6 +25,7 @@
 #include <initializer_list>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 #include "共通状態.h"
@@ -83,6 +84,8 @@ namespace autopilot
     }
 
     環境設定::環境設定() :
+        _tasc初期起動(true),
+        _ato初期起動(true),
         _車両長(20),
         _加速終了遅延(1),
         _常用最大減速度(mps_from_kmph(3)),
@@ -104,9 +107,30 @@ namespace autopilot
 
     void 環境設定::ファイル読込(LPCWSTR 設定ファイル名)
     {
+        using namespace std::string_view_literals;
+
         constexpr std::size_t buffer_size = 256;
         WCHAR buffer[buffer_size];
         DWORD size;
+
+        // 初期モード
+        size = GetPrivateProfileStringW(
+            L"init", L"mode", L"", buffer, buffer_size,
+            設定ファイル名);
+        if (0 < size && size < buffer_size - 1) {
+            if (buffer == L"off"sv) {
+                _tasc初期起動 = false;
+                _ato初期起動 = false;
+            }
+            else if (buffer == L"tasc"sv) {
+                _tasc初期起動 = true;
+                _ato初期起動 = false;
+            }
+            else {
+                _tasc初期起動 = true;
+                _ato初期起動 = true;
+            }
+        }
 
         // 車両長
         size = GetPrivateProfileStringW(

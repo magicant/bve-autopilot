@@ -48,6 +48,8 @@ namespace autopilot
         void リセット(int 制動状態);
         void 設定ファイル読込(LPCWSTR 設定ファイル名) {
             _状態.設定ファイル読込(設定ファイル名);
+            _tasc有効 = _状態.設定().tasc初期起動();
+            _ato有効 = _状態.設定().ato初期起動();
         }
 
         void 逆転器操作(int ノッチ);
