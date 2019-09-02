@@ -46,6 +46,8 @@ namespace autopilot
         void リセット();
         void ファイル読込(LPCWSTR 設定ファイル名);
 
+        bool tasc初期起動() const { return _tasc初期起動; }
+        bool ato初期起動() const { return _ato初期起動; }
         距離型 車両長() const { return _車両長; }
         時間型 加速終了遅延() const { return _加速終了遅延; }
         加速度型 常用最大減速度() const { return _常用最大減速度; }
@@ -64,6 +66,7 @@ namespace autopilot
         }
 
     private:
+        bool _tasc初期起動, _ato初期起動;
         距離型 _車両長;
         時間型 _加速終了遅延;
         加速度型 _常用最大減速度;
