@@ -35,13 +35,18 @@ namespace autopilot
         ~制動特性();
 
         void 性能設定(
-            int 常用ノッチ数, int 無効ノッチ数, 加速度型 常用最大減速度,
-            時間型 反応時間, const std::vector<double> &pressure_rates);
+            int 常用ノッチ数, int 無効ノッチ数, int 拡張ノッチ数,
+            加速度型 常用最大減速度, 時間型 反応時間,
+            const std::vector<double> &pressure_rates);
 
         int 常用ノッチ数() const { return _常用ノッチ数; }
         int 無効ノッチ数() const { return _無効ノッチ数; }
         int 実効ノッチ数() const {
             return _常用ノッチ数 - _無効ノッチ数;
+        }
+        int 拡張ノッチ数() const { return _拡張ノッチ数; }
+        int 自動ノッチ数() const {
+            return _拡張ノッチ数 > 0 ? _拡張ノッチ数 : _常用ノッチ数;
         }
         加速度型 常用最大減速度() const { return _常用最大減速度; }
         時間型 反応時間() const { return _反応時間; }
@@ -54,7 +59,7 @@ namespace autopilot
         加速度型 減速度(double ノッチ) const;
 
     private:
-        int _常用ノッチ数 = 0, _無効ノッチ数 = 0;
+        int _常用ノッチ数 = 0, _無効ノッチ数 = 0, _拡張ノッチ数 = 0;
         加速度型 _常用最大減速度 = 0;
         時間型 _反応時間 = 0;
 

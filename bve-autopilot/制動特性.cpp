@@ -29,11 +29,13 @@ namespace autopilot
     制動特性::~制動特性() = default;
 
     void 制動特性::性能設定(
-        int 常用ノッチ数, int 無効ノッチ数, 加速度型 常用最大減速度,
-        時間型 反応時間, const std::vector<double> &pressure_rates)
+        int 常用ノッチ数, int 無効ノッチ数, int 拡張ノッチ数,
+        加速度型 常用最大減速度, 時間型 反応時間,
+        const std::vector<double> &pressure_rates)
     {
         _常用ノッチ数 = 常用ノッチ数;
         _無効ノッチ数 = 無効ノッチ数;
+        _拡張ノッチ数 = 拡張ノッチ数;
         _常用最大減速度 = 常用最大減速度;
         _反応時間 = 反応時間;
         _pressure_rates = pressure_rates;
