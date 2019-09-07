@@ -21,6 +21,7 @@
 #include "制動特性.h"
 #include <algorithm>
 #include <cassert>
+#include <iterator>
 
 namespace autopilot
 {
@@ -31,16 +32,53 @@ namespace autopilot
     void 制動特性::性能設定(
         int 常用ノッチ数, int 無効ノッチ数, int 拡張ノッチ数,
         加速度型 常用最大減速度, 時間型 反応時間,
-        const std::vector<double> &pressure_rates_config)
+        const std::vector<double> &pressure_rates)
     {
         _常用ノッチ数 = 常用ノッチ数;
         _無効ノッチ数 = 無効ノッチ数;
-        _拡張ノッチ数 = 拡張ノッチ数;
         _常用最大減速度 = 常用最大減速度;
         _反応時間 = 反応時間;
-        _標準ノッチ列 = pressure_rates_config;
 
+        auto 標準ノッチ列最大長 =
+            static_cast<pressure_rates::size_type>(常用ノッチ数) + 2;
+        _標準ノッチ列 = pressure_rates;
         _標準ノッチ列.穴埋めする(常用ノッチ数, 無効ノッチ数);
+        if (_標準ノッチ列.size() > 標準ノッチ列最大長) {
+            // 拡張ノッチ列相当部分は取り除く
+            _標準ノッチ列.resize(標準ノッチ列最大長);
+        }
+
+        auto 拡張ノッチ列最大長 =
+            static_cast<pressure_rates::size_type>(拡張ノッチ数) + 1;
+        _拡張ノッチ列.clear();
+        if (pressure_rates.size() > 標準ノッチ列最大長) {
+            _拡張ノッチ列.push_back(0);
+            std::copy(
+                pressure_rates.begin() + 標準ノッチ列最大長,
+                pressure_rates.end(),
+                std::back_inserter(_拡張ノッチ列));
+            if (_拡張ノッチ列.size() > 拡張ノッチ列最大長) {
+                // 余った分は取り除く
+                _拡張ノッチ列.resize(拡張ノッチ列最大長);
+            }
+            if (_拡張ノッチ列.size() <= 1) {
+                // 緩めノッチしかないのはダメ
+                _拡張ノッチ列.clear();
+            }
+        }
+    }
+
+    inline int 制動特性::拡張ノッチ数() const
+    {
+        if (_拡張ノッチ列.empty()) {
+            return 0;
+        }
+        return _拡張ノッチ列.size() - 1;
+    }
+
+    inline int 制動特性::自動ノッチ数() const {
+        int c = 拡張ノッチ数();
+        return c > 0 ? c : _常用ノッチ数;
     }
 
     double 制動特性::ノッチ(加速度型 減速度) const
