@@ -21,6 +21,7 @@
 #include "制動特性.h"
 #include <algorithm>
 #include <cassert>
+#include <cmath>
 #include <iterator>
 
 namespace autopilot
@@ -68,7 +69,7 @@ namespace autopilot
         }
     }
 
-    inline int 制動特性::拡張ノッチ数() const
+    int 制動特性::拡張ノッチ数() const
     {
         if (_拡張ノッチ列.empty()) {
             return 0;
@@ -76,21 +77,67 @@ namespace autopilot
         return _拡張ノッチ列.size() - 1;
     }
 
-    inline int 制動特性::自動ノッチ数() const {
+    int 制動特性::自動ノッチ数() const {
         int c = 拡張ノッチ数();
         return c > 0 ? c : _標準ノッチ数;
     }
 
-    double 制動特性::ノッチ(加速度型 減速度) const
+    double 制動特性::標準ノッチ(加速度型 減速度) const
     {
         double 割合 = 減速度 / _常用最大減速度;
         return _標準ノッチ列.ノッチ(割合);
     }
 
-    加速度型 制動特性::減速度(double ノッチ) const
+    double 制動特性::自動ノッチ(加速度型 減速度) const
+    {
+        if (_拡張ノッチ列.empty()) {
+            return 標準ノッチ(減速度);
+        }
+        double 割合 = 減速度 / _常用最大減速度;
+        return _拡張ノッチ列.ノッチ(割合);
+    }
+
+    加速度型 制動特性::標準ノッチ減速度(double ノッチ) const
     {
         double 割合 = _標準ノッチ列.割合(ノッチ);
         return _常用最大減速度 * 割合;
+    }
+
+    加速度型 制動特性::自動ノッチ減速度(double ノッチ) const
+    {
+        double 割合;
+        if (_拡張ノッチ列.empty()) {
+            割合 = _標準ノッチ列.割合(ノッチ);
+        }
+        else {
+            割合 = _拡張ノッチ列.割合(ノッチ);
+        }
+        return _常用最大減速度 * 割合;
+    }
+
+    int 制動特性::自動ノッチ番号(int 自動ノッチ) const
+    {
+        if (自動ノッチ == 0) {
+            return 0;
+        }
+        if (_拡張ノッチ列.empty()) {
+            return 自動ノッチ;
+        }
+        return 自動ノッチ + _標準ノッチ数 + 1;
+    }
+
+    int 制動特性::自動ノッチインデクス(int ノッチ番号) const
+    {
+        if (ノッチ番号 > _標準ノッチ数 + 1) {
+            return ノッチ番号 - _標準ノッチ数 - 1;
+        }
+        if (_拡張ノッチ列.empty()) {
+            return ノッチ番号;
+        }
+
+        double 割合 = _標準ノッチ列.割合(ノッチ番号);
+        double インデクス = _拡張ノッチ列.ノッチ(割合);
+        return static_cast<int>(std::ceil(インデクス));
     }
 
     void 制動特性::pressure_rates::穴埋めする(

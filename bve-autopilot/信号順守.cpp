@@ -53,9 +53,9 @@ namespace autopilot
             加速度型 勾配影響 = 状態.車両勾配加速度();
             加速度型 出力減速度 =
                 std::max(目標減速度 + 勾配影響, mps_from_kmph(1.0));
-            double 制動ノッチd = 状態.制動().ノッチ(出力減速度);
+            double 制動ノッチd = 状態.制動().自動ノッチ(出力減速度);
             int 制動ノッチi = static_cast<int>(std::ceil(制動ノッチd));
-            return -std::min(制動ノッチi, 状態.制動().標準ノッチ数());
+            return -std::min(制動ノッチi, 状態.制動().自動ノッチ数());
         }
 
     }

@@ -109,8 +109,8 @@ namespace autopilot {
 
         if (残距離 <= 0.5 && 状態.現在速度() < mps_from_kmph(0.05)) {
             // 停車中は制動し続ける
-            double 転動防止ノッチ = std::ceil(
-                状態.制動().ノッチ(std::abs(実勾配影響) + mps_from_kmph(1)));
+            auto a = std::abs(実勾配影響) + mps_from_kmph(1);
+            double 転動防止ノッチ = std::ceil(状態.制動().自動ノッチ(a));
             _出力ノッチ =
                 std::min(_出力ノッチ, static_cast<int>(-転動防止ノッチ));
         }
