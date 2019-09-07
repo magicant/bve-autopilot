@@ -38,20 +38,20 @@ namespace autopilot
         _拡張ノッチ数 = 拡張ノッチ数;
         _常用最大減速度 = 常用最大減速度;
         _反応時間 = 反応時間;
-        _pressure_rates = pressure_rates_config;
+        _標準ノッチ列 = pressure_rates_config;
 
-        _pressure_rates.穴埋めする(常用ノッチ数, 無効ノッチ数);
+        _標準ノッチ列.穴埋めする(常用ノッチ数, 無効ノッチ数);
     }
 
     double 制動特性::ノッチ(加速度型 減速度) const
     {
         double 割合 = 減速度 / _常用最大減速度;
-        return _pressure_rates.ノッチ(割合);
+        return _標準ノッチ列.ノッチ(割合);
     }
 
     加速度型 制動特性::減速度(double ノッチ) const
     {
-        double 割合 = _pressure_rates.割合(ノッチ);
+        double 割合 = _標準ノッチ列.割合(ノッチ);
         return _常用最大減速度 * 割合;
     }
 

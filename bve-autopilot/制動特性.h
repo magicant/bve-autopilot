@@ -83,9 +83,7 @@ namespace autopilot
         加速度型 _常用最大減速度 = 0;
         時間型 _反応時間 = 0;
 
-        /// 車両パラメーターファイルの PressureRates に同じ。
-        /// 少なくとも (_常用ノッチ数 + 1) 個の要素を持ちます。
-        pressure_rates _pressure_rates;
+        pressure_rates _標準ノッチ列;
     };
 
 }
