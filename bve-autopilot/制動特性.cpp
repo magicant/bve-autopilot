@@ -30,19 +30,19 @@ namespace autopilot
     制動特性::~制動特性() = default;
 
     void 制動特性::性能設定(
-        int 常用ノッチ数, int 無効ノッチ数, int 拡張ノッチ数,
+        int 標準ノッチ数, int 無効ノッチ数, int 拡張ノッチ数,
         加速度型 常用最大減速度, 時間型 反応時間,
         const std::vector<double> &pressure_rates)
     {
-        _常用ノッチ数 = 常用ノッチ数;
+        _標準ノッチ数 = 標準ノッチ数;
         _無効ノッチ数 = 無効ノッチ数;
         _常用最大減速度 = 常用最大減速度;
         _反応時間 = 反応時間;
 
         auto 標準ノッチ列最大長 =
-            static_cast<pressure_rates::size_type>(常用ノッチ数) + 2;
+            static_cast<pressure_rates::size_type>(標準ノッチ数) + 2;
         _標準ノッチ列 = pressure_rates;
-        _標準ノッチ列.穴埋めする(常用ノッチ数, 無効ノッチ数);
+        _標準ノッチ列.穴埋めする(標準ノッチ数, 無効ノッチ数);
         if (_標準ノッチ列.size() > 標準ノッチ列最大長) {
             // 拡張ノッチ列相当部分は取り除く
             _標準ノッチ列.resize(標準ノッチ列最大長);
@@ -78,7 +78,7 @@ namespace autopilot
 
     inline int 制動特性::自動ノッチ数() const {
         int c = 拡張ノッチ数();
-        return c > 0 ? c : _常用ノッチ数;
+        return c > 0 ? c : _標準ノッチ数;
     }
 
     double 制動特性::ノッチ(加速度型 減速度) const

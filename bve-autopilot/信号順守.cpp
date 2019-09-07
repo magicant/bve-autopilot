@@ -55,7 +55,7 @@ namespace autopilot
                 std::max(目標減速度 + 勾配影響, mps_from_kmph(1.0));
             double 制動ノッチd = 状態.制動().ノッチ(出力減速度);
             int 制動ノッチi = static_cast<int>(std::ceil(制動ノッチd));
-            return -std::min(制動ノッチi, 状態.制動().常用ノッチ数());
+            return -std::min(制動ノッチi, 状態.制動().標準ノッチ数());
         }
 
     }
