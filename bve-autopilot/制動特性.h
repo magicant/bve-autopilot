@@ -37,7 +37,7 @@ namespace autopilot
         void 性能設定(
             int 常用ノッチ数, int 無効ノッチ数, int 拡張ノッチ数,
             加速度型 常用最大減速度, 時間型 反応時間,
-            const std::vector<double> &pressure_rates);
+            const std::vector<double> &pressure_rates_config);
 
         int 常用ノッチ数() const { return _常用ノッチ数; }
         int 無効ノッチ数() const { return _無効ノッチ数; }
@@ -59,16 +59,33 @@ namespace autopilot
         加速度型 減速度(double ノッチ) const;
 
     private:
+        /// 車両パラメーターファイルの PressureRates と同様に、ノッチごとの
+        /// ブレーキ力の割合を示す数列です。
+        /// 最初の要素は 0 である必要があります。
+        class pressure_rates : public std::vector<double> {
+        public:
+            using std::vector<double>::vector;
+
+            pressure_rates &operator=(const std::vector<double> &v) {
+                static_cast<std::vector<double> &>(*this) = v;
+                return *this;
+            }
+
+            void 穴埋めする(size_type 常用ノッチ数, size_type 無効ノッチ数);
+
+            /// 指定した割合に相当するノッチを返します。
+            double ノッチ(double 割合) const;
+            /// 指定したノッチに相当する割合を返します。
+            double 割合(double ノッチ) const;
+        };
+
         int _常用ノッチ数 = 0, _無効ノッチ数 = 0, _拡張ノッチ数 = 0;
         加速度型 _常用最大減速度 = 0;
         時間型 _反応時間 = 0;
 
         /// 車両パラメーターファイルの PressureRates に同じ。
         /// 少なくとも (_常用ノッチ数 + 1) 個の要素を持ちます。
-        std::vector<double> _pressure_rates;
-
-        /// _pressure_rates の要素数が足りないときに穴埋めします。
-        void pressure_rates_を穴埋め();
+        pressure_rates _pressure_rates;
     };
 
 }

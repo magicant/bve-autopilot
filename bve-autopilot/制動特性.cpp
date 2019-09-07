@@ -31,77 +31,81 @@ namespace autopilot
     void 制動特性::性能設定(
         int 常用ノッチ数, int 無効ノッチ数, int 拡張ノッチ数,
         加速度型 常用最大減速度, 時間型 反応時間,
-        const std::vector<double> &pressure_rates)
+        const std::vector<double> &pressure_rates_config)
     {
         _常用ノッチ数 = 常用ノッチ数;
         _無効ノッチ数 = 無効ノッチ数;
         _拡張ノッチ数 = 拡張ノッチ数;
         _常用最大減速度 = 常用最大減速度;
         _反応時間 = 反応時間;
-        _pressure_rates = pressure_rates;
+        _pressure_rates = pressure_rates_config;
 
-        pressure_rates_を穴埋め();
+        _pressure_rates.穴埋めする(常用ノッチ数, 無効ノッチ数);
     }
 
     double 制動特性::ノッチ(加速度型 減速度) const
     {
         double 割合 = 減速度 / _常用最大減速度;
-        auto i = std::lower_bound(
-            _pressure_rates.begin(), _pressure_rates.end(), 割合);
-        if (i == _pressure_rates.begin()) {
+        return _pressure_rates.ノッチ(割合);
+    }
+
+    加速度型 制動特性::減速度(double ノッチ) const
+    {
+        double 割合 = _pressure_rates.割合(ノッチ);
+        return _常用最大減速度 * 割合;
+    }
+
+    void 制動特性::pressure_rates::穴埋めする(
+        size_type 常用ノッチ数, size_type 無効ノッチ数)
+    {
+        while (size() <= 常用ノッチ数) {
+            if (size() <= 無効ノッチ数) {
+                push_back(0);
+            }
+            else {
+                auto 分割数 = 常用ノッチ数 - size() + 1;
+                auto 前の値 = back();
+                auto 次の値 = 前の値 + (1 - 前の値) / 分割数;
+                push_back(次の値);
+            }
+        }
+    }
+
+    double 制動特性::pressure_rates::ノッチ(double 割合) const
+    {
+        auto i = std::lower_bound(begin(), end(), 割合);
+        if (i == begin()) {
             return 0;
         }
-        if (i == _pressure_rates.end()) {
-            return 割合 * 実効ノッチ数() + _無効ノッチ数;
+        if (i == end()) {
+            return 割合 * size();
         }
 
         double 次ノッチ割合 = *i;
         --i;
         double 前ノッチ割合 = *i;
-        return std::distance(_pressure_rates.begin(), i) +
+        return std::distance(begin(), i) +
             (割合 - 前ノッチ割合) / (次ノッチ割合 - 前ノッチ割合);
-
     }
 
-    加速度型 制動特性::減速度(double ノッチ) const
+    double 制動特性::pressure_rates::割合(double ノッチ) const
     {
         assert(ノッチ >= 0);
+        assert(size() > 0);
 
-        double 割合;
-        if (ノッチ >= _常用ノッチ数) {
-            割合 = (ノッチ - _無効ノッチ数) / 実効ノッチ数();
+        if (ノッチ >= size() - 1) {
+            return ノッチ / (size() - 1);
         }
-        else {
-            using size_type = std::vector<double>::size_type;
-            size_type i = static_cast<size_type>(ノッチ);
-            assert(i + 1 < _pressure_rates.size());
-            double 前ノッチ割合 = _pressure_rates[i];
-            double 次ノッチ割合 = _pressure_rates[i + 1];
-            割合 = 前ノッチ割合;
-            if (前ノッチ割合 < 次ノッチ割合) {
-                割合 += (ノッチ - i) / (次ノッチ割合 - 前ノッチ割合);
-            }
-        }
-        return _常用最大減速度 * 割合;
-    }
 
-    void 制動特性::pressure_rates_を穴埋め()
-    {
-        while (_pressure_rates.size() <=
-            static_cast<std::vector<double>::size_type>(_常用ノッチ数))
-        {
-            if (_pressure_rates.size() <=
-                static_cast<std::vector<double>::size_type>(_無効ノッチ数))
-            {
-                _pressure_rates.push_back(0);
-            }
-            else {
-                auto 分割数 = _常用ノッチ数 - _pressure_rates.size() + 1;
-                auto 前の値 = _pressure_rates.back();
-                auto 次の値 = 前の値 + (1 - 前の値) / 分割数;
-                _pressure_rates.push_back(次の値);
-            }
+        size_type i = static_cast<size_type>(ノッチ);
+        assert(i < size() - 1);
+        double 前ノッチ割合 = (*this)[i];
+        double 次ノッチ割合 = (*this)[i + 1];
+        double 割合 = 前ノッチ割合;
+        if (前ノッチ割合 < 次ノッチ割合) {
+            割合 += (ノッチ - i) / (次ノッチ割合 - 前ノッチ割合);
         }
+        return 割合;
     }
 
 }
