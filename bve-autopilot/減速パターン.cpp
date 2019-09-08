@@ -20,6 +20,7 @@
 #include "stdafx.h"
 #include "減速パターン.h"
 #include <algorithm>
+#include <cmath>
 #include <limits>
 #include <tuple>
 #include "共通状態.h"
