@@ -71,6 +71,11 @@ namespace autopilot
         /// 引数が自動ノッチでない場合、対応する自動ノッチに切り上げます。
         int 自動ノッチインデクス(int ノッチ番号) const;
 
+        /// 自動ノッチを整数に丸めます。
+        /// 弱いノッチはより弱く、強いノッチはより強くなる方向に
+        /// バイアスをかけます。
+        double 自動ノッチ丸め(double ノッチ) const;
+
     private:
         /// 車両パラメーターファイルの PressureRates と同様に、ノッチごとの
         /// ブレーキ力の割合を示す数列です。
@@ -88,8 +93,13 @@ namespace autopilot
 
             /// 指定した割合に相当するノッチを返します。
             double ノッチ(double 割合) const;
+            std::pair<double, double> 割合と丸め閾値(double ノッチ) const;
             /// 指定したノッチに相当する割合を返します。
             double 割合(double ノッチ) const;
+            /// ノッチを整数に丸めます。
+            /// 弱いノッチはより弱く、強いノッチはより強くなる方向に
+            /// バイアスをかけます。
+            double 丸め(double ノッチ) const;
         };
 
         int _標準ノッチ数 = 0;

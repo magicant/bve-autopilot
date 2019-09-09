@@ -139,6 +139,16 @@ namespace autopilot
         return static_cast<int>(std::ceil(インデクス));
     }
 
+    double 制動特性::自動ノッチ丸め(double ノッチ) const
+    {
+        if (_拡張ノッチ列.empty()) {
+            return _標準ノッチ列.丸め(ノッチ);
+        }
+        else {
+            return _拡張ノッチ列.丸め(ノッチ);
+        }
+    }
+
     void 制動特性::pressure_rates::穴埋めする(size_type 常用ノッチ数)
     {
         if (empty()) {
@@ -169,24 +179,42 @@ namespace autopilot
             (割合 - 前ノッチ割合) / (次ノッチ割合 - 前ノッチ割合);
     }
 
-    double 制動特性::pressure_rates::割合(double ノッチ) const
+    std::pair<double, double> 制動特性::pressure_rates::割合と丸め閾値(
+        double ノッチ) const
     {
-        assert(ノッチ >= 0);
         assert(size() > 0);
 
-        if (ノッチ >= size() - 1) {
-            return ノッチ / (size() - 1);
+        if (ノッチ <= 0) {
+            return {0, 0};
+        }
+
+        auto s1 = size() - 1;
+        if (ノッチ >= s1) {
+            return {ノッチ / s1, s1};
         }
 
         size_type i = static_cast<size_type>(ノッチ);
-        assert(i < size() - 1);
+        assert(i < s1);
         double 前ノッチ割合 = (*this)[i];
         double 次ノッチ割合 = (*this)[i + 1];
         double 割合 = 前ノッチ割合;
         if (前ノッチ割合 < 次ノッチ割合) {
             割合 += (ノッチ - i) * (次ノッチ割合 - 前ノッチ割合);
         }
-        return 割合;
+        double 丸め閾値 = 次ノッチ割合 / (次ノッチ割合 - 前ノッチ割合 + 1);
+        return {割合, 丸め閾値};
+    }
+
+    double 制動特性::pressure_rates::割合(double ノッチ) const
+    {
+        return 割合と丸め閾値(ノッチ).first;
+    }
+
+    double 制動特性::pressure_rates::丸め(double ノッチ) const
+    {
+        double 割合, 丸め閾値;
+        std::tie(割合, 丸め閾値) = 割合と丸め閾値(ノッチ);
+        return 割合 <= 丸め閾値 ? std::floor(ノッチ) : std::ceil(ノッチ);
     }
 
 }
