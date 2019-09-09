@@ -35,19 +35,13 @@ namespace autopilot
         ~制動特性();
 
         void 性能設定(
-            int 標準ノッチ数, int 無効ノッチ数, int 拡張ノッチ数,
+            int 標準ノッチ数, int 拡張ノッチ数,
             加速度型 常用最大減速度, 時間型 反応時間,
             const std::vector<double> &pressure_rates);
 
         /// 標準の常用ブレーキのノッチ数です。
         /// 緩めノッチと非常ブレーキノッチを含みません。
         int 標準ノッチ数() const { return _標準ノッチ数; }
-        /// 標準ノッチのうち制動力がないものとみなされるノッチ数です。
-        int 無効ノッチ数() const { return _無効ノッチ数; }
-        /// 無効ノッチでない標準ノッチの数です。
-        int 実効ノッチ数() const {
-            return _標準ノッチ数 - _無効ノッチ数;
-        }
         /// 非常ブレーキノッチの後のノッチ番号を使用して定義された
         /// 拡張ノッチの数です。緩めノッチと非常ブレーキノッチを含みません。
         int 拡張ノッチ数() const;
@@ -90,7 +84,7 @@ namespace autopilot
                 return *this;
             }
 
-            void 穴埋めする(size_type 常用ノッチ数, size_type 無効ノッチ数);
+            void 穴埋めする(size_type 常用ノッチ数);
 
             /// 指定した割合に相当するノッチを返します。
             double ノッチ(double 割合) const;
@@ -98,7 +92,7 @@ namespace autopilot
             double 割合(double ノッチ) const;
         };
 
-        int _標準ノッチ数 = 0, _無効ノッチ数 = 0;
+        int _標準ノッチ数 = 0;
         加速度型 _常用最大減速度 = 0;
         時間型 _反応時間 = 0;
 

@@ -31,19 +31,18 @@ namespace autopilot
     制動特性::~制動特性() = default;
 
     void 制動特性::性能設定(
-        int 標準ノッチ数, int 無効ノッチ数, int 拡張ノッチ数,
+        int 標準ノッチ数, int 拡張ノッチ数,
         加速度型 常用最大減速度, 時間型 反応時間,
         const std::vector<double> &pressure_rates)
     {
         _標準ノッチ数 = 標準ノッチ数;
-        _無効ノッチ数 = 無効ノッチ数;
         _常用最大減速度 = 常用最大減速度;
         _反応時間 = 反応時間;
 
         auto 標準ノッチ列最大長 =
             static_cast<pressure_rates::size_type>(標準ノッチ数) + 2;
         _標準ノッチ列 = pressure_rates;
-        _標準ノッチ列.穴埋めする(標準ノッチ数, 無効ノッチ数);
+        _標準ノッチ列.穴埋めする(標準ノッチ数);
         if (_標準ノッチ列.size() > 標準ノッチ列最大長) {
             // 拡張ノッチ列相当部分は取り除く
             _標準ノッチ列.resize(標準ノッチ列最大長);
@@ -140,19 +139,16 @@ namespace autopilot
         return static_cast<int>(std::ceil(インデクス));
     }
 
-    void 制動特性::pressure_rates::穴埋めする(
-        size_type 常用ノッチ数, size_type 無効ノッチ数)
+    void 制動特性::pressure_rates::穴埋めする(size_type 常用ノッチ数)
     {
+        if (empty()) {
+            push_back(0);
+        }
         while (size() <= 常用ノッチ数) {
-            if (size() <= 無効ノッチ数) {
-                push_back(0);
-            }
-            else {
-                auto 分割数 = 常用ノッチ数 - size() + 1;
-                auto 前の値 = back();
-                auto 次の値 = 前の値 + (1 - 前の値) / 分割数;
-                push_back(次の値);
-            }
+            auto 分割数 = 常用ノッチ数 - size() + 1;
+            auto 前の値 = back();
+            auto 次の値 = 前の値 + (1 - 前の値) / 分割数;
+            push_back(次の値);
         }
     }
 
