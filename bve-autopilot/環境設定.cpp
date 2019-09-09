@@ -90,6 +90,7 @@ namespace autopilot
         _加速終了遅延(1),
         _常用最大減速度(mps_from_kmph(3)),
         _制動反応時間(0.2),
+        _制動拡張ノッチ数(0),
         _pressure_rates{},
         _キー割り当て{
             {キー操作::モード切替, ATS_KEY_L},
@@ -176,6 +177,17 @@ namespace autopilot
             }
             else if (0 < 反応時間 && std::isfinite(反応時間)) {
                 _制動反応時間 = 反応時間;
+            }
+        }
+
+        // 制動拡張ノッチ数
+        size = GetPrivateProfileStringW(
+            L"braking", L"extendednotches", L"", buffer, buffer_size,
+            設定ファイル名);
+        if (0 < size && size < buffer_size - 1) {
+            int count = std::stoi(buffer);
+            if (count >= 0) {
+                _制動拡張ノッチ数 = count;
             }
         }
 
