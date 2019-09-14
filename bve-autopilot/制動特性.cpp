@@ -23,6 +23,7 @@
 #include <cassert>
 #include <cmath>
 #include <iterator>
+#include "共通状態.h"
 
 namespace autopilot
 {
@@ -149,6 +150,11 @@ namespace autopilot
         else {
             return _拡張ノッチ列.丸め(ノッチ);
         }
+    }
+
+    void 制動特性::経過(const 共通状態 &状態)
+    {
+        // TODO
     }
 
     void 制動特性::pressure_rates::穴埋めする(size_type 常用ノッチ数)

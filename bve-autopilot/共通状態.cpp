@@ -66,6 +66,7 @@ namespace autopilot {
         _状態 = 状態;
         _加速度計.経過({ mps_from_kmph(状態.Speed), 現在時刻() });
         _勾配特性.通過(現在位置() - 列車長());
+        _制動特性.経過(*this);
     }
 
     void 共通状態::出力(const ATS_HANDLES & 出力)
