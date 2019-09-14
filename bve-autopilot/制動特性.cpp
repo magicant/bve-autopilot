@@ -32,11 +32,11 @@ namespace autopilot
 
     void 制動特性::性能設定(
         int 標準ノッチ数, int 拡張ノッチ数,
-        加速度型 常用最大減速度, 時間型 反応時間,
+        加速度型 基準最大減速度, 時間型 反応時間,
         const std::vector<double> &pressure_rates)
     {
         _標準ノッチ数 = 標準ノッチ数;
-        _常用最大減速度 = 常用最大減速度;
+        _基準最大減速度 = 基準最大減速度;
         _反応時間 = 反応時間;
 
         auto 標準ノッチ列最大長 =
@@ -66,6 +66,8 @@ namespace autopilot
                 _拡張ノッチ列.clear();
             }
         }
+
+        _推定最大減速度 = 基準最大減速度;
     }
 
     int 制動特性::拡張ノッチ数() const
@@ -83,7 +85,7 @@ namespace autopilot
 
     double 制動特性::標準ノッチ(加速度型 減速度) const
     {
-        double 割合 = 減速度 / _常用最大減速度;
+        double 割合 = 減速度 / _推定最大減速度;
         return _標準ノッチ列.ノッチ(割合);
     }
 
@@ -92,14 +94,14 @@ namespace autopilot
         if (_拡張ノッチ列.empty()) {
             return 標準ノッチ(減速度);
         }
-        double 割合 = 減速度 / _常用最大減速度;
+        double 割合 = 減速度 / _推定最大減速度;
         return _拡張ノッチ列.ノッチ(割合);
     }
 
     加速度型 制動特性::標準ノッチ減速度(double ノッチ) const
     {
         double 割合 = _標準ノッチ列.割合(ノッチ);
-        return _常用最大減速度 * 割合;
+        return _推定最大減速度 * 割合;
     }
 
     加速度型 制動特性::自動ノッチ減速度(double ノッチ) const
@@ -111,7 +113,7 @@ namespace autopilot
         else {
             割合 = _拡張ノッチ列.割合(ノッチ);
         }
-        return _常用最大減速度 * 割合;
+        return _推定最大減速度 * 割合;
     }
 
     int 制動特性::自動ノッチ番号(int 自動ノッチ) const
