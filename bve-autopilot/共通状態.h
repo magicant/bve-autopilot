@@ -66,6 +66,8 @@ namespace autopilot {
         走行モデル 現在走行状態() const {
             return 走行モデル{ 現在位置(), 現在速度(), 現在時刻() };
         }
+        float 現在電流() const { return _状態.Current; }
+        float 現在ブレーキシリンダー圧() const { return _状態.BcPressure; }
         bool 戸閉() const { return _戸閉; }
         int 逆転器ノッチ() const { return _逆転器ノッチ; }
         int 力行ノッチ() const { return _力行ノッチ; }
