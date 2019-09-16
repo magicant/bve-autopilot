@@ -33,6 +33,7 @@ namespace autopilot {
         _調整した目標停止位置(std::numeric_limits<double>::infinity()),
         _直前目標停止位置受信位置(std::numeric_limits<距離型>::quiet_NaN()),
         _目標減速度(mps_from_kmph(2.5)),
+        _緩解(false),
         _出力ノッチ(std::numeric_limits<int>::max())
     {
     }
@@ -42,6 +43,7 @@ namespace autopilot {
         _名目の目標停止位置 = std::numeric_limits<double>::infinity();
         _調整した目標停止位置 = std::numeric_limits<double>::infinity();
         _直前目標停止位置受信位置 = std::numeric_limits<距離型>::quiet_NaN();
+        _緩解 = false;
     }
 
     void tasc::制動操作(const 共通状態 &状態)
@@ -50,7 +52,7 @@ namespace autopilot {
             加速度型 手動 = 状態.制動().標準ノッチ減速度(状態.制動ノッチ());
             加速度型 自動 = 状態.制動().自動ノッチ減速度(-_出力ノッチ);
             if (手動 >= 自動) {
-                リセット();
+                _緩解 = true;
             }
         }
     }
@@ -85,6 +87,11 @@ namespace autopilot {
 
     void tasc::経過(const 共通状態 & 状態)
     {
+        if (_緩解) {
+            _出力ノッチ = std::numeric_limits<int>::max();
+            return;
+        }
+
         目標停止位置を補正(状態);
 
         距離型 残距離 = _名目の目標停止位置 - 状態.現在位置();
