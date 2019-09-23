@@ -28,10 +28,18 @@
 
 namespace autopilot {
 
+    namespace
+    {
+
+        constexpr 距離型 デフォルト最大許容誤差 = 0.5;
+
+    }
+
     tasc::tasc() :
         _名目の目標停止位置(std::numeric_limits<double>::infinity()),
         _調整した目標停止位置(std::numeric_limits<double>::infinity()),
         _直前目標停止位置受信位置(std::numeric_limits<距離型>::quiet_NaN()),
+        _最大許容誤差(デフォルト最大許容誤差),
         _目標減速度(mps_from_kmph(2.5)),
         _緩解(false),
         _出力ノッチ(std::numeric_limits<int>::max())
@@ -43,6 +51,7 @@ namespace autopilot {
         _名目の目標停止位置 = std::numeric_limits<double>::infinity();
         _調整した目標停止位置 = std::numeric_limits<double>::infinity();
         _直前目標停止位置受信位置 = std::numeric_limits<距離型>::quiet_NaN();
+        _最大許容誤差 = デフォルト最大許容誤差;
         _緩解 = false;
     }
 
@@ -64,6 +73,12 @@ namespace autopilot {
 
     void tasc::地上子通過(const ATS_BEACONDATA & 地上子, const 共通状態 & 状態)
     {
+        switch (地上子.Type) {
+        case 1031: // TASC 停止位置許容誤差設定
+            最大許容誤差を設定(地上子.Optional * 0.01);
+            break;
+        }
+
         if (!状態.戸閉()) {
             return; // 「停車場へ移動」時は無視する
         }
@@ -95,7 +110,7 @@ namespace autopilot {
         目標停止位置を補正(状態);
 
         距離型 残距離 = _名目の目標停止位置 - 状態.現在位置();
-        if (残距離 <= 0.5) {
+        if (残距離 <= _最大許容誤差) {
             // 目標停止位置に近付いたらさっさと車両を止めるように
             // 目標停止位置を手前に接近させる
             走行モデル 減速モデル = 状態.現在走行状態();
@@ -124,7 +139,7 @@ namespace autopilot {
         _出力ノッチ =
             パターン.出力ノッチ(状態.現在位置(), 状態.現在速度(), 状態);
 
-        if (残距離 <= 0.5 && 状態.現在速度() < mps_from_kmph(0.05)) {
+        if (残距離 <= _最大許容誤差 && 状態.現在速度() < mps_from_kmph(0.05)) {
             // 停車中は制動し続ける
             auto a = std::abs(実勾配影響) + mps_from_kmph(1);
             auto 転動防止ノッチ = static_cast<int>(
@@ -163,6 +178,13 @@ namespace autopilot {
         }
 
         _直前目標停止位置受信位置 = std::numeric_limits<距離型>::quiet_NaN();
+    }
+
+    void tasc::最大許容誤差を設定(距離型 最大許容誤差)
+    {
+        _最大許容誤差 = std::max(0.0, 最大許容誤差);
+        _調整した目標停止位置 = std::max(
+            _調整した目標停止位置, _名目の目標停止位置 - _最大許容誤差);
     }
 
     加速度型 tasc::出力減速度(
