@@ -60,7 +60,7 @@ namespace autopilot
 
     int 信号前照査順守::出力ノッチ(const 共通状態 &状態) const
     {
-        return _制限グラフ.出力ノッチ(状態, 2, 1);
+        return _制限グラフ.出力ノッチ(状態, 1, 1);
     }
 
     void 信号前照査順守::再計算(const 共通状態 &状態, const 信号順守 &信号)
