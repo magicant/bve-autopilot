@@ -68,6 +68,7 @@ namespace autopilot {
         }
         float 現在電流() const { return _状態.Current; }
         float 現在ブレーキシリンダー圧() const { return _状態.BcPressure; }
+        加速度型 目安減速度() const { return _目安減速度; }
         bool 戸閉() const { return _戸閉; }
         int 逆転器ノッチ() const { return _逆転器ノッチ; }
         int 力行ノッチ() const { return _力行ノッチ; }
@@ -84,6 +85,7 @@ namespace autopilot {
         互換モード型 _互換モード = 互換モード型::無効;
         ATS_VEHICLESPEC _車両仕様 = {};
         ATS_VEHICLESTATE _状態 = {};
+        加速度型 _目安減速度 = 0;
         bool _戸閉 = false;
         int _逆転器ノッチ = 0, _力行ノッチ = 0, _制動ノッチ = 0;
         加速度計 _加速度計;

@@ -33,6 +33,7 @@ namespace autopilot {
         // _設定.リセット(); // ファイルから読み込むのでリセットしない
         _互換モード = 互換モード型::無効;
         _状態 = ATS_VEHICLESTATE{};
+        _目安減速度 = 0.8 * _設定.常用最大減速度();
         _加速度計.リセット();
         _勾配特性.消去();
     }
@@ -54,6 +55,13 @@ namespace autopilot {
         {
         case 1001: // 互換モード設定
             _互換モード = static_cast<互換モード型>(地上子.Optional);
+            break;
+        case 1002: // 目標減速度設定
+            if (地上子.Optional > 0) {
+                _目安減速度 = std::min(
+                    mps_from_kmph(0.1 * 地上子.Optional),
+                    0.95 * _設定.常用最大減速度());
+            }
             break;
         case 1008: // 勾配設定
             勾配追加(地上子.Optional);
