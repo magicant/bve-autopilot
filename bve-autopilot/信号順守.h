@@ -78,7 +78,8 @@ namespace autopilot
             void 状態更新(
                 const ATS_BEACONDATA &地上子,
                 const 共通状態 &状態,
-                const std::map<信号インデックス, 速度型> &速度表);
+                const std::map<信号インデックス, 速度型> &速度表,
+                bool 信号インデックスを更新する);
             void 統合(const 閉塞型 &統合元);
             void 先行列車位置から信号指示を推定(
                 int 閉塞数, const std::map<信号インデックス, 速度型> &速度表);
@@ -93,7 +94,9 @@ namespace autopilot
         制限グラフ _信号グラフ;
 
         void 信号速度更新();
-        void 信号現示受信(const ATS_BEACONDATA &地上子, const 共通状態 &状態);
+        void 信号現示受信(
+            const ATS_BEACONDATA &地上子, const 共通状態 &状態,
+            bool 信号インデックスを更新する);
         void 前方閉塞信号を推定();
         void 信号グラフ再計算();
 

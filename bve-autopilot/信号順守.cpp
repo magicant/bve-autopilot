@@ -172,23 +172,20 @@ namespace autopilot
         switch (地上子.Type)
         {
         case 31: // 信号現示受信 (メトロ総合プラグイン互換)
-            if (状態.互換モード() != 互換モード型::メトロ総合) {
-                break;
+            if (状態.互換モード() == 互換モード型::メトロ総合) {
+                信号現示受信(地上子, 状態, false);
             }
-            // FALLS THRU
-        case 1016: { // 停止信号前速度設定
-            ATS_BEACONDATA 地上子2 = 地上子;
-            地上子2.Optional = 0;
-            信号現示受信(地上子2, 状態);
             break;
-        }
+        case 1016: // 停止信号前速度設定
+            信号現示受信(地上子, 状態, false);
+            break;
         case 1011: // 信号速度設定
             信号速度設定(_信号速度表, 地上子.Optional);
             信号速度更新();
             信号グラフ再計算();
             break;
         case 1012: // 信号現示受信
-            信号現示受信(地上子, 状態);
+            信号現示受信(地上子, 状態, true);
             break;
         }
     }
@@ -259,7 +256,8 @@ namespace autopilot
     }
 
     void 信号順守::信号現示受信(
-        const ATS_BEACONDATA &地上子, const 共通状態 &状態)
+        const ATS_BEACONDATA &地上子, const 共通状態 &状態,
+        bool 信号インデックスを更新する)
     {
         if (地上子.Distance == 0 && 状態.現在速度() != 0) {
             // マップファイルのバージョンが古いとおかしなデータが来ることがある
@@ -273,7 +271,7 @@ namespace autopilot
             i->second.始点 < 位置 + 許容誤差 ?
             i->second :
             _前方閉塞一覧[位置];
-        閉塞.状態更新(地上子, 状態, _信号速度表);
+        閉塞.状態更新(地上子, 状態, _信号速度表, 信号インデックスを更新する);
         信号グラフ再計算();
     }
 
@@ -347,10 +345,11 @@ namespace autopilot
     void 信号順守::閉塞型::状態更新(
         const ATS_BEACONDATA &地上子,
         const 共通状態 &状態,
-        const std::map<信号インデックス, 速度型> &速度表)
+        const std::map<信号インデックス, 速度型> &速度表,
+        bool 信号インデックスを更新する)
     {
         始点 = 状態.現在位置() + 地上子.Distance;
-        if (地上子.Optional > 0) {
+        if (信号インデックスを更新する && 地上子.Optional > 0) {
             信号インデックス一覧 = 地上子.Optional;
         }
         信号指示設定(地上子.Signal, 速度表);
