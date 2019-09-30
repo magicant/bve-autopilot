@@ -116,7 +116,7 @@ namespace autopilot
                 if (!std::isfinite(出力)) {
                     出力 = -20;
                 }
-                return static_cast<int>(出力);
+                return static_cast<int>(std::round(出力));
             })},
             {L"speedpattern", パネル出力対象([](const Main & main) {
                 速度型 制限速度 = main.現在常用パターン速度();
@@ -124,7 +124,7 @@ namespace autopilot
                 if (!std::isfinite(出力)) {
                     出力 = -20.0 * 100;
                 }
-                return static_cast<int>(出力);
+                return static_cast<int>(std::round(出力));
             })},
             {L"orpspeedlimit", パネル出力対象([](const Main &main) {
                 速度型 制限速度 = main.現在orp照査速度();
@@ -132,7 +132,7 @@ namespace autopilot
                 if (!std::isfinite(出力)) {
                     出力 = -20.0 * 100;
                 }
-                return static_cast<int>(出力);
+                return static_cast<int>(std::round(出力));
             })},
             {L"compatmode", パネル出力対象([](const Main &main) {
                 互換モード型 モード = main.状態().互換モード();
