@@ -37,6 +37,7 @@ namespace autopilot {
         無効,
         汎用ats,
         メトロ総合,
+        swp2,
     };
 
     class 共通状態
