@@ -53,6 +53,9 @@ namespace autopilot
         速度型 期待速度(距離型 現在位置) const {
             return 期待速度と期待減速度(現在位置).first;
         }
+        加速度型 期待減速度(距離型 現在位置) const {
+            return 期待速度と期待減速度(現在位置).second;
+        }
 
         int 出力制動ノッチ(
             距離型 現在位置, 速度型 現在速度, int 現在制動ノッチ,
