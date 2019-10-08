@@ -19,6 +19,7 @@
 
 #include "stdafx.h"
 #include <algorithm>
+#include <cmath>
 #include <cstdlib>
 #include <limits>
 #include "共通状態.h"
@@ -105,6 +106,15 @@ namespace autopilot {
     区間 共通状態::現在範囲() const
     {
         return 区間{ _状態.Location - 列車長(), _状態.Location };
+    }
+
+    int 共通状態::転動防止自動ノッチ() const
+    {
+        加速度型 出力減速度 =
+            _設定.転動防止制動割合() * _設定.常用最大減速度();
+        double ノッチ = _制動特性.自動ノッチ(出力減速度);
+        int ノッチi = static_cast<int>(std::ceil(ノッチ));
+        return std::min(ノッチi, _制動特性.自動ノッチ数());
     }
 
     加速度型 共通状態::進路勾配加速度(距離型 目標位置) const

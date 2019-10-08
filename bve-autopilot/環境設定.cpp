@@ -91,6 +91,7 @@ namespace autopilot
         _常用最大減速度(mps_from_kmph(3)),
         _制動反応時間(0.2),
         _制動拡張ノッチ数(0),
+        _転動防止制動割合(0.5),
         _pressure_rates{},
         _キー割り当て{
             {キー操作::モード切替, ATS_KEY_L},
@@ -188,6 +189,20 @@ namespace autopilot
             int count = std::stoi(buffer);
             if (count >= 0) {
                 _制動拡張ノッチ数 = count;
+            }
+        }
+
+        // 転動防止制動割合
+        size = GetPrivateProfileStringW(
+            L"braking", L"standbybrakerate", L"", buffer, buffer_size,
+            設定ファイル名);
+        if (0 < size && size < buffer_size - 1) {
+            double 割合 = std::wcstod(buffer, nullptr);
+            if (割合 == 0) {
+                _転動防止制動割合 = 0; // 負の 0 は正の 0 にする
+            }
+            else if (0 <= 割合 && 割合 <= 1) {
+                _転動防止制動割合 = 割合;
             }
         }
 
