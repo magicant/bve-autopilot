@@ -112,6 +112,14 @@ namespace autopilot
         return _拡張ノッチ列.ノッチ(割合);
     }
 
+    double 制動特性::割合自動ノッチ(double 割合) const
+    {
+        if (_拡張ノッチ列.empty()) {
+            return _標準ノッチ列.ノッチ(割合);
+        }
+        return _拡張ノッチ列.ノッチ(割合);
+    }
+
     加速度型 制動特性::標準ノッチ減速度(double ノッチ) const
     {
         double 割合 = _標準ノッチ列.割合(ノッチ);
