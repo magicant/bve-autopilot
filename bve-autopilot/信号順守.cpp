@@ -321,8 +321,14 @@ namespace autopilot
         return _信号グラフ.出力ノッチ(状態, 時間マージン, 停止マージン);
     }
 
-    速度型 信号順守::制限速度(距離型 位置) const {
-        return _信号グラフ.制限速度(位置 + 許容誤差);
+    const 信号順守::閉塞型 &信号順守::閉塞(距離型 位置) const
+    {
+        auto i = _前方閉塞一覧.lower_bound(位置 + 許容誤差);
+        if (i == _前方閉塞一覧.begin()) {
+            return _現在閉塞;
+        }
+        --i;
+        return i->second;
     }
 
     速度型 信号順守::現在制限速度(const 共通状態 &状態) const

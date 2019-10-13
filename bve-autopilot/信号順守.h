@@ -85,7 +85,7 @@ namespace autopilot
             // リセット前後に std::numeric_limits<int>::max() が
             // 信号インデックスとして送られてくることがあるが無視する
         }
-        速度型 制限速度(距離型 位置) const;
+        const 閉塞型 &閉塞(距離型 位置) const;
         速度型 現在制限速度(const 共通状態 &状態) const;
         速度型 現在常用パターン速度(const 共通状態 &状態) const;
 
