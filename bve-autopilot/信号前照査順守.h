@@ -69,6 +69,8 @@ namespace autopilot
             距離型 照査位置;
             速度型 照査速度;
             距離型 信号位置;
+
+            速度型 走行速度(bool 停止解放) const;
         };
 
         std::vector<照査型> _照査表;
