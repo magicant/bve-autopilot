@@ -38,6 +38,30 @@ namespace autopilot
     public:
         using 信号インデックス = int;
 
+        struct 閉塞型 {
+            信号インデックス 信号指示 = -1;
+            速度型 信号速度 = std::numeric_limits<速度型>::infinity();
+            距離型 始点 = std::numeric_limits<距離型>::infinity();
+            int 信号インデックス一覧 = 0; // 信号現示受信地上子の値
+            bool 停止解放 = false;
+
+            bool 通過済(距離型 位置) const { return 始点 < 位置; }
+            速度型 走行速度() const;
+            int 先行列車位置() const;
+
+            void 信号指示設定(
+                信号インデックス 指示,
+                const std::map<信号インデックス, 速度型> &速度表);
+            void 状態更新(
+                const ATS_BEACONDATA &地上子,
+                const 共通状態 &状態,
+                const std::map<信号インデックス, 速度型> &速度表,
+                bool 信号インデックスを更新する);
+            void 統合(const 閉塞型 &統合元);
+            void 先行列車位置から信号指示を推定(
+                int 閉塞数, const std::map<信号インデックス, 速度型> &速度表);
+        };
+
         // 7.5 km/h は C-ATS や CS-ATC ORP の 最低照査速度による。
         static constexpr 速度型 停止解放走行速度 = mps_from_kmph(7.5);
 
@@ -66,30 +90,6 @@ namespace autopilot
         速度型 現在常用パターン速度(const 共通状態 &状態) const;
 
     private:
-        struct 閉塞型 {
-            信号インデックス 信号指示 = -1;
-            速度型 信号速度 = std::numeric_limits<速度型>::infinity();
-            距離型 始点 = std::numeric_limits<距離型>::infinity();
-            int 信号インデックス一覧 = 0; // 信号現示受信地上子の値
-            bool 停止解放 = false;
-
-            bool 通過済(距離型 位置) const { return 始点 < 位置; }
-            速度型 走行速度() const;
-            int 先行列車位置() const;
-
-            void 信号指示設定(
-                信号インデックス 指示,
-                const std::map<信号インデックス, 速度型> &速度表);
-            void 状態更新(
-                const ATS_BEACONDATA &地上子,
-                const 共通状態 &状態,
-                const std::map<信号インデックス, 速度型> &速度表,
-                bool 信号インデックスを更新する);
-            void 統合(const 閉塞型 &統合元);
-            void 先行列車位置から信号指示を推定(
-                int 閉塞数, const std::map<信号インデックス, 速度型> &速度表);
-        };
-
         std::map<信号インデックス, 速度型> _信号速度表;
         閉塞型 _現在閉塞;
         std::map<距離型, 閉塞型> _前方閉塞一覧;
