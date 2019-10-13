@@ -38,6 +38,9 @@ namespace autopilot
     public:
         using 信号インデックス = int;
 
+        // 7.5 km/h は C-ATS や CS-ATC ORP の 最低照査速度による。
+        static constexpr 速度型 停止解放走行速度 = mps_from_kmph(7.5);
+
         信号順守();
         ~信号順守();
 
@@ -71,6 +74,7 @@ namespace autopilot
             bool 停止解放 = false;
 
             bool 通過済(距離型 位置) const { return 始点 < 位置; }
+            速度型 走行速度() const;
             int 先行列車位置() const;
 
             void 信号指示設定(
