@@ -50,7 +50,9 @@ namespace autopilot
         void 経過(const 共通状態 &状態);
 
         // 力行は正の値、制動は負の値
-        int 出力ノッチ(const 共通状態 &状態) const;
+        int 出力ノッチ(const 共通状態 &状態) const {
+            return _制限グラフ.出力ノッチ(状態);
+        }
 
         速度型 制限速度(距離型 位置) const {
             return _制限グラフ.制限速度(位置);
