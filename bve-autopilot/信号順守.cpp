@@ -144,9 +144,11 @@ namespace autopilot
         // 最低照査速度による。
         constexpr 速度型 許容速度 = mps_from_kmph(7.5);
         _現在閉塞.信号速度 = std::max(_現在閉塞.信号速度, 許容速度);
+        _現在閉塞.停止解放 = true;
         if (!_前方閉塞一覧.empty()) {
             閉塞型 &次閉塞 = _前方閉塞一覧.begin()->second;
             次閉塞.信号速度 = std::max(次閉塞.信号速度, 許容速度);
+            次閉塞.停止解放 = true;
         }
         信号グラフ再計算();
     }

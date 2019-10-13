@@ -68,6 +68,7 @@ namespace autopilot
             速度型 信号速度 = std::numeric_limits<速度型>::infinity();
             距離型 始点 = std::numeric_limits<距離型>::infinity();
             int 信号インデックス一覧 = 0; // 信号現示受信地上子の値
+            bool 停止解放 = false;
 
             bool 通過済(距離型 位置) const { return 始点 < 位置; }
             int 先行列車位置() const;
