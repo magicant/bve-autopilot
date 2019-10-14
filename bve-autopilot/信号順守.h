@@ -49,6 +49,8 @@ namespace autopilot
             速度型 走行速度() const;
             int 先行列車位置() const;
 
+            void 信号速度更新(
+                const std::map<信号インデックス, 速度型> &速度表);
             void 信号指示設定(
                 信号インデックス 指示,
                 const std::map<信号インデックス, 速度型> &速度表);
