@@ -34,7 +34,7 @@ namespace autopilot
     {
     public:
         void 消去();
-        void 制限区間追加(距離型 始点, 速度型 速度);
+        void 制限区間追加(距離型 減速目標地点, 距離型 始点, 速度型 速度);
         void 通過(距離型 位置);
 
         速度型 制限速度(区間 対象区間) const;
@@ -45,10 +45,7 @@ namespace autopilot
         速度型 現在常用パターン速度(const 共通状態 &状態) const;
 
         // 力行は正の値、制動は負の値
-        int 出力ノッチ(
-            const 共通状態 & 状態,
-            時間型 時間マージン = 1,
-            速度型 速度マージン = mps_from_kmph(0.5)) const;
+        int 出力ノッチ(const 共通状態 &状態) const;
 
     private:
         std::forward_list<制限区間> _区間リスト;
