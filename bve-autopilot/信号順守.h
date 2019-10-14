@@ -79,6 +79,7 @@ namespace autopilot
         void リセット();
         void 発進();
         void 信号現示変化(信号インデックス 指示);
+        void tasc目標停止位置変化(距離型 位置);
         void 地上子通過(const ATS_BEACONDATA &地上子, const 共通状態 &状態);
 
         void 経過(const 共通状態 &状態);
@@ -99,6 +100,9 @@ namespace autopilot
         std::map<信号インデックス, 速度型> _信号速度表;
         閉塞型 _現在閉塞;
         std::map<距離型, 閉塞型> _前方閉塞一覧;
+
+        // どうせ tasc目標停止位置変化 がすぐ呼ばれるので初期値は何でも良い
+        距離型 _tasc目標停止位置 = 0.0;
 
         // 経過メソッドが呼ばれる度に毎回制限グラフを計算するのはメモリに
         // 優しくないので予め計算しておく

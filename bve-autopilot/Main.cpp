@@ -20,6 +20,7 @@
 #include "stdafx.h"
 #include "Main.h"
 #include <algorithm>
+#include <functional>
 #include <limits>
 
 namespace autopilot
@@ -58,6 +59,14 @@ namespace autopilot
         _ato有効{true},
         _通過済地上子{}
     {
+        _tasc.目標停止位置を監視([&](距離型 位置) {
+            _ato.tasc目標停止位置変化(位置);
+        });
+    }
+
+    Main::~Main()
+    {
+        _tasc.目標停止位置を監視(nullptr);
     }
 
     速度型 Main::現在制限速度() const

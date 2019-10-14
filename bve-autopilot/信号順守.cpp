@@ -277,6 +277,12 @@ namespace autopilot
         信号グラフ再計算();
     }
 
+    void 信号順守::tasc目標停止位置変化(距離型 位置)
+    {
+        _tasc目標停止位置 = 位置;
+        信号グラフ再計算();
+    }
+
     void 信号順守::地上子通過(
         const ATS_BEACONDATA &地上子, const 共通状態 &状態)
     {

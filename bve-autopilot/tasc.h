@@ -18,6 +18,8 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include <utility>
+#include "observable.h"
 #include "共通状態.h"
 #include "単位.h"
 #include "走行モデル.h"
@@ -36,14 +38,18 @@ namespace autopilot {
         void 地上子通過(const ATS_BEACONDATA & 地上子, const 共通状態 & 状態);
         void 経過(const 共通状態 & 状態);
 
-        距離型 目標停止位置() const { return _名目の目標停止位置; }
+        距離型 目標停止位置() const { return _名目の目標停止位置.get(); }
         bool 制御中() const;
 
         // 力行は正の値、制動は負の値
         int 出力ノッチ() const { return _出力ノッチ; }
 
+        void 目標停止位置を監視(observable<距離型>::observer_type &&observer) {
+            _名目の目標停止位置.set_observer(std::move(observer));
+        }
+
     private:
-        距離型 _名目の目標停止位置;
+        observable<距離型> _名目の目標停止位置;
         距離型 _調整した目標停止位置;
         距離型 _直前目標停止位置受信位置;
         距離型 _最大許容誤差;
