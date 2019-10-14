@@ -48,7 +48,6 @@ namespace autopilot
         int 出力ノッチ(
             const 共通状態 & 状態,
             時間型 時間マージン = 1,
-            距離型 停止位置マージン = 0,
             速度型 速度マージン = mps_from_kmph(0.5)) const;
 
     private:
