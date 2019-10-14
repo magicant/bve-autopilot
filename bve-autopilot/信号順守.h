@@ -31,7 +31,6 @@ namespace autopilot
 
     class 共通状態;
     class tasc;
-    class 信号前照査順守;
 
     class 信号順守
     {
@@ -44,10 +43,15 @@ namespace autopilot
             距離型 始点 = std::numeric_limits<距離型>::infinity();
             int 信号インデックス一覧 = 0; // 信号現示受信地上子の値
             bool 停止解放 = false;
+            // この閉塞の信号速度が 0 の時にだけ有効な制限速度の一覧
+            std::map<距離型, 速度型> 停止信号前照査一覧;
 
             bool 通過済(距離型 位置) const { return 始点 < 位置; }
-            速度型 走行速度() const;
             int 先行列車位置() const;
+
+            void 制限グラフに制限区間を追加(
+                制限グラフ &追加先グラフ, 距離型 始点_, 速度型 速度) const;
+            void 制限グラフに追加(制限グラフ &追加先グラフ) const;
 
             void 信号速度更新(
                 const std::map<信号インデックス, 速度型> &速度表);
@@ -59,6 +63,8 @@ namespace autopilot
                 const 共通状態 &状態,
                 const std::map<信号インデックス, 速度型> &速度表,
                 bool 信号インデックスを更新する);
+            void 停止信号前照査設定(
+                const ATS_BEACONDATA &地上子, 距離型 現在位置);
             void 統合(const 閉塞型 &統合元);
             void 先行列車位置から信号指示を推定(
                 int 閉塞数, const std::map<信号インデックス, 速度型> &速度表);
@@ -78,8 +84,7 @@ namespace autopilot
         void 経過(const 共通状態 &状態);
 
         // 力行は正の値、制動は負の値
-        int 出力ノッチ(const 共通状態 &状態,
-            const tasc &tasc, const 信号前照査順守 &照査) const;
+        int 出力ノッチ(const 共通状態 &状態, const tasc &tasc) const;
 
         bool is_atc() const {
             return 10 <= _現在閉塞.信号指示 &&
@@ -87,7 +92,6 @@ namespace autopilot
             // リセット前後に std::numeric_limits<int>::max() が
             // 信号インデックスとして送られてくることがあるが無視する
         }
-        const 閉塞型 &閉塞(距離型 位置) const;
         速度型 現在制限速度(const 共通状態 &状態) const;
         速度型 現在常用パターン速度(const 共通状態 &状態) const;
 
@@ -101,7 +105,7 @@ namespace autopilot
         制限グラフ _信号グラフ;
 
         void 信号速度更新();
-        void 信号現示受信(
+        閉塞型 *信号現示受信(
             const ATS_BEACONDATA &地上子, const 共通状態 &状態,
             bool 信号インデックスを更新する);
         void 前方閉塞信号を推定();

@@ -21,7 +21,6 @@
 #include <limits>
 #include <map>
 #include "orp.h"
-#include "信号前照査順守.h"
 #include "信号順守.h"
 #include "制限グラフ.h"
 #include "単位.h"
@@ -43,7 +42,7 @@ namespace autopilot
 
         void リセット();
         void 発進(const 共通状態 &状態);
-        void 信号現示変化(信号インデックス 指示, const 共通状態 &状態);
+        void 信号現示変化(信号インデックス 指示);
         void 地上子通過(const ATS_BEACONDATA &地上子, const 共通状態 &状態);
         void 経過(const 共通状態 &状態, const tasc &tasc);
 
@@ -60,7 +59,6 @@ namespace autopilot
         制限グラフ _制限速度1006, _制限速度1007,
             _制限速度6, _制限速度8, _制限速度9, _制限速度10;
         信号順守 _信号;
-        信号前照査順守 _照査;
         orp _orp;
         制御状態 _制御状態 = 制御状態::走行;
         int _出力ノッチ = 0;

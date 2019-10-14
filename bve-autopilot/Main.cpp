@@ -147,7 +147,7 @@ namespace autopilot
 
     void Main::信号現示変化(int 信号指示)
     {
-        _ato.信号現示変化(信号指示, _状態);
+        _ato.信号現示変化(信号指示);
     }
 
     void Main::地上子通過(const ATS_BEACONDATA & 地上子)
