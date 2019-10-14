@@ -29,7 +29,6 @@
 namespace autopilot
 {
 
-    class tasc;
     class 共通状態;
 
     class ato
@@ -47,7 +46,7 @@ namespace autopilot
             _信号.tasc目標停止位置変化(位置);
         }
         void 地上子通過(const ATS_BEACONDATA &地上子, const 共通状態 &状態);
-        void 経過(const 共通状態 &状態, const tasc &tasc);
+        void 経過(const 共通状態 &状態);
 
         速度型 現在制限速度(const 共通状態 &状態) const;
         速度型 現在常用パターン速度(const 共通状態 &状態) const;

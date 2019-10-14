@@ -30,7 +30,6 @@ namespace autopilot
 {
 
     class 共通状態;
-    class tasc;
 
     class 信号順守
     {
@@ -51,7 +50,8 @@ namespace autopilot
 
             void 制限グラフに制限区間を追加(
                 制限グラフ &追加先グラフ, 距離型 始点_, 速度型 速度) const;
-            void 制限グラフに追加(制限グラフ &追加先グラフ) const;
+            void 制限グラフに追加(
+                制限グラフ &追加先グラフ, 距離型 tasc目標停止位置) const;
 
             void 信号速度更新(
                 const std::map<信号インデックス, 速度型> &速度表);
@@ -73,6 +73,13 @@ namespace autopilot
         // 7.5 km/h は C-ATS や CS-ATC ORP の 最低照査速度による。
         static constexpr 速度型 停止解放走行速度 = mps_from_kmph(7.5);
 
+        static constexpr bool atc用の信号指示である(信号インデックス 指示) {
+            return 10 <= 指示 &&
+                指示 < std::numeric_limits<信号インデックス>::max();
+            // リセット前後に std::numeric_limits<信号インデックス>::max() が
+            // 信号インデックスとして送られてくることがあるがそれは無視する
+        }
+
         信号順守();
         ~信号順守();
 
@@ -85,13 +92,10 @@ namespace autopilot
         void 経過(const 共通状態 &状態);
 
         // 力行は正の値、制動は負の値
-        int 出力ノッチ(const 共通状態 &状態, const tasc &tasc) const;
+        int 出力ノッチ(const 共通状態 &状態) const;
 
         bool is_atc() const {
-            return 10 <= _現在閉塞.信号指示 &&
-                _現在閉塞.信号指示 < std::numeric_limits<int>::max();
-            // リセット前後に std::numeric_limits<int>::max() が
-            // 信号インデックスとして送られてくることがあるが無視する
+            return atc用の信号指示である(_現在閉塞.信号指示);
         }
         速度型 現在制限速度(const 共通状態 &状態) const;
         速度型 現在常用パターン速度(const 共通状態 &状態) const;
@@ -114,8 +118,6 @@ namespace autopilot
             bool 信号インデックスを更新する);
         void 前方閉塞信号を推定();
         void 信号グラフ再計算();
-
-        距離型 停止信号位置() const;
     };
 
 }

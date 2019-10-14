@@ -22,7 +22,6 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
-#include "tasc.h"
 #include "共通状態.h"
 #include "単位.h"
 
@@ -143,7 +142,7 @@ namespace autopilot
         _orp.地上子通過(地上子, 状態, _信号);
     }
 
-    void ato::経過(const 共通状態 &状態, const tasc &tasc)
+    void ato::経過(const 共通状態 &状態)
     {
         距離型 最後尾 = 状態.現在位置() - 状態.列車長();
         _制限速度1006.通過(最後尾);
@@ -170,8 +169,7 @@ namespace autopilot
             _出力ノッチ = -状態.転動防止自動ノッチ();
         }
         else {
-            _急動作抑制.経過(
-                _信号.出力ノッチ(状態, tasc), 状態, _信号.is_atc());
+            _急動作抑制.経過(_信号.出力ノッチ(状態), 状態, _信号.is_atc());
             _出力ノッチ = std::min({
                 状態.車両仕様().PowerNotches,
                 _制限速度1006.出力ノッチ(状態),

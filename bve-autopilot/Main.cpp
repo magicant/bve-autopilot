@@ -184,7 +184,7 @@ namespace autopilot
         _通過済地上子.shrink_to_fit();
 
         _tasc.経過(_状態);
-        _ato.経過(_状態, _tasc);
+        _ato.経過(_状態);
 
         // TASC と ATO の出力ノッチをまとめる
         int 自動ノッチ = _状態.車両仕様().PowerNotches;
