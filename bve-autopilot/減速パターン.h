@@ -31,6 +31,7 @@ namespace autopilot
     struct 減速パターン
     {
         static constexpr 加速度型 標準最終減速度 = mps_from_kmph(0.5);
+        static constexpr 加速度型 停止最終減速度 = mps_from_kmph(1.0);
 
         距離型 目標位置;
         速度型 目標速度;
