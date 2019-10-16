@@ -20,6 +20,7 @@
 #include "stdafx.h"
 #include "Main.h"
 #include <algorithm>
+#include <functional>
 #include <limits>
 
 namespace autopilot
@@ -58,6 +59,14 @@ namespace autopilot
         _ato有効{true},
         _通過済地上子{}
     {
+        _tasc.目標停止位置を監視([&](距離型 位置) {
+            _ato.tasc目標停止位置変化(位置);
+        });
+    }
+
+    Main::~Main()
+    {
+        _tasc.目標停止位置を監視(nullptr);
     }
 
     速度型 Main::現在制限速度() const
@@ -147,7 +156,7 @@ namespace autopilot
 
     void Main::信号現示変化(int 信号指示)
     {
-        _ato.信号現示変化(信号指示, _状態);
+        _ato.信号現示変化(信号指示);
     }
 
     void Main::地上子通過(const ATS_BEACONDATA & 地上子)
@@ -175,7 +184,7 @@ namespace autopilot
         _通過済地上子.shrink_to_fit();
 
         _tasc.経過(_状態);
-        _ato.経過(_状態, _tasc);
+        _ato.経過(_状態);
 
         // TASC と ATO の出力ノッチをまとめる
         int 自動ノッチ = _状態.車両仕様().PowerNotches;

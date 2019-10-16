@@ -30,7 +30,7 @@ namespace autopilot
     {
     public:
         Main();
-        ~Main() = default;
+        ~Main();
 
         const 共通状態 & 状態() const { return _状態; }
         const tasc & tasc状態() const { return _tasc; }

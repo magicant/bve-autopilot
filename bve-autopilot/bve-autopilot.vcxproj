@@ -160,13 +160,13 @@
     <ClInclude Include="ato.h" />
     <ClInclude Include="atsplugin.h" />
     <ClInclude Include="Main.h" />
+    <ClInclude Include="observable.h" />
     <ClInclude Include="orp.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="tasc.h" />
     <ClInclude Include="パネル出力.h" />
-    <ClInclude Include="信号前照査順守.h" />
     <ClInclude Include="信号順守.h" />
     <ClInclude Include="共通状態.h" />
     <ClInclude Include="制動特性.h" />
@@ -194,7 +194,6 @@
     </ClCompile>
     <ClCompile Include="tasc.cpp" />
     <ClCompile Include="パネル出力.cpp" />
-    <ClCompile Include="信号前照査順守.cpp" />
     <ClCompile Include="信号順守.cpp" />
     <ClCompile Include="共通状態.cpp" />
     <ClCompile Include="制動特性.cpp" />
