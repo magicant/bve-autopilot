@@ -81,7 +81,7 @@
     <ClInclude Include="orp.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="observable.h">
+    <ClInclude Include="live.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,4 +1,4 @@
-// observable.h : 他のクラスから変更を監視可能な汎用オブジェクトです
+// live.h : 他のクラスから変更を監視可能な汎用オブジェクトです
 //
 // Copyright © 2019 Watanabe, Yuki
 //
@@ -25,12 +25,12 @@ namespace autopilot
 {
 
     template<typename T>
-    class observable
+    class live
     {
     public:
         using observer_type = std::function<void(const T &)>;
 
-        explicit observable(T &&value) : _value{std::move(value)} { }
+        explicit live(T &&value) : _value{std::move(value)} { }
 
         const T &get() const { return _value; }
 

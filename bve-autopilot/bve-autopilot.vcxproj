@@ -160,7 +160,7 @@
     <ClInclude Include="ato.h" />
     <ClInclude Include="atsplugin.h" />
     <ClInclude Include="Main.h" />
-    <ClInclude Include="observable.h" />
+    <ClInclude Include="live.h" />
     <ClInclude Include="orp.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />

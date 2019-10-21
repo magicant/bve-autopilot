@@ -19,7 +19,7 @@
 
 #pragma once
 #include <utility>
-#include "observable.h"
+#include "live.h"
 #include "共通状態.h"
 #include "単位.h"
 #include "走行モデル.h"
@@ -44,12 +44,12 @@ namespace autopilot {
         // 力行は正の値、制動は負の値
         int 出力ノッチ() const { return _出力ノッチ; }
 
-        void 目標停止位置を監視(observable<距離型>::observer_type &&observer) {
+        void 目標停止位置を監視(live<距離型>::observer_type &&observer) {
             _名目の目標停止位置.set_observer(std::move(observer));
         }
 
     private:
-        observable<距離型> _名目の目標停止位置;
+        live<距離型> _名目の目標停止位置;
         距離型 _調整した目標停止位置;
         距離型 _直前目標停止位置受信位置;
         距離型 _最大許容誤差;
