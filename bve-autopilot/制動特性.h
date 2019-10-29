@@ -121,6 +121,10 @@ namespace autopilot
 
         pressure_rates _標準ノッチ列, _拡張ノッチ列;
 
+        const pressure_rates &有効ノッチ列() const noexcept {
+            return _拡張ノッチ列.empty() ? _標準ノッチ列 : _拡張ノッチ列;
+        }
+
         double 割合(int ノッチ番号) const;
     };
 

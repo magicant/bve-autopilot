@@ -90,19 +90,13 @@ namespace autopilot
 
     double 制動特性::自動ノッチ(加速度型 減速度) const
     {
-        if (_拡張ノッチ列.empty()) {
-            return 標準ノッチ(減速度);
-        }
         double 割合 = 減速度 / 推定最大減速度();
-        return _拡張ノッチ列.ノッチ(割合);
+        return 有効ノッチ列().ノッチ(割合);
     }
 
     double 制動特性::割合自動ノッチ(double 割合) const
     {
-        if (_拡張ノッチ列.empty()) {
-            return _標準ノッチ列.ノッチ(割合);
-        }
-        return _拡張ノッチ列.ノッチ(割合);
+        return 有効ノッチ列().ノッチ(割合);
     }
 
     加速度型 制動特性::標準ノッチ減速度(double ノッチ) const
@@ -113,13 +107,7 @@ namespace autopilot
 
     加速度型 制動特性::自動ノッチ減速度(double ノッチ) const
     {
-        double 割合;
-        if (_拡張ノッチ列.empty()) {
-            割合 = _標準ノッチ列.割合(ノッチ);
-        }
-        else {
-            割合 = _拡張ノッチ列.割合(ノッチ);
-        }
+        double 割合 = 有効ノッチ列().割合(ノッチ);
         return 推定最大減速度() * 割合;
     }
 
@@ -150,12 +138,7 @@ namespace autopilot
 
     double 制動特性::自動ノッチ丸め(double ノッチ) const
     {
-        if (_拡張ノッチ列.empty()) {
-            return _標準ノッチ列.丸め(ノッチ);
-        }
-        else {
-            return _拡張ノッチ列.丸め(ノッチ);
-        }
+        return 有効ノッチ列().丸め(ノッチ);
     }
 
     void 制動特性::経過(const 共通状態 &状態)
