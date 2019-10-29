@@ -18,12 +18,13 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include <algorithm>
+#include <cmath>
+#include <limits>
 
 namespace autopilot
 {
 
-    // 秒
-    using 時間型 = double;
     // メートル
     using 距離型 = double;
     // メートル毎秒
@@ -33,15 +34,196 @@ namespace autopilot
     // メートル毎秒毎秒毎秒
     using 加加速度型 = double;
 
-    constexpr 時間型 s_from_ms(double ms) {
-        return ms / 1000.0;
-    }
-
     constexpr 速度型 mps_from_kmph(double kmph) {
         return kmph / 3.6;
     }
     constexpr double kmph_from_mps(速度型 mps) {
         return mps * 3.6;
     }
+
+    template<typename Value, typename Self>
+    struct 物理量
+    {
+        using value_type = Value;
+
+        value_type value;
+
+        static constexpr Self 無限大() {
+            return Self(std::numeric_limits<value_type>::infinity());
+        }
+
+        constexpr 物理量() : value{} {}
+        constexpr explicit 物理量(const value_type &v) : value{v} {}
+    };
+
+    template<typename Value, typename Self>
+    constexpr Self operator+(const 物理量<Value, Self> &v) {
+        return Self(+v.value);
+    }
+
+    template<typename Value, typename Self>
+    constexpr Self operator-(const 物理量<Value, Self> &v) {
+        return Self(-v.value);
+    }
+
+    template<typename Value, typename Self>
+    constexpr Self operator+(
+        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
+    {
+        return Self(a.value + b.value);
+    }
+
+    template<typename Value, typename Self>
+    constexpr 物理量<Value, Self> &operator+=(
+        物理量<Value, Self> &a, const 物理量<Value, Self> &b)
+    {
+        a.value += b.value;
+        return a;
+    }
+
+    template<typename Value, typename Self>
+    constexpr Self operator-(
+        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
+    {
+        return Self(a.value - b.value);
+    }
+
+    template<typename Value, typename Self>
+    constexpr 物理量<Value, Self> &operator-=(
+        物理量<Value, Self> &a, const 物理量<Value, Self> &b)
+    {
+        a.value -= b.value;
+        return a;
+    }
+
+    template<typename Value, typename Self, typename Value2>
+    constexpr Self operator*(
+        const 物理量<Value, Self> &a, const Value2 &b)
+    {
+        return Self(a.value * b);
+    }
+
+    template<typename Value, typename Self, typename Value2>
+    constexpr Self operator*=(物理量<Value, Self> &a, const Value2 &b)
+    {
+        a.value *= b;
+        return a;
+    }
+
+    template<typename Value2, typename Value, typename Self>
+    constexpr Self operator*(
+        const Value2 &a, const 物理量<Value, Self> &b)
+    {
+        return Self(a * b.value);
+    }
+
+    template<typename Value, typename Self, typename Value2>
+    constexpr Self operator/(
+        const 物理量<Value, Self> &a, const Value2 &b)
+    {
+        return Self(a.value / b);
+    }
+
+    template<typename Value, typename Self, typename Value2>
+    constexpr Self operator/=(物理量<Value, Self> &a, const Value2 &b)
+    {
+        a.value /= b;
+        return a;
+    }
+
+    template<typename Value, typename Self, typename Value2>
+    constexpr Self operator%(
+        const 物理量<Value, Self> &a, const Value2 &b)
+    {
+        return Self(a.value % b);
+    }
+
+    template<typename Value, typename Self, typename Value2>
+    constexpr Self operator%=(物理量<Value, Self> &a, const Value2 &b)
+    {
+        a.value %= b;
+        return a;
+    }
+
+    template<typename Value, typename Self>
+    constexpr bool operator==(
+        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
+    {
+        return a.value == b.value;
+    }
+
+    template<typename Value, typename Self>
+    constexpr bool operator!=(
+        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
+    {
+        return a.value != b.value;
+    }
+
+    template<typename Value, typename Self>
+    constexpr bool operator<(
+        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
+    {
+        return a.value < b.value;
+    }
+
+    template<typename Value, typename Self>
+    constexpr bool operator<=(
+        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
+    {
+        return a.value <= b.value;
+    }
+
+    template<typename Value, typename Self>
+    constexpr bool operator>(
+        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
+    {
+        return a.value > b.value;
+    }
+
+    template<typename Value, typename Self>
+    constexpr bool operator>=(
+        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
+    {
+        return a.value >= b.value;
+    }
+
+    template<typename Value, typename Self>
+    Self abs(const 物理量<Value, Self> &v) {
+        return Self(std::abs(v.value));
+    }
+
+    template<typename Value, typename Self>
+    constexpr Self max(
+        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
+    {
+        return Self(std::max(a.value, b.value));
+    }
+
+    template<typename Value, typename Self>
+    constexpr Self min(
+        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
+    {
+        return Self(std::min(a.value, b.value));
+    }
+
+    // 時間
+
+    struct 秒;
+    struct ミリ秒;
+
+    struct 秒 : 物理量<double, 秒>
+    {
+        using 物理量::物理量;
+        constexpr 秒(const ミリ秒 &v);
+    };
+
+    struct ミリ秒 : 物理量<double, ミリ秒>
+    {
+        using 物理量::物理量;
+        constexpr ミリ秒(const 秒 &v);
+    };
+
+    constexpr 秒::秒(const ミリ秒 &v) : 物理量(v.value / 1000.0) {}
+    constexpr ミリ秒::ミリ秒(const 秒 &v) : 物理量(v.value * 1000.0) {}
 
 }

@@ -49,9 +49,9 @@ namespace autopilot
         bool tasc初期起動() const { return _tasc初期起動; }
         bool ato初期起動() const { return _ato初期起動; }
         距離型 車両長() const { return _車両長; }
-        時間型 加速終了遅延() const { return _加速終了遅延; }
+        秒 加速終了遅延() const { return _加速終了遅延; }
         加速度型 常用最大減速度() const { return _常用最大減速度; }
-        時間型 制動反応時間() const { return _制動反応時間; }
+        秒 制動反応時間() const { return _制動反応時間; }
         int 制動拡張ノッチ数() const { return _制動拡張ノッチ数; }
         double 転動防止制動割合() const { return _転動防止制動割合; }
         const std::vector<double> &pressure_rates() const {
@@ -70,9 +70,9 @@ namespace autopilot
     private:
         bool _tasc初期起動, _ato初期起動;
         距離型 _車両長;
-        時間型 _加速終了遅延;
+        秒 _加速終了遅延;
         加速度型 _常用最大減速度;
-        時間型 _制動反応時間;
+        秒 _制動反応時間;
         int _制動拡張ノッチ数;
         double _転動防止制動割合;
         std::vector<double> _pressure_rates;

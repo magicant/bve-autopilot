@@ -39,7 +39,7 @@ namespace autopilot
 
         void 性能設定(
             int 標準ノッチ数, int 拡張ノッチ数,
-            加速度型 基準最大減速度, 時間型 反応時間,
+            加速度型 基準最大減速度, 秒 反応時間,
             const std::vector<double> &pressure_rates);
 
         /// 標準の常用ブレーキのノッチ数です。
@@ -58,7 +58,7 @@ namespace autopilot
         加速度型 推定最大減速度() const {
             return _制動力推定.推定最大減速度();
         }
-        時間型 反応時間() const { return _反応時間; }
+        秒 反応時間() const { return _反応時間; }
 
         /// 所望の減速度に対応する標準ノッチを得ます。
         /// 引数の大きさによっては常用最大を超えるノッチを返すことがあります。
@@ -116,7 +116,7 @@ namespace autopilot
         };
 
         int _標準ノッチ数 = 0;
-        時間型 _反応時間 = 0;
+        秒 _反応時間 = {};
         制動力推定 _制動力推定;
 
         pressure_rates _標準ノッチ列, _拡張ノッチ列;

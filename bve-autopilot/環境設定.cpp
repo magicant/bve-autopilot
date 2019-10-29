@@ -150,9 +150,9 @@ namespace autopilot
             L"power", L"offdelay", L"", buffer, buffer_size,
             設定ファイル名);
         if (0 < size && size < buffer_size - 1) {
-            時間型 遅延 = std::wcstod(buffer, nullptr);
+            double 遅延 = std::wcstod(buffer, nullptr);
             if (0 <= 遅延 && std::isfinite(遅延)) {
-                _加速終了遅延 = 遅延;
+                _加速終了遅延 = 秒(遅延);
             }
         }
 
@@ -172,12 +172,12 @@ namespace autopilot
             L"braking", L"effectlag", L"", buffer, buffer_size,
             設定ファイル名);
         if (0 < size && size < buffer_size - 1) {
-            時間型 反応時間 = std::wcstod(buffer, nullptr);
+            double 反応時間 = std::wcstod(buffer, nullptr);
             if (反応時間 == 0) {
-                _制動反応時間 = 0; // 負の 0 は正の 0 にする
+                _制動反応時間 = 秒(0); // 負の 0 は正の 0 にする
             }
             else if (0 < 反応時間 && std::isfinite(反応時間)) {
-                _制動反応時間 = 反応時間;
+                _制動反応時間 = 秒(反応時間);
             }
         }
 
