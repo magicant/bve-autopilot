@@ -21,12 +21,11 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <type_traits>
 
 namespace autopilot
 {
 
-    // メートル
-    using 距離型 = double;
     // メートル毎秒
     using 速度型 = double;
     // メートル毎秒毎秒
@@ -51,6 +50,10 @@ namespace autopilot
         static constexpr Self 無限大() {
             return static_cast<Self>(
                 std::numeric_limits<value_type>::infinity());
+        }
+        static constexpr Self quiet_NaN() {
+            return static_cast<Self>(
+                std::numeric_limits<value_type>::quiet_NaN());
         }
 
         constexpr 物理量() : value{} {}
@@ -98,49 +101,69 @@ namespace autopilot
     }
 
     template<typename Value, typename Self, typename Value2>
-    constexpr Self operator*(
-        const 物理量<Value, Self> &a, const Value2 &b)
+    constexpr std::enable_if_t<
+        !std::is_convertible_v<Value2 *, 物理量<Value, Self> *>, Self>
+        operator*(const 物理量<Value, Self> &a, const Value2 &b)
     {
         return static_cast<Self>(a.value * b);
     }
 
     template<typename Value, typename Self, typename Value2>
-    constexpr Self operator*=(物理量<Value, Self> &a, const Value2 &b)
+    constexpr std::enable_if_t<
+        !std::is_convertible_v<Value2 *, 物理量<Value, Self> *>,
+        物理量<Value, Self> &>
+        operator*=(物理量<Value, Self> &a, const Value2 &b)
     {
         a.value *= b;
         return a;
     }
 
     template<typename Value2, typename Value, typename Self>
-    constexpr Self operator*(
-        const Value2 &a, const 物理量<Value, Self> &b)
+    constexpr std::enable_if_t<
+        !std::is_convertible_v<Value2 *, 物理量<Value, Self> *>, Self>
+        operator*(const Value2 &a, const 物理量<Value, Self> &b)
     {
         return static_cast<Self>(a * b.value);
     }
 
     template<typename Value, typename Self, typename Value2>
-    constexpr Self operator/(
-        const 物理量<Value, Self> &a, const Value2 &b)
+    constexpr std::enable_if_t<
+        !std::is_convertible_v<Value2 *, 物理量<Value, Self> *>, Self>
+        operator/(const 物理量<Value, Self> &a, const Value2 &b)
     {
         return static_cast<Self>(a.value / b);
     }
 
     template<typename Value, typename Self, typename Value2>
-    constexpr Self operator/=(物理量<Value, Self> &a, const Value2 &b)
+    constexpr std::enable_if_t<
+        !std::is_convertible_v<Value2 *, 物理量<Value, Self> *>,
+        物理量<Value, Self> &>
+        operator/=(物理量<Value, Self> &a, const Value2 &b)
     {
         a.value /= b;
         return a;
     }
 
+    template<typename Value, typename Self>
+    constexpr Value operator/(
+        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
+    {
+        return a.value / b.value;
+    }
+
     template<typename Value, typename Self, typename Value2>
-    constexpr Self operator%(
-        const 物理量<Value, Self> &a, const Value2 &b)
+    constexpr std::enable_if_t<
+        !std::is_convertible_v<Value2 *, 物理量<Value, Self> *>, Self>
+        operator%(const 物理量<Value, Self> &a, const Value2 &b)
     {
         return static_cast<Self>(a.value % b);
     }
 
     template<typename Value, typename Self, typename Value2>
-    constexpr Self operator%=(物理量<Value, Self> &a, const Value2 &b)
+    constexpr std::enable_if_t<
+        !std::is_convertible_v<Value2 *, 物理量<Value, Self> *>,
+        物理量<Value, Self> &>
+        operator%=(物理量<Value, Self> &a, const Value2 &b)
     {
         a.value %= b;
         return a;
@@ -189,8 +212,38 @@ namespace autopilot
     }
 
     template<typename Value, typename Self>
+    bool isfinite(const 物理量<Value, Self> &v) {
+        return std::isfinite(v.value);
+    }
+
+    template<typename Value, typename Self>
+    bool isinf(const 物理量<Value, Self> &v) {
+        return std::isinf(v.value);
+    }
+
+    template<typename Value, typename Self>
+    bool isnormal(const 物理量<Value, Self> &v) {
+        return std::isnormal(v.value);
+    }
+
+    template<typename Value, typename Self>
+    bool isnan(const 物理量<Value, Self> &v) {
+        return std::isnan(v.value);
+    }
+
+    template<typename Value, typename Self>
     Self abs(const 物理量<Value, Self> &v) {
         return static_cast<Self>(std::abs(v.value));
+    }
+
+    template<typename Value, typename Self>
+    Self ceil(const 物理量<Value, Self> &v) {
+        return static_cast<Self>(std::ceil(v.value));
+    }
+
+    template<typename Value, typename Self>
+    Self floor(const 物理量<Value, Self> &v) {
+        return static_cast<Self>(std::floor(v.value));
     }
 
     template<typename Value, typename Self>
@@ -232,6 +285,18 @@ namespace autopilot
     }
     constexpr ミリ秒 operator"" _ms(long double v) {
         return static_cast<ミリ秒>(static_cast<double>(v));
+    }
+
+    // 距離
+
+    /// メートル
+    struct 米 : 物理量<double, 米>
+    {
+        using 物理量::物理量;
+    };
+
+    constexpr 米 operator"" _m(long double v) {
+        return static_cast<米>(static_cast<double>(v));
     }
 
 }

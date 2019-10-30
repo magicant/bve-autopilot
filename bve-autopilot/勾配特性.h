@@ -37,8 +37,8 @@ namespace autopilot
         勾配特性 &operator =(const 勾配特性 &) = delete;
 
         void 消去();
-        void 勾配区間追加(距離型 始点, double 勾配);
-        void 通過(距離型 位置);
+        void 勾配区間追加(米 始点, double 勾配);
+        void 通過(米 位置);
 
         // 指定した範囲に列車が存在するときの勾配による加速度への影響を
         // 計算します。

@@ -38,34 +38,34 @@ namespace autopilot {
         void 地上子通過(const ATS_BEACONDATA & 地上子, const 共通状態 & 状態);
         void 経過(const 共通状態 & 状態);
 
-        距離型 目標停止位置() const { return _名目の目標停止位置.get(); }
+        米 目標停止位置() const { return _名目の目標停止位置.get(); }
         bool 制御中() const;
 
         // 力行は正の値、制動は負の値
         int 出力ノッチ() const { return _出力ノッチ; }
 
-        void 目標停止位置を監視(live<距離型>::observer_type &&observer) {
+        void 目標停止位置を監視(live<米>::observer_type &&observer) {
             _名目の目標停止位置.set_observer(std::move(observer));
         }
 
     private:
-        live<距離型> _名目の目標停止位置;
-        距離型 _調整した目標停止位置;
-        距離型 _直前目標停止位置受信位置;
-        距離型 _最大許容誤差;
+        live<米> _名目の目標停止位置;
+        米 _調整した目標停止位置;
+        米 _直前目標停止位置受信位置;
+        米 _最大許容誤差;
         加速度型 _目標減速度;
         bool _緩解;
         int _出力ノッチ;
 
-        void 目標停止位置を設定(距離型 残距離, const 共通状態 &状態);
+        void 目標停止位置を設定(米 残距離, const 共通状態 &状態);
         // 直前のフレームとの現在位置変化に従い、目標停止位置が整数である
         // 可能性があるなら整数に丸める
         void 目標停止位置を補正(const 共通状態 &状態);
 
-        void 最大許容誤差を設定(距離型 最大許容誤差);
+        void 最大許容誤差を設定(米 最大許容誤差);
 
         加速度型 出力減速度(
-            距離型 停止位置, 加速度型 勾配影響, const 共通状態 &状態) const;
+            米 停止位置, 加速度型 勾配影響, const 共通状態 &状態) const;
     };
 
 }

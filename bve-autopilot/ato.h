@@ -42,7 +42,7 @@ namespace autopilot
         void リセット();
         void 発進(const 共通状態 &状態);
         void 信号現示変化(信号インデックス 指示);
-        void tasc目標停止位置変化(距離型 位置) {
+        void tasc目標停止位置変化(米 位置) {
             _信号.tasc目標停止位置変化(位置);
         }
         void 地上子通過(const ATS_BEACONDATA &地上子, const 共通状態 &状態);

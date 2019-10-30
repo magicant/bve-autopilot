@@ -139,9 +139,9 @@ namespace autopilot
             L"dynamics", L"carlength", L"", buffer, buffer_size,
             設定ファイル名);
         if (0 < size && size < buffer_size - 1) {
-            距離型 車両長 = std::wcstod(buffer, nullptr);
+            double 車両長 = std::wcstod(buffer, nullptr);
             if (0 < 車両長 && std::isfinite(車両長)) {
-                _車両長 = 車両長;
+                _車両長 = static_cast<米>(車両長);
             }
         }
 

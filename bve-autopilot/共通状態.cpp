@@ -105,7 +105,7 @@ namespace autopilot {
 
     区間 共通状態::現在範囲() const
     {
-        return 区間{ _状態.Location - 列車長(), _状態.Location };
+        return 区間{ 現在位置() - 列車長(), 現在位置() };
     }
 
     int 共通状態::転動防止自動ノッチ() const
@@ -116,7 +116,7 @@ namespace autopilot {
         return std::min(ノッチi, _制動特性.自動ノッチ数());
     }
 
-    加速度型 共通状態::進路勾配加速度(距離型 目標位置) const
+    加速度型 共通状態::進路勾配加速度(米 目標位置) const
     {
         区間 進路 = 現在範囲();
         進路.終点 = std::max(進路.終点, 目標位置);
@@ -137,7 +137,7 @@ namespace autopilot {
         bool 下り = 地上子値 < 0;
         地上子値 = std::abs(地上子値);
 
-        double 距離 = 地上子値 / 1000;
+        米 距離 = static_cast<米>(地上子値 / 1000);
         double 勾配 = (地上子値 % 1000) * 0.001;
         if (下り) {
             勾配 = -勾配;

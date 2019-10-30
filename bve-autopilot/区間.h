@@ -26,20 +26,20 @@ namespace autopilot
 
     struct 区間
     {
-        距離型 始点, 終点;
+        米 始点, 終点;
 
-        constexpr 距離型 長さ() const {
+        constexpr 米 長さ() const {
             return 終点 - 始点;
         }
 
-        constexpr bool 含む(距離型 点) const {
+        constexpr bool 含む(米 点) const {
             return 始点 <= 点 && 点 <= 終点;
         }
         constexpr bool 空である() const {
             return 始点 >= 終点;
         }
 
-        constexpr bool 通過済(距離型 列車最後尾位置) const {
+        constexpr bool 通過済(米 列車最後尾位置) const {
             return 終点 < 列車最後尾位置;
         }
 
