@@ -49,7 +49,8 @@ namespace autopilot
         value_type value;
 
         static constexpr Self 無限大() {
-            return Self(std::numeric_limits<value_type>::infinity());
+            return static_cast<Self>(
+                std::numeric_limits<value_type>::infinity());
         }
 
         constexpr 物理量() : value{} {}
@@ -225,5 +226,12 @@ namespace autopilot
 
     constexpr 秒::秒(const ミリ秒 &v) : 物理量(v.value / 1000.0) {}
     constexpr ミリ秒::ミリ秒(const 秒 &v) : 物理量(v.value * 1000.0) {}
+
+    constexpr 秒 operator"" _s(long double v) {
+        return static_cast<秒>(static_cast<double>(v));
+    }
+    constexpr ミリ秒 operator"" _ms(long double v) {
+        return static_cast<ミリ秒>(static_cast<double>(v));
+    }
 
 }

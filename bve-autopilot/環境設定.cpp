@@ -87,9 +87,9 @@ namespace autopilot
         _tasc初期起動(true),
         _ato初期起動(true),
         _車両長(20),
-        _加速終了遅延(2.0),
+        _加速終了遅延(2.0_s),
         _常用最大減速度(mps_from_kmph(3)),
-        _制動反応時間(0.2),
+        _制動反応時間(0.2_s),
         _制動拡張ノッチ数(0),
         _転動防止制動割合(0.5),
         _pressure_rates{},
@@ -152,7 +152,7 @@ namespace autopilot
         if (0 < size && size < buffer_size - 1) {
             double 遅延 = std::wcstod(buffer, nullptr);
             if (0 <= 遅延 && std::isfinite(遅延)) {
-                _加速終了遅延 = 秒(遅延);
+                _加速終了遅延 = static_cast<秒>(遅延);
             }
         }
 
@@ -174,10 +174,10 @@ namespace autopilot
         if (0 < size && size < buffer_size - 1) {
             double 反応時間 = std::wcstod(buffer, nullptr);
             if (反応時間 == 0) {
-                _制動反応時間 = 秒(0); // 負の 0 は正の 0 にする
+                _制動反応時間 = 0.0_s; // 負の 0 は正の 0 にする
             }
             else if (0 < 反応時間 && std::isfinite(反応時間)) {
-                _制動反応時間 = 秒(反応時間);
+                _制動反応時間 = static_cast<秒>(反応時間);
             }
         }
 
