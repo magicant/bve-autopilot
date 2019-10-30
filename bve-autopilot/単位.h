@@ -59,19 +59,19 @@ namespace autopilot
 
     template<typename Value, typename Self>
     constexpr Self operator+(const 物理量<Value, Self> &v) {
-        return Self(+v.value);
+        return static_cast<Self>(+v.value);
     }
 
     template<typename Value, typename Self>
     constexpr Self operator-(const 物理量<Value, Self> &v) {
-        return Self(-v.value);
+        return static_cast<Self>(-v.value);
     }
 
     template<typename Value, typename Self>
     constexpr Self operator+(
         const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
     {
-        return Self(a.value + b.value);
+        return static_cast<Self>(a.value + b.value);
     }
 
     template<typename Value, typename Self>
@@ -86,7 +86,7 @@ namespace autopilot
     constexpr Self operator-(
         const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
     {
-        return Self(a.value - b.value);
+        return static_cast<Self>(a.value - b.value);
     }
 
     template<typename Value, typename Self>
@@ -101,7 +101,7 @@ namespace autopilot
     constexpr Self operator*(
         const 物理量<Value, Self> &a, const Value2 &b)
     {
-        return Self(a.value * b);
+        return static_cast<Self>(a.value * b);
     }
 
     template<typename Value, typename Self, typename Value2>
@@ -115,14 +115,14 @@ namespace autopilot
     constexpr Self operator*(
         const Value2 &a, const 物理量<Value, Self> &b)
     {
-        return Self(a * b.value);
+        return static_cast<Self>(a * b.value);
     }
 
     template<typename Value, typename Self, typename Value2>
     constexpr Self operator/(
         const 物理量<Value, Self> &a, const Value2 &b)
     {
-        return Self(a.value / b);
+        return static_cast<Self>(a.value / b);
     }
 
     template<typename Value, typename Self, typename Value2>
@@ -136,7 +136,7 @@ namespace autopilot
     constexpr Self operator%(
         const 物理量<Value, Self> &a, const Value2 &b)
     {
-        return Self(a.value % b);
+        return static_cast<Self>(a.value % b);
     }
 
     template<typename Value, typename Self, typename Value2>
@@ -190,21 +190,21 @@ namespace autopilot
 
     template<typename Value, typename Self>
     Self abs(const 物理量<Value, Self> &v) {
-        return Self(std::abs(v.value));
+        return static_cast<Self>(std::abs(v.value));
     }
 
     template<typename Value, typename Self>
     constexpr Self max(
         const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
     {
-        return Self(std::max(a.value, b.value));
+        return static_cast<Self>(std::max(a.value, b.value));
     }
 
     template<typename Value, typename Self>
     constexpr Self min(
         const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
     {
-        return Self(std::min(a.value, b.value));
+        return static_cast<Self>(std::min(a.value, b.value));
     }
 
     // 時間
