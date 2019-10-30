@@ -141,7 +141,7 @@ namespace autopilot
         if (0 < size && size < buffer_size - 1) {
             距離型 車両長 = std::wcstod(buffer, nullptr);
             if (0 < 車両長 && std::isfinite(車両長)) {
-                _車両長 = mps_from_kmph(車両長);
+                _車両長 = 車両長;
             }
         }
 
