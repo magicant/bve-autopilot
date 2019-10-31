@@ -28,7 +28,7 @@ namespace autopilot
     public:
         struct 観測 {
             速度型 _速度;
-            秒 _時刻;
+            s _時刻;
         };
 
         加速度計();

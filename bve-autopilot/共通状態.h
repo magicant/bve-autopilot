@@ -62,7 +62,7 @@ namespace autopilot {
         米 列車長() const { return _設定.車両長() * _車両仕様.Cars; }
         米 現在位置() const { return static_cast<米>(_状態.Location); }
         区間 現在範囲() const;
-        秒 現在時刻() const { return static_cast<ミリ秒>(_状態.Time); }
+        s 現在時刻() const { return static_cast<ミリ秒>(_状態.Time); }
         速度型 現在速度() const { return mps_from_kmph(_状態.Speed); }
         走行モデル 現在走行状態() const {
             return 走行モデル{ 現在位置(), 現在速度(), 現在時刻() };

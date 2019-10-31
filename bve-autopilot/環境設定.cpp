@@ -152,7 +152,7 @@ namespace autopilot
         if (0 < size && size < buffer_size - 1) {
             double 遅延 = std::wcstod(buffer, nullptr);
             if (0 <= 遅延 && std::isfinite(遅延)) {
-                _加速終了遅延 = static_cast<秒>(遅延);
+                _加速終了遅延 = static_cast<s>(遅延);
             }
         }
 
@@ -177,7 +177,7 @@ namespace autopilot
                 _制動反応時間 = 0.0_s; // 負の 0 は正の 0 にする
             }
             else if (0 < 反応時間 && std::isfinite(反応時間)) {
-                _制動反応時間 = static_cast<秒>(反応時間);
+                _制動反応時間 = static_cast<s>(反応時間);
             }
         }
 
