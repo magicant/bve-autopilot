@@ -48,7 +48,7 @@ namespace autopilot
 
         bool tasc初期起動() const { return _tasc初期起動; }
         bool ato初期起動() const { return _ato初期起動; }
-        米 車両長() const { return _車両長; }
+        m 車両長() const { return _車両長; }
         s 加速終了遅延() const { return _加速終了遅延; }
         加速度型 常用最大減速度() const { return _常用最大減速度; }
         s 制動反応時間() const { return _制動反応時間; }
@@ -69,7 +69,7 @@ namespace autopilot
 
     private:
         bool _tasc初期起動, _ato初期起動;
-        米 _車両長;
+        m _車両長;
         s _加速終了遅延;
         加速度型 _常用最大減速度;
         s _制動反応時間;

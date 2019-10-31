@@ -59,7 +59,7 @@ namespace autopilot
         _ato有効{true},
         _通過済地上子{}
     {
-        _tasc.目標停止位置を監視([&](米 位置) {
+        _tasc.目標停止位置を監視([&](m 位置) {
             _ato.tasc目標停止位置変化(位置);
         });
     }

@@ -59,8 +59,8 @@ namespace autopilot {
         const 環境設定 & 設定() const { return _設定; }
         互換モード型 互換モード() const { return _互換モード; }
         const ATS_VEHICLESPEC & 車両仕様() const { return _車両仕様; }
-        米 列車長() const { return _設定.車両長() * _車両仕様.Cars; }
-        米 現在位置() const { return static_cast<米>(_状態.Location); }
+        m 列車長() const { return _設定.車両長() * _車両仕様.Cars; }
+        m 現在位置() const { return static_cast<m>(_状態.Location); }
         区間 現在範囲() const;
         s 現在時刻() const { return static_cast<ms>(_状態.Time); }
         速度型 現在速度() const { return mps_from_kmph(_状態.Speed); }
@@ -78,7 +78,7 @@ namespace autopilot {
         const 制動特性 & 制動() const { return _制動特性; }
         int 転動防止自動ノッチ() const;
         const 勾配特性 &勾配() const { return _勾配特性; }
-        加速度型 進路勾配加速度(米 目標位置) const;
+        加速度型 進路勾配加速度(m 目標位置) const;
         加速度型 車両勾配加速度() const;
         const ATS_HANDLES & 前回出力() const { return _前回出力; }
 

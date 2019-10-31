@@ -34,11 +34,11 @@ namespace autopilot
     {
     public:
         void 消去();
-        void 制限区間追加(米 減速目標地点, 米 始点, 速度型 速度);
-        void 通過(米 位置);
+        void 制限区間追加(m 減速目標地点, m 始点, 速度型 速度);
+        void 通過(m 位置);
 
         速度型 制限速度(区間 対象区間) const;
-        速度型 制限速度(米 位置) const {
+        速度型 制限速度(m 位置) const {
             return 制限速度(区間{ 位置, 位置 });
         }
 

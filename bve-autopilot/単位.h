@@ -292,13 +292,13 @@ namespace autopilot
     // 距離
 
     /// メートル
-    struct 米 : 物理量<double, 米>
+    struct m : 物理量<double, m>
     {
         using 物理量::物理量;
     };
 
-    constexpr 米 operator"" _m(long double v) {
-        return static_cast<米>(static_cast<double>(v));
+    constexpr m operator"" _m(long double v) {
+        return static_cast<m>(static_cast<double>(v));
     }
 
 }

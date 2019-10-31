@@ -39,20 +39,20 @@ namespace autopilot
         struct 閉塞型 {
             信号インデックス 信号指示 = -1;
             速度型 信号速度 = std::numeric_limits<速度型>::infinity();
-            米 始点 = 米::無限大();
+            m 始点 = m::無限大();
             int 信号インデックス一覧 = 0; // 信号現示受信地上子の値
             bool 停止解放 = false;
             // この閉塞の信号速度が 0 の時にだけ有効な制限速度の一覧
-            std::map<米, 速度型> 停止信号前照査一覧;
+            std::map<m, 速度型> 停止信号前照査一覧;
 
-            bool 通過済(米 位置) const { return 始点 < 位置; }
+            bool 通過済(m 位置) const { return 始点 < 位置; }
             int 先行列車位置() const;
 
             void 制限グラフに制限区間を追加(
                 制限グラフ &追加先グラフ,
-                米 減速目標地点, 米 始点_, 速度型 速度) const;
+                m 減速目標地点, m 始点_, 速度型 速度) const;
             void 制限グラフに追加(
-                制限グラフ &追加先グラフ, 米 tasc目標停止位置, bool is_atc)
+                制限グラフ &追加先グラフ, m tasc目標停止位置, bool is_atc)
                 const;
 
             void 信号速度更新(
@@ -65,7 +65,7 @@ namespace autopilot
                 const 共通状態 &状態,
                 const std::map<信号インデックス, 速度型> &速度表,
                 bool 信号インデックスを更新する);
-            void 停止信号前照査設定(const ATS_BEACONDATA &地上子, 米 現在位置);
+            void 停止信号前照査設定(const ATS_BEACONDATA &地上子, m 現在位置);
             void 統合(const 閉塞型 &統合元);
             void 先行列車位置から信号指示を推定(
                 int 閉塞数, const std::map<信号インデックス, 速度型> &速度表);
@@ -80,7 +80,7 @@ namespace autopilot
         void リセット();
         void 発進();
         void 信号現示変化(信号インデックス 指示);
-        void tasc目標停止位置変化(米 位置);
+        void tasc目標停止位置変化(m 位置);
         void 地上子通過(const ATS_BEACONDATA &地上子, const 共通状態 &状態);
 
         void 経過(const 共通状態 &状態);
@@ -100,10 +100,10 @@ namespace autopilot
     private:
         std::map<信号インデックス, 速度型> _信号速度表;
         閉塞型 _現在閉塞;
-        std::map<米, 閉塞型> _前方閉塞一覧;
+        std::map<m, 閉塞型> _前方閉塞一覧;
 
         // どうせ tasc目標停止位置変化 がすぐ呼ばれるので初期値は何でも良い
-        米 _tasc目標停止位置 = {};
+        m _tasc目標停止位置 = {};
 
         // 経過メソッドが呼ばれる度に毎回制限グラフを計算するのはメモリに
         // 優しくないので予め計算しておく

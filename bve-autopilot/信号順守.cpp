@@ -31,7 +31,7 @@ namespace autopilot
     namespace
     {
 
-        constexpr 米 許容誤差 = 4.0_m;
+        constexpr m 許容誤差 = 4.0_m;
 
         void 信号速度設定(
             std::map<信号順守::信号インデックス, 速度型> &速度表, int 地上子値)
@@ -75,7 +75,7 @@ namespace autopilot
 
     void 信号順守::閉塞型::制限グラフに制限区間を追加(
         制限グラフ &追加先グラフ,
-        米 減速目標地点, 米 始点_, 速度型 速度) const
+        m 減速目標地点, m 始点_, 速度型 速度) const
     {
         if (停止解放) {
             速度 = std::max(速度, 停止解放走行速度);
@@ -84,15 +84,15 @@ namespace autopilot
     }
 
     void 信号順守::閉塞型::制限グラフに追加(
-        制限グラフ &追加先グラフ, 米 tasc目標停止位置, bool is_atc) const
+        制限グラフ &追加先グラフ, m tasc目標停止位置, bool is_atc) const
     {
-        米 減速目標地点 = 始点;
+        m 減速目標地点 = 始点;
 
         if (信号速度 == 0) {
-            米 停止位置 = tasc目標停止位置;
+            m 停止位置 = tasc目標停止位置;
 
             for (const auto &照査 : 停止信号前照査一覧) {
-                米 照査位置 = 照査.first;
+                m 照査位置 = 照査.first;
                 速度型 照査速度 = 照査.second;
                 制限グラフに制限区間を追加(
                     追加先グラフ, 照査位置, 照査位置, 照査速度);
@@ -114,10 +114,10 @@ namespace autopilot
             if (is_atc) {
                 // 最終減速度 0.5 km/h/s で信号速度より 0.5 km/h 低く減速
                 // するので、ちょっとオーバーするくらいでも良い
-                減速目標地点 += static_cast<米>(1.0 * 信号速度); // FIXME 単位を正しく扱う
+                減速目標地点 += static_cast<m>(1.0 * 信号速度); // FIXME 単位を正しく扱う
             }
             else {
-                減速目標地点 -= static_cast<米>(4.0 * 信号速度); // FIXME 単位を正しく扱う
+                減速目標地点 -= static_cast<m>(4.0 * 信号速度); // FIXME 単位を正しく扱う
             }
         }
 
@@ -148,7 +148,7 @@ namespace autopilot
         const std::map<信号インデックス, 速度型> &速度表,
         bool 信号インデックスを更新する)
     {
-        始点 = 状態.現在位置() + static_cast<米>(地上子.Distance);
+        始点 = 状態.現在位置() + static_cast<m>(地上子.Distance);
         if (信号インデックスを更新する && 地上子.Optional > 0) {
             信号インデックス一覧 = 地上子.Optional;
         }
@@ -156,9 +156,9 @@ namespace autopilot
     }
 
     void 信号順守::閉塞型::停止信号前照査設定(
-        const ATS_BEACONDATA &地上子, 米 現在位置)
+        const ATS_BEACONDATA &地上子, m 現在位置)
     {
-        米 位置 = 現在位置 + static_cast<米>(地上子.Optional / 1000);
+        m 位置 = 現在位置 + static_cast<m>(地上子.Optional / 1000);
         速度型 速度 = mps_from_kmph(地上子.Optional % 1000);
         停止信号前照査一覧[位置] = 速度;
     }
@@ -295,7 +295,7 @@ namespace autopilot
     void 信号順守::信号現示変化(信号インデックス 指示)
     {
         _現在閉塞.信号指示設定(指示, _信号速度表);
-        _現在閉塞.始点 = -米::無限大();
+        _現在閉塞.始点 = -m::無限大();
         if (is_atc()) {
             // 前方閉塞の現示も上がっている可能性が高いが
             // 推測は無理なのできれいさっぱり忘れる
@@ -307,7 +307,7 @@ namespace autopilot
         信号グラフ再計算();
     }
 
-    void 信号順守::tasc目標停止位置変化(米 位置)
+    void 信号順守::tasc目標停止位置変化(m 位置)
     {
         _tasc目標停止位置 = 位置;
         信号グラフ再計算();
@@ -396,7 +396,7 @@ namespace autopilot
             return nullptr;
         }
 
-        米 位置 = 状態.現在位置() + static_cast<米>(地上子.Distance);
+        m 位置 = 状態.現在位置() + static_cast<m>(地上子.Distance);
         auto i = _前方閉塞一覧.lower_bound(位置 - 許容誤差);
         閉塞型 &閉塞 =
             i != _前方閉塞一覧.end() &&

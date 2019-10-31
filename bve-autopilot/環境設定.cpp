@@ -141,7 +141,7 @@ namespace autopilot
         if (0 < size && size < buffer_size - 1) {
             double 車両長 = std::wcstod(buffer, nullptr);
             if (0 < 車両長 && std::isfinite(車両長)) {
-                _車両長 = static_cast<米>(車両長);
+                _車両長 = static_cast<m>(車両長);
             }
         }
 
