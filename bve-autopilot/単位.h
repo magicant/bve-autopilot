@@ -246,20 +246,6 @@ namespace autopilot
         return static_cast<Self>(std::floor(v.value));
     }
 
-    template<typename Value, typename Self>
-    constexpr Self max(
-        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
-    {
-        return static_cast<Self>(std::max(a.value, b.value));
-    }
-
-    template<typename Value, typename Self>
-    constexpr Self min(
-        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
-    {
-        return static_cast<Self>(std::min(a.value, b.value));
-    }
-
     // 時間
 
     struct s;
