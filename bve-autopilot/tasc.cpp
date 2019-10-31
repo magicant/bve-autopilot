@@ -75,7 +75,7 @@ namespace autopilot {
     {
         switch (地上子.Type) {
         case 1031: // TASC 停止位置許容誤差設定
-            最大許容誤差を設定(static_cast<m>(地上子.Optional * 0.01));
+            最大許容誤差を設定(static_cast<cm>(地上子.Optional));
             break;
         }
 

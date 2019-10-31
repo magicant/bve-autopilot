@@ -48,13 +48,13 @@ namespace autopilot
 
         int tasc残距離桁::operator()(const Main &main) const
         {
-            m 残距離 =
+            cm 残距離 =
                 main.tasc状態().目標停止位置() - main.状態().現在位置();
             double 値 = 残距離.value;
             if (!std::isfinite(値)) {
                 return 無効値;
             }
-            int v = static_cast<int>(std::abs(値) * 100);
+            int v = static_cast<int>(std::abs(値));
             for (int i = 0; i < _桁; ++i) {
                 v /= 10;
             }
@@ -85,16 +85,16 @@ namespace autopilot
                 return std::max(-main.tasc状態().出力ノッチ(), 0);
             })},
             {L"tascdistance", パネル出力対象([](const Main &main) {
-                m 残距離 =
+                cm 残距離 =
                     main.tasc状態().目標停止位置() - main.状態().現在位置();
                 double 値 = 残距離.value;
                 if (!std::isfinite(値)) {
                     return 0;
                 }
-                return static_cast<int>(値 * 100);
+                return static_cast<int>(値);
             })},
             {L"tascdistancesign", パネル出力対象([](const Main &main) {
-                m 残距離 =
+                auto 残距離 =
                     main.tasc状態().目標停止位置() - main.状態().現在位置();
                 double 値 = 残距離.value;
                 if (!std::isfinite(値)) {
