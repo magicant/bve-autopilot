@@ -263,29 +263,30 @@ namespace autopilot
     // 時間
 
     struct s;
-    struct ミリ秒;
+    struct ms;
 
     // 秒
     struct s : 物理量<double, s>
     {
         using 物理量::物理量;
-        constexpr s(const ミリ秒 &v);
+        constexpr s(const ms &v);
     };
 
-    struct ミリ秒 : 物理量<double, ミリ秒>
+    // ミリ秒
+    struct ms : 物理量<double, ms>
     {
         using 物理量::物理量;
-        constexpr ミリ秒(const s &v);
+        constexpr ms(const s &v);
     };
 
-    constexpr s::s(const ミリ秒 &v) : 物理量(v.value / 1000.0) {}
-    constexpr ミリ秒::ミリ秒(const s &v) : 物理量(v.value * 1000.0) {}
+    constexpr s::s(const ms &v) : 物理量(v.value / 1000.0) {}
+    constexpr ms::ms(const s &v) : 物理量(v.value * 1000.0) {}
 
     constexpr s operator"" _s(long double v) {
         return static_cast<s>(static_cast<double>(v));
     }
-    constexpr ミリ秒 operator"" _ms(long double v) {
-        return static_cast<ミリ秒>(static_cast<double>(v));
+    constexpr ms operator"" _ms(long double v) {
+        return static_cast<ms>(static_cast<double>(v));
     }
 
     // 距離
