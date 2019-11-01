@@ -88,7 +88,7 @@ namespace autopilot
             return;
         }
 
-        mps2 変化量上限 = static_cast<mps2>(mps_from_kmph(1.0) * フレーム.value); // FIXME 単位を正しく扱う
+        mps2 変化量上限 = 1.0_kmphps2 * フレーム;
         mps2 新推定値 = 出力減速度 / 割合;
         _推定最大減速度 = std::clamp(新推定値,
             _推定最大減速度 - 変化量上限, _推定最大減速度 + 変化量上限);
