@@ -47,7 +47,7 @@ namespace autopilot
 
         int atc停止出力ノッチ(const 共通状態 &状態)
         {
-            mps2 目標減速度 = 状態.現在速度() / 2.0_s; // FIXME 単位を正しく扱う
+            mps2 目標減速度 = 状態.現在速度() / 2.0_s;
             mps2 勾配影響 = 状態.車両勾配加速度();
             mps2 出力減速度 =
                 std::max(目標減速度 + 勾配影響, static_cast<mps2>(1.0_kmphps));

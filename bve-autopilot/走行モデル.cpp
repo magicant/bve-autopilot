@@ -50,7 +50,7 @@ namespace autopilot {
             return;
         }
 
-        mps 新速度 = static_cast<mps>(std::sqrt(_速度.value * _速度.value + 2 * 距離.value * 加速度.value)); // FIXME 単位を正しく扱う
+        mps 新速度 = sqrt(_速度 * _速度 + 2.0 * 距離 * 加速度);
         if (!(新速度 >= 0.0_mps)) {
             新速度 = 0.0_mps;
         }
@@ -117,7 +117,7 @@ namespace autopilot {
 
     mps2 走行モデル::距離と速度による加速度(m 距離, mps 初速度, mps 終速度)
     {
-        return static_cast<mps2>((終速度.value * 終速度.value - 初速度.value * 初速度.value) / 距離.value / 2.0); // FIXME 単位を正しく扱う
+        return (終速度 * 終速度 - 初速度 * 初速度) / 距離 / 2.0;
     }
 
 }

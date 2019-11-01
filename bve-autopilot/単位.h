@@ -396,4 +396,33 @@ namespace autopilot
         return static_cast<s>(a.value / b.value);
     }
 
+    // 比エネルギー
+
+    /// メートルメートル毎秒毎秒
+    struct m2ps2 : 物理量<double, m2ps2>
+    {
+        using 物理量::物理量;
+    };
+
+    constexpr m2ps2 operator"" _m2ps2(long double v) {
+        return static_cast<m2ps2>(static_cast<double>(v));
+    }
+
+    constexpr m2ps2 operator*(const mps &a, const mps &b) {
+        return static_cast<m2ps2>(a.value * b.value);
+    }
+    constexpr m2ps2 operator*(const m &a, const mps2 &b) {
+        return static_cast<m2ps2>(a.value * b.value);
+    }
+    constexpr m2ps2 operator*(const mps2 &a, const m &b) {
+        return static_cast<m2ps2>(a.value * b.value);
+    }
+    constexpr mps2 operator/(const m2ps2 &a, const m &b) {
+        return static_cast<mps2>(a.value / b.value);
+    }
+
+    inline mps sqrt(const m2ps2 &v) {
+        return static_cast<mps>(std::sqrt(v.value));
+    }
+
 }
