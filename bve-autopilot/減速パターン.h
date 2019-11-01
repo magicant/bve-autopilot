@@ -30,37 +30,37 @@ namespace autopilot
 
     struct 減速パターン
     {
-        static constexpr 加速度型 標準最終減速度 = mps_from_kmph(0.5);
-        static constexpr 加速度型 停止最終減速度 = mps_from_kmph(1.0);
+        static constexpr mps2 標準最終減速度 = 0.5_kmphps;
+        static constexpr mps2 停止最終減速度 = 1.0_kmphps;
 
         m 目標位置;
         mps 目標速度;
-        加速度型 初期減速度, 最終減速度;
+        mps2 初期減速度, 最終減速度;
 
         constexpr 減速パターン(
-            m 目標位置, mps 目標速度, 加速度型 初期減速度) :
+            m 目標位置, mps 目標速度, mps2 初期減速度) :
             目標位置(目標位置), 目標速度(目標速度),
             初期減速度(初期減速度), 最終減速度(初期減速度) {}
         constexpr 減速パターン(
             m 目標位置, mps 目標速度,
-            加速度型 初期減速度, 加速度型 最終減速度) :
+            mps2 初期減速度, mps2 最終減速度) :
             目標位置(目標位置), 目標速度(目標速度),
             初期減速度(初期減速度), 最終減速度(最終減速度) {}
 
         ~減速パターン() = default;
 
-        std::pair<mps, 加速度型> 期待速度と期待減速度(m 現在位置) const;
+        std::pair<mps, mps2> 期待速度と期待減速度(m 現在位置) const;
         mps 期待速度(m 現在位置) const {
             return 期待速度と期待減速度(現在位置).first;
         }
 
-        加速度型 出力減速度(m 現在位置, mps 現在速度) const;
+        mps2 出力減速度(m 現在位置, mps 現在速度) const;
         int 出力制動ノッチ(
             m 現在位置, mps 現在速度, int 現在制動ノッチ,
-            加速度型 勾配影響, const 共通状態 &状態) const;
+            mps2 勾配影響, const 共通状態 &状態) const;
         bool 力行する余裕あり(
-            int 力行ノッチ, 加速度型 想定加速度, s 想定惰行時間,
-            加速度型 勾配影響, const 共通状態 &状態) const;
+            int 力行ノッチ, mps2 想定加速度, s 想定惰行時間,
+            mps2 勾配影響, const 共通状態 &状態) const;
         int 出力ノッチ(const 共通状態 &状態) const;
 
     };

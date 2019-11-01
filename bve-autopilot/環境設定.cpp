@@ -88,7 +88,7 @@ namespace autopilot
         _ato初期起動(true),
         _車両長(20),
         _加速終了遅延(2.0_s),
-        _常用最大減速度(mps_from_kmph(3)),
+        _常用最大減速度(3.0_kmphps),
         _制動反応時間(0.2_s),
         _制動拡張ノッチ数(0),
         _転動防止制動割合(0.5),
@@ -161,9 +161,9 @@ namespace autopilot
             L"braking", L"maxdeceleration", L"", buffer, buffer_size,
             設定ファイル名);
         if (0 < size && size < buffer_size - 1) {
-            加速度型 減速度 = std::wcstod(buffer, nullptr);
+            double 減速度 = std::wcstod(buffer, nullptr);
             if (0 < 減速度 && std::isfinite(減速度)) {
-                _常用最大減速度 = mps_from_kmph(減速度);
+                _常用最大減速度 = static_cast<kmphps>(減速度);
             }
         }
 

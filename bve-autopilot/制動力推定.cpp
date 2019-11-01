@@ -83,13 +83,13 @@ namespace autopilot
             return;
         }
 
-        加速度型 出力減速度 = 状態.車両勾配加速度() - 状態.加速度();
-        if (出力減速度 < mps_from_kmph(0.1)) {
+        mps2 出力減速度 = 状態.車両勾配加速度() - 状態.加速度();
+        if (出力減速度 < static_cast<mps2>(0.1_kmphps)) {
             return;
         }
 
-        加速度型 変化量上限 = mps_from_kmph(1.0) * フレーム.value; // FIXME 単位を正しく扱う
-        加速度型 新推定値 = 出力減速度 / 割合;
+        mps2 変化量上限 = static_cast<mps2>(mps_from_kmph(1.0) * フレーム.value); // FIXME 単位を正しく扱う
+        mps2 新推定値 = 出力減速度 / 割合;
         _推定最大減速度 = std::clamp(新推定値,
             _推定最大減速度 - 変化量上限, _推定最大減速度 + 変化量上限);
     }

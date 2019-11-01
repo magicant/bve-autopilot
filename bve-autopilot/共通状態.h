@@ -71,17 +71,17 @@ namespace autopilot {
         }
         float 現在電流() const { return _状態.Current; }
         float 現在ブレーキシリンダー圧() const { return _状態.BcPressure; }
-        加速度型 目安減速度() const { return _目安減速度; }
+        mps2 目安減速度() const { return _目安減速度; }
         bool 戸閉() const { return _戸閉; }
         int 逆転器ノッチ() const { return _逆転器ノッチ; }
         int 力行ノッチ() const { return _力行ノッチ; }
         int 制動ノッチ() const { return _制動ノッチ; }
-        加速度型 加速度() const { return _加速度計.加速度(); }
+        mps2 加速度() const { return _加速度計.加速度(); }
         const 制動特性 & 制動() const { return _制動特性; }
         int 転動防止自動ノッチ() const;
         const 勾配特性 &勾配() const { return _勾配特性; }
-        加速度型 進路勾配加速度(m 目標位置) const;
-        加速度型 車両勾配加速度() const;
+        mps2 進路勾配加速度(m 目標位置) const;
+        mps2 車両勾配加速度() const;
         const ATS_HANDLES & 前回出力() const { return _前回出力; }
 
     private:
@@ -89,7 +89,7 @@ namespace autopilot {
         互換モード型 _互換モード = 互換モード型::無効;
         ATS_VEHICLESPEC _車両仕様 = {};
         ATS_VEHICLESTATE _状態 = {};
-        加速度型 _目安減速度 = 0;
+        mps2 _目安減速度 = {};
         bool _戸閉 = false;
         int _逆転器ノッチ = 0, _力行ノッチ = 0, _制動ノッチ = 0;
         加速度計 _加速度計;

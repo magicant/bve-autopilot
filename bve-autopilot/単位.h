@@ -26,8 +26,6 @@
 namespace autopilot
 {
 
-    // メートル毎秒毎秒
-    using 加速度型 = double;
     // メートル毎秒毎秒毎秒
     using 加加速度型 = double;
 
@@ -323,6 +321,48 @@ namespace autopilot
         return static_cast<m>(a.value * b.value);
     }
     constexpr s operator/(const m &a, const mps &b) {
+        return static_cast<s>(a.value / b.value);
+    }
+
+    // 加速度
+
+    struct mps2;
+    struct kmphps;
+
+    /// メートル毎秒毎秒
+    struct mps2 : 物理量<double, mps2>
+    {
+        using 物理量::物理量;
+        constexpr mps2(const kmphps &v);
+    };
+
+    /// キロメートル毎時毎秒
+    struct kmphps : 物理量<double, kmphps>
+    {
+        using 物理量::物理量;
+        constexpr kmphps(const mps2 &v);
+    };
+
+    constexpr mps2::mps2(const kmphps &v) : 物理量(v.value / 3.6) {}
+    constexpr kmphps::kmphps(const mps2 &v) : 物理量(v.value * 3.6) {}
+
+    constexpr mps2 operator"" _mps2(long double v) {
+        return static_cast<mps2>(static_cast<double>(v));
+    }
+    constexpr kmphps operator"" _kmphps(long double v) {
+        return static_cast<kmphps>(static_cast<double>(v));
+    }
+
+    constexpr mps2 operator/(const mps &a, const s &b) {
+        return static_cast<mps2>(a.value / b.value);
+    }
+    constexpr mps operator*(const mps2 &a, const s &b) {
+        return static_cast<mps>(a.value * b.value);
+    }
+    constexpr mps operator*(const s &a, const mps2 &b) {
+        return static_cast<mps>(a.value * b.value);
+    }
+    constexpr s operator/(const mps &a, const mps2 &b) {
         return static_cast<s>(a.value / b.value);
     }
 

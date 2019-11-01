@@ -31,14 +31,14 @@ namespace autopilot
     namespace
     {
 
-        constexpr 加速度型 重力加速度 = 9.80665; // m/s/s
+        constexpr mps2 重力加速度 = 9.80665_mps2;
 
     }
 
     struct 勾配特性::勾配区間 : 区間
     {
         double 勾配;
-        加速度型 影響加速度;
+        mps2 影響加速度;
 
         勾配区間(m 始点, m 終点, double 勾配) :
             区間{ 始点, 終点 },
@@ -80,14 +80,14 @@ namespace autopilot
         });
     }
 
-    加速度型 勾配特性::勾配加速度(区間 対象範囲) const
+    mps2 勾配特性::勾配加速度(区間 対象範囲) const
     {
         m 全体長さ = 対象範囲.長さ();
         if (!(全体長さ > 0.0_m)) {
-            return 0;
+            return 0.0_mps2;
         }
 
-        加速度型 加速度 = 0;
+        mps2 加速度 = 0.0_mps2;
         for (const 勾配区間 &区間 : _区間リスト) {
             auto 影響区間 = 重なり(区間, 対象範囲);
             m 影響長さ = 影響区間.長さ();

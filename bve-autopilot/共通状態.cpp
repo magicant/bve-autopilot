@@ -60,7 +60,8 @@ namespace autopilot {
         case 1002: // 目標減速度設定
             if (地上子.Optional > 0) {
                 _目安減速度 = std::min(
-                    mps_from_kmph(0.1 * 地上子.Optional),
+                    static_cast<mps2>(static_cast<kmphps>(
+                        0.1 * 地上子.Optional)),
                     0.95 * _設定.常用最大減速度());
             }
             break;
@@ -116,14 +117,14 @@ namespace autopilot {
         return std::min(ノッチi, _制動特性.自動ノッチ数());
     }
 
-    加速度型 共通状態::進路勾配加速度(m 目標位置) const
+    mps2 共通状態::進路勾配加速度(m 目標位置) const
     {
         区間 進路 = 現在範囲();
         進路.終点 = std::max(進路.終点, 目標位置);
         return _勾配特性.勾配加速度(進路);
     }
 
-    加速度型 共通状態::車両勾配加速度() const
+    mps2 共通状態::車両勾配加速度() const
     {
         return _勾配特性.勾配加速度(現在範囲());
     }
