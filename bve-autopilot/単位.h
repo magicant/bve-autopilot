@@ -18,10 +18,8 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
-#include <algorithm>
 #include <cmath>
 #include <limits>
-#include <type_traits>
 
 namespace autopilot
 {
