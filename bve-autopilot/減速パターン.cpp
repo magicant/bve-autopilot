@@ -133,6 +133,9 @@ namespace autopilot
             出力制動ノッチ相当 = std::ceil(出力制動ノッチ相当);
         }
 
+        if (出力制動ノッチ相当 > std::numeric_limits<int>::max()) {
+            return 制動.自動ノッチ数();
+        }
         int 出力制動ノッチ = static_cast<int>(出力制動ノッチ相当);
         return std::clamp(出力制動ノッチ, 0, 制動.自動ノッチ数());
     }

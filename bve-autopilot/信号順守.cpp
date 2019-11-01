@@ -88,6 +88,10 @@ namespace autopilot
     {
         m 減速目標地点 = 始点;
 
+        if (信号速度 == mps::無限大()) {
+            return;
+        }
+
         if (信号速度 == 0.0_mps) {
             m 停止位置 = tasc目標停止位置;
 
