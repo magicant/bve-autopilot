@@ -26,17 +26,15 @@
 namespace autopilot
 {
 
-    // メートル毎秒
-    using 速度型 = double;
     // メートル毎秒毎秒
     using 加速度型 = double;
     // メートル毎秒毎秒毎秒
     using 加加速度型 = double;
 
-    constexpr 速度型 mps_from_kmph(double kmph) {
+    constexpr double mps_from_kmph(double kmph) {
         return kmph / 3.6;
     }
-    constexpr double kmph_from_mps(速度型 mps) {
+    constexpr double kmph_from_mps(double mps) {
         return mps * 3.6;
     }
 
@@ -100,45 +98,32 @@ namespace autopilot
         return a;
     }
 
-    template<typename Value, typename Self, typename Value2>
-    constexpr std::enable_if_t<
-        !std::is_convertible_v<Value2 *, 物理量<Value, Self> *>, Self>
-        operator*(const 物理量<Value, Self> &a, const Value2 &b)
-    {
+    template<typename Value, typename Self>
+    constexpr Self operator*(const 物理量<Value, Self> &a, const Value &b) {
         return static_cast<Self>(a.value * b);
     }
 
-    template<typename Value, typename Self, typename Value2>
-    constexpr std::enable_if_t<
-        !std::is_convertible_v<Value2 *, 物理量<Value, Self> *>,
-        物理量<Value, Self> &>
-        operator*=(物理量<Value, Self> &a, const Value2 &b)
+    template<typename Value, typename Self>
+    constexpr 物理量<Value, Self> &operator*=(
+        物理量<Value, Self> &a, const Value &b)
     {
         a.value *= b;
         return a;
     }
 
-    template<typename Value2, typename Value, typename Self>
-    constexpr std::enable_if_t<
-        !std::is_convertible_v<Value2 *, 物理量<Value, Self> *>, Self>
-        operator*(const Value2 &a, const 物理量<Value, Self> &b)
-    {
+    template<typename Value, typename Self>
+    constexpr Self operator*(const Value &a, const 物理量<Value, Self> &b) {
         return static_cast<Self>(a * b.value);
     }
 
-    template<typename Value, typename Self, typename Value2>
-    constexpr std::enable_if_t<
-        !std::is_convertible_v<Value2 *, 物理量<Value, Self> *>, Self>
-        operator/(const 物理量<Value, Self> &a, const Value2 &b)
-    {
+    template<typename Value, typename Self>
+    constexpr Self operator/(const 物理量<Value, Self> &a, const Value &b) {
         return static_cast<Self>(a.value / b);
     }
 
-    template<typename Value, typename Self, typename Value2>
-    constexpr std::enable_if_t<
-        !std::is_convertible_v<Value2 *, 物理量<Value, Self> *>,
-        物理量<Value, Self> &>
-        operator/=(物理量<Value, Self> &a, const Value2 &b)
+    template<typename Value, typename Self>
+    constexpr 物理量<Value, Self> &operator/=(
+        物理量<Value, Self> &a, const Value &b)
     {
         a.value /= b;
         return a;
@@ -151,19 +136,14 @@ namespace autopilot
         return a.value / b.value;
     }
 
-    template<typename Value, typename Self, typename Value2>
-    constexpr std::enable_if_t<
-        !std::is_convertible_v<Value2 *, 物理量<Value, Self> *>, Self>
-        operator%(const 物理量<Value, Self> &a, const Value2 &b)
-    {
+    template<typename Value, typename Self>
+    constexpr Self operator%(const 物理量<Value, Self> &a, const Value &b) {
         return static_cast<Self>(a.value % b);
     }
 
-    template<typename Value, typename Self, typename Value2>
-    constexpr std::enable_if_t<
-        !std::is_convertible_v<Value2 *, 物理量<Value, Self> *>,
-        物理量<Value, Self> &>
-        operator%=(物理量<Value, Self> &a, const Value2 &b)
+    template<typename Value, typename Self>
+    constexpr 物理量<Value, Self> &operator%=(
+        物理量<Value, Self> &a, const Value &b)
     {
         a.value %= b;
         return a;
@@ -302,6 +282,48 @@ namespace autopilot
     }
     constexpr cm operator"" _cm(long double v) {
         return static_cast<cm>(static_cast<double>(v));
+    }
+
+    // 速度
+
+    struct mps;
+    struct kmph;
+
+    /// メートル毎秒
+    struct mps : 物理量<double, mps>
+    {
+        using 物理量::物理量;
+        constexpr mps(const kmph &v);
+    };
+
+    /// キロメートル毎時
+    struct kmph : 物理量<double, kmph>
+    {
+        using 物理量::物理量;
+        constexpr kmph(const mps &v);
+    };
+
+    constexpr mps::mps(const kmph &v) : 物理量(v.value / 3.6) {}
+    constexpr kmph::kmph(const mps &v) : 物理量(v.value * 3.6) {}
+
+    constexpr mps operator"" _mps(long double v) {
+        return static_cast<mps>(static_cast<double>(v));
+    }
+    constexpr kmph operator"" _kmph(long double v) {
+        return static_cast<kmph>(static_cast<double>(v));
+    }
+
+    constexpr mps operator/(const m &a, const s &b) {
+        return static_cast<mps>(a.value / b.value);
+    }
+    constexpr m operator*(const mps &a, const s &b) {
+        return static_cast<m>(a.value * b.value);
+    }
+    constexpr m operator*(const s &a, const mps &b) {
+        return static_cast<m>(a.value * b.value);
+    }
+    constexpr s operator/(const m &a, const mps &b) {
+        return static_cast<s>(a.value / b.value);
     }
 
 }

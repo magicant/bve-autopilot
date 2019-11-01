@@ -33,7 +33,7 @@ namespace autopilot
         _区間リスト.clear();
     }
 
-    void 制限グラフ::制限区間追加(m 減速目標地点, m 始点, 速度型 速度)
+    void 制限グラフ::制限区間追加(m 減速目標地点, m 始点, mps 速度)
     {
         // 新しい制限区間に上書きされる区間を消す
         _区間リスト.remove_if([始点](const 制限区間 & 区間) {
@@ -57,9 +57,9 @@ namespace autopilot
         });
     }
 
-    速度型 制限グラフ::制限速度(区間 対象区間) const
+    mps 制限グラフ::制限速度(区間 対象区間) const
     {
-        速度型 制限速度 = std::numeric_limits<速度型>::infinity();
+        auto 制限速度 = mps::無限大();
         for (const 制限区間 &区間 : _区間リスト) {
             if (重なる(区間, 対象区間)) {
                 制限速度 = std::min(制限速度, 区間.速度);
@@ -68,9 +68,9 @@ namespace autopilot
         return 制限速度;
     }
 
-    速度型 制限グラフ::現在常用パターン速度(const 共通状態 &状態) const
+    mps 制限グラフ::現在常用パターン速度(const 共通状態 &状態) const
     {
-        速度型 速度 = std::numeric_limits<速度型>::infinity();
+        auto 速度 = mps::無限大();
         加速度型 標準減速度 = 状態.制動().基準最大減速度();
 
         for (const 制限区間 &区間 : _区間リスト) {

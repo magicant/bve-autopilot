@@ -59,11 +59,13 @@ namespace autopilot {
         const 環境設定 & 設定() const { return _設定; }
         互換モード型 互換モード() const { return _互換モード; }
         const ATS_VEHICLESPEC & 車両仕様() const { return _車両仕様; }
-        m 列車長() const { return _設定.車両長() * _車両仕様.Cars; }
+        m 列車長() const {
+            return _設定.車両長() * static_cast<double>(_車両仕様.Cars);
+        }
         m 現在位置() const { return static_cast<m>(_状態.Location); }
         区間 現在範囲() const;
         s 現在時刻() const { return static_cast<ms>(_状態.Time); }
-        速度型 現在速度() const { return mps_from_kmph(_状態.Speed); }
+        mps 現在速度() const { return static_cast<kmph>(_状態.Speed); }
         走行モデル 現在走行状態() const {
             return 走行モデル{ 現在位置(), 現在速度(), 現在時刻() };
         }

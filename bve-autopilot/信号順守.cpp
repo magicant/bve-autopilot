@@ -34,20 +34,20 @@ namespace autopilot
         constexpr m 許容誤差 = 4.0_m;
 
         void 信号速度設定(
-            std::map<信号順守::信号インデックス, 速度型> &速度表, int 地上子値)
+            std::map<信号順守::信号インデックス, mps> &速度表, int 地上子値)
         {
             信号順守::信号インデックス 指示 = 地上子値 / 1000;
             if (指示 < 0 || 256 <= 指示) {
                 return;
             }
 
-            速度型 速度 = mps_from_kmph(地上子値 % 1000);
+            mps 速度 = static_cast<kmph>(地上子値 % 1000);
             速度表[指示] = 速度;
         }
 
         int atc停止出力ノッチ(const 共通状態 &状態)
         {
-            加速度型 目標減速度 = 状態.現在速度() / 2.0;
+            加速度型 目標減速度 = 状態.現在速度().value / 2.0; // FIXME 単位を正しく扱う
             加速度型 勾配影響 = 状態.車両勾配加速度();
             加速度型 出力減速度 =
                 std::max(目標減速度 + 勾配影響, mps_from_kmph(1.0));
@@ -75,7 +75,7 @@ namespace autopilot
 
     void 信号順守::閉塞型::制限グラフに制限区間を追加(
         制限グラフ &追加先グラフ,
-        m 減速目標地点, m 始点_, 速度型 速度) const
+        m 減速目標地点, m 始点_, mps 速度) const
     {
         if (停止解放) {
             速度 = std::max(速度, 停止解放走行速度);
@@ -88,15 +88,15 @@ namespace autopilot
     {
         m 減速目標地点 = 始点;
 
-        if (信号速度 == 0) {
+        if (信号速度 == 0.0_mps) {
             m 停止位置 = tasc目標停止位置;
 
             for (const auto &照査 : 停止信号前照査一覧) {
                 m 照査位置 = 照査.first;
-                速度型 照査速度 = 照査.second;
+                mps 照査速度 = 照査.second;
                 制限グラフに制限区間を追加(
                     追加先グラフ, 照査位置, 照査位置, 照査速度);
-                if (照査速度 == 0) {
+                if (照査速度 == 0.0_mps) {
                     停止位置 = std::min(停止位置, 照査位置);
                 }
             }
@@ -114,10 +114,10 @@ namespace autopilot
             if (is_atc) {
                 // 最終減速度 0.5 km/h/s で信号速度より 0.5 km/h 低く減速
                 // するので、ちょっとオーバーするくらいでも良い
-                減速目標地点 += static_cast<m>(1.0 * 信号速度); // FIXME 単位を正しく扱う
+                減速目標地点 += 1.0_s * 信号速度;
             }
             else {
-                減速目標地点 -= static_cast<m>(4.0 * 信号速度); // FIXME 単位を正しく扱う
+                減速目標地点 -= 4.0_s * 信号速度;
             }
         }
 
@@ -125,7 +125,7 @@ namespace autopilot
     }
 
     void 信号順守::閉塞型::信号速度更新(
-        const std::map<信号インデックス, 速度型> &速度表)
+        const std::map<信号インデックス, mps> &速度表)
     {
         auto i = 速度表.find(信号指示);
         if (i != 速度表.end()) {
@@ -135,7 +135,7 @@ namespace autopilot
 
     void 信号順守::閉塞型::信号指示設定(
         信号インデックス 指示,
-        const std::map<信号インデックス, 速度型> &速度表)
+        const std::map<信号インデックス, mps> &速度表)
     {
         信号指示 = 指示;
         停止解放 = false;
@@ -145,7 +145,7 @@ namespace autopilot
     void 信号順守::閉塞型::状態更新(
         const ATS_BEACONDATA &地上子,
         const 共通状態 &状態,
-        const std::map<信号インデックス, 速度型> &速度表,
+        const std::map<信号インデックス, mps> &速度表,
         bool 信号インデックスを更新する)
     {
         始点 = 状態.現在位置() + static_cast<m>(地上子.Distance);
@@ -159,7 +159,7 @@ namespace autopilot
         const ATS_BEACONDATA &地上子, m 現在位置)
     {
         m 位置 = 現在位置 + static_cast<m>(地上子.Optional / 1000);
-        速度型 速度 = mps_from_kmph(地上子.Optional % 1000);
+        mps 速度 = static_cast<kmph>(地上子.Optional % 1000);
         停止信号前照査一覧[位置] = 速度;
     }
 
@@ -175,7 +175,7 @@ namespace autopilot
     }
 
     void 信号順守::閉塞型::先行列車位置から信号指示を推定(
-        int 閉塞数, const std::map<信号インデックス, 速度型> &速度表)
+        int 閉塞数, const std::map<信号インデックス, mps> &速度表)
     {
         int i = 信号インデックス一覧;
         if (i == 0) {
@@ -205,65 +205,65 @@ namespace autopilot
     void 信号順守::リセット()
     {
         _信号速度表 = {
-            {0, mps_from_kmph(0)},
-            {1, mps_from_kmph(25)},
-            {2, mps_from_kmph(40)},
-            {3, mps_from_kmph(65)},
-            {4, mps_from_kmph(85)},
-            {5, mps_from_kmph(160)},
-            {9, mps_from_kmph(0)},
-            {10, mps_from_kmph(0)},
-            {11, mps_from_kmph(10)},
-            {12, mps_from_kmph(10)},
-            {13, mps_from_kmph(15)},
-            {14, mps_from_kmph(20)},
-            {15, mps_from_kmph(25)},
-            {16, mps_from_kmph(30)},
-            {17, mps_from_kmph(35)},
-            {18, mps_from_kmph(40)},
-            {19, mps_from_kmph(45)},
-            {20, mps_from_kmph(50)},
-            {21, mps_from_kmph(55)},
-            {22, mps_from_kmph(60)},
-            {23, mps_from_kmph(65)},
-            {24, mps_from_kmph(70)},
-            {25, mps_from_kmph(75)},
-            {26, mps_from_kmph(80)},
-            {27, mps_from_kmph(85)},
-            {28, mps_from_kmph(90)},
-            {29, mps_from_kmph(95)},
-            {30, mps_from_kmph(100)},
-            {31, mps_from_kmph(105)},
-            {32, mps_from_kmph(110)},
-            {33, mps_from_kmph(120)},
-            {36, mps_from_kmph(0)},
-            {39, mps_from_kmph(45)},
-            {40, mps_from_kmph(40)},
-            {41, mps_from_kmph(35)},
-            {42, mps_from_kmph(30)},
-            {43, mps_from_kmph(25)},
-            {44, mps_from_kmph(20)},
-            {45, mps_from_kmph(15)},
-            {46, mps_from_kmph(10)},
-            {47, mps_from_kmph(10)},
-            {48, mps_from_kmph(01)},
-            {50, mps_from_kmph(0)},
-            {51, mps_from_kmph(25)},
-            {52, mps_from_kmph(40)},
-            {53, mps_from_kmph(65)},
-            {54, mps_from_kmph(100)},
-            {101, mps_from_kmph(0)},
-            {102, mps_from_kmph(0)},
-            {103, mps_from_kmph(15)},
-            {104, mps_from_kmph(25)},
-            {105, mps_from_kmph(45)},
-            {106, mps_from_kmph(55)},
-            {107, mps_from_kmph(65)},
-            {108, mps_from_kmph(75)},
-            {109, mps_from_kmph(90)},
-            {110, mps_from_kmph(100)},
-            {111, mps_from_kmph(110)},
-            {112, mps_from_kmph(120)},
+            {0, 0.0_kmph},
+            {1, 25.0_kmph},
+            {2, 40.0_kmph},
+            {3, 65.0_kmph},
+            {4, 85.0_kmph},
+            {5, 160.0_kmph},
+            {9, 0.0_kmph},
+            {10, 0.0_kmph},
+            {11, 10.0_kmph},
+            {12, 10.0_kmph},
+            {13, 15.0_kmph},
+            {14, 20.0_kmph},
+            {15, 25.0_kmph},
+            {16, 30.0_kmph},
+            {17, 35.0_kmph},
+            {18, 40.0_kmph},
+            {19, 45.0_kmph},
+            {20, 50.0_kmph},
+            {21, 55.0_kmph},
+            {22, 60.0_kmph},
+            {23, 65.0_kmph},
+            {24, 70.0_kmph},
+            {25, 75.0_kmph},
+            {26, 80.0_kmph},
+            {27, 85.0_kmph},
+            {28, 90.0_kmph},
+            {29, 95.0_kmph},
+            {30, 100.0_kmph},
+            {31, 105.0_kmph},
+            {32, 110.0_kmph},
+            {33, 120.0_kmph},
+            {36, 0.0_kmph},
+            {39, 45.0_kmph},
+            {40, 40.0_kmph},
+            {41, 35.0_kmph},
+            {42, 30.0_kmph},
+            {43, 25.0_kmph},
+            {44, 20.0_kmph},
+            {45, 15.0_kmph},
+            {46, 10.0_kmph},
+            {47, 10.0_kmph},
+            {48, 01.0_kmph},
+            {50, 0.0_kmph},
+            {51, 25.0_kmph},
+            {52, 40.0_kmph},
+            {53, 65.0_kmph},
+            {54, 100.0_kmph},
+            {101, 0.0_kmph},
+            {102, 0.0_kmph},
+            {103, 15.0_kmph},
+            {104, 25.0_kmph},
+            {105, 45.0_kmph},
+            {106, 55.0_kmph},
+            {107, 65.0_kmph},
+            {108, 75.0_kmph},
+            {109, 90.0_kmph},
+            {110, 100.0_kmph},
+            {111, 110.0_kmph},
+            {112, 120.0_kmph},
         };
 
         if (!is_atc()) {
@@ -362,18 +362,18 @@ namespace autopilot
 
     int 信号順守::出力ノッチ(const 共通状態 &状態) const
     {
-        if (is_atc() && _現在閉塞.信号速度 == 0) {
+        if (is_atc() && _現在閉塞.信号速度 == 0.0_mps) {
             return atc停止出力ノッチ(状態);
         }
         return _信号グラフ.出力ノッチ(状態);
     }
 
-    速度型 信号順守::現在制限速度(const 共通状態 &状態) const
+    mps 信号順守::現在制限速度(const 共通状態 &状態) const
     {
         return _信号グラフ.制限速度(状態.現在範囲());
     }
 
-    速度型 信号順守::現在常用パターン速度(const 共通状態 &状態) const
+    mps 信号順守::現在常用パターン速度(const 共通状態 &状態) const
     {
         return _信号グラフ.現在常用パターン速度(状態);
     }
@@ -391,7 +391,7 @@ namespace autopilot
         const ATS_BEACONDATA &地上子, const 共通状態 &状態,
         bool 信号インデックスを更新する)
     {
-        if (地上子.Distance == 0 && 状態.現在速度() != 0) {
+        if (地上子.Distance == 0 && 状態.現在速度() != 0.0_mps) {
             // マップファイルのバージョンが古いとおかしなデータが来ることがある
             return nullptr;
         }

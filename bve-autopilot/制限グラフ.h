@@ -34,15 +34,15 @@ namespace autopilot
     {
     public:
         void 消去();
-        void 制限区間追加(m 減速目標地点, m 始点, 速度型 速度);
+        void 制限区間追加(m 減速目標地点, m 始点, mps 速度);
         void 通過(m 位置);
 
-        速度型 制限速度(区間 対象区間) const;
-        速度型 制限速度(m 位置) const {
+        mps 制限速度(区間 対象区間) const;
+        mps 制限速度(m 位置) const {
             return 制限速度(区間{ 位置, 位置 });
         }
 
-        速度型 現在常用パターン速度(const 共通状態 &状態) const;
+        mps 現在常用パターン速度(const 共通状態 &状態) const;
 
         // 力行は正の値、制動は負の値
         int 出力ノッチ(const 共通状態 &状態) const;

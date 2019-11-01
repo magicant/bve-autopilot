@@ -63,7 +63,7 @@ namespace autopilot
             _前回不安定時刻 = 状態.現在時刻();
         }
 
-        if (状態.現在速度() >= mps_from_kmph(0.1)) {
+        if (状態.現在速度() >= static_cast<mps>(0.1_kmph)) {
             if (abs(_前回不安定時刻 - 状態.現在時刻()) >= 0.5_s) {
                 最大減速度を推定(割合, 状態);
             }

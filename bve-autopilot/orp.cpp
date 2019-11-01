@@ -34,9 +34,9 @@ namespace autopilot
     {
 
         constexpr orp::信号インデックス orp信号インデックス = 35;
-        constexpr 速度型 照査速度下限 = mps_from_kmph(7.5);
-        constexpr 速度型 最終目標速度 = 照査速度下限 - mps_from_kmph(0.5);
-        constexpr 速度型 運転速度マージン = mps_from_kmph(4);
+        constexpr mps 照査速度下限 = 7.5_kmph;
+        constexpr mps 最終目標速度 = 照査速度下限 - static_cast<mps>(0.5_kmph);
+        constexpr mps 運転速度マージン = 4.0_kmph;
 
     }
 
@@ -45,7 +45,7 @@ namespace autopilot
         _照査パターン{m::無限大(), 照査速度下限, 0, 0},
         _運転パターン{m::無限大(), 最終目標速度, 0, 0},
         _出力ノッチ{std::numeric_limits<int>::max()},
-        _照査速度{std::numeric_limits<速度型>::infinity()}
+        _照査速度{mps::無限大()}
     {
     }
 
@@ -55,10 +55,10 @@ namespace autopilot
         _出力ノッチ = std::numeric_limits<int>::max();
     }
 
-    void orp::設定(速度型 初期照査速度, m 初期位置, m 限界位置)
+    void orp::設定(mps 初期照査速度, m 初期位置, m 限界位置)
     {
         加速度型 照査減速度 = -走行モデル::距離と速度による加速度(
-            限界位置 - 初期位置, 初期照査速度, 0);
+            限界位置 - 初期位置, 初期照査速度, 0.0_mps);
         走行モデル 照査{初期位置, 初期照査速度};
         照査.指定速度まで走行(照査速度下限, -照査減速度);
         _照査パターン.目標位置 = 照査.位置();
@@ -67,10 +67,10 @@ namespace autopilot
         assert(_照査パターン.目標速度 == 照査速度下限);
 
         照査.指定速度まで走行(
-            最終目標速度 + 運転速度マージン / 2, -照査減速度);
+            最終目標速度 + 運転速度マージン / 2.0, -照査減速度);
 
         m 減速終了位置 = 照査.位置();
-        速度型 初期運転速度 = 初期照査速度 - 運転速度マージン;
+        mps 初期運転速度 = 初期照査速度 - 運転速度マージン;
         加速度型 運転減速度 = -走行モデル::距離と速度による加速度(
             減速終了位置 - 初期位置, 初期運転速度, 最終目標速度);
         _運転パターン.目標位置 = 減速終了位置;
@@ -98,7 +98,7 @@ namespace autopilot
 
         switch (地上子.Type) {
         case 12: { // ORP 動作開始 (メトロ総合プラグイン互換)
-            速度型 初速度 = 信号.現在制限速度(状態);
+            mps 初速度 = 信号.現在制限速度(状態);
             m 残距離 = 地上子.Optional <= 48 ? 48.0_m : 79.0_m;
             設定(初速度, 状態.現在位置(), 状態.現在位置() + 残距離);
             break;
@@ -108,10 +108,11 @@ namespace autopilot
             if (地上子.Signal == orp信号インデックス &&
                 地上子.Distance > 0)
             {
-                速度型 初速度 = 信号.現在制限速度(状態);
+                mps 初速度 = 信号.現在制限速度(状態);
                 m 開始位置 =
                     状態.現在位置() + static_cast<m>(地上子.Distance);
-                m orp距離 = 初速度 <= mps_from_kmph(30) ? 48.0_m : 79.0_m;
+                m orp距離 =
+                    初速度 <= static_cast<mps>(30.0_kmph) ? 48.0_m : 79.0_m;
                 設定(初速度, 開始位置, 開始位置 + orp距離);
             }
             break;

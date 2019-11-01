@@ -38,41 +38,41 @@ namespace autopilot
 
         struct 閉塞型 {
             信号インデックス 信号指示 = -1;
-            速度型 信号速度 = std::numeric_limits<速度型>::infinity();
+            mps 信号速度 = mps::無限大();
             m 始点 = m::無限大();
             int 信号インデックス一覧 = 0; // 信号現示受信地上子の値
             bool 停止解放 = false;
             // この閉塞の信号速度が 0 の時にだけ有効な制限速度の一覧
-            std::map<m, 速度型> 停止信号前照査一覧;
+            std::map<m, mps> 停止信号前照査一覧;
 
             bool 通過済(m 位置) const { return 始点 < 位置; }
             int 先行列車位置() const;
 
             void 制限グラフに制限区間を追加(
                 制限グラフ &追加先グラフ,
-                m 減速目標地点, m 始点_, 速度型 速度) const;
+                m 減速目標地点, m 始点_, mps 速度) const;
             void 制限グラフに追加(
                 制限グラフ &追加先グラフ, m tasc目標停止位置, bool is_atc)
                 const;
 
             void 信号速度更新(
-                const std::map<信号インデックス, 速度型> &速度表);
+                const std::map<信号インデックス, mps> &速度表);
             void 信号指示設定(
                 信号インデックス 指示,
-                const std::map<信号インデックス, 速度型> &速度表);
+                const std::map<信号インデックス, mps> &速度表);
             void 状態更新(
                 const ATS_BEACONDATA &地上子,
                 const 共通状態 &状態,
-                const std::map<信号インデックス, 速度型> &速度表,
+                const std::map<信号インデックス, mps> &速度表,
                 bool 信号インデックスを更新する);
             void 停止信号前照査設定(const ATS_BEACONDATA &地上子, m 現在位置);
             void 統合(const 閉塞型 &統合元);
             void 先行列車位置から信号指示を推定(
-                int 閉塞数, const std::map<信号インデックス, 速度型> &速度表);
+                int 閉塞数, const std::map<信号インデックス, mps> &速度表);
         };
 
         // 7.5 km/h は C-ATS や CS-ATC ORP の 最低照査速度による。
-        static constexpr 速度型 停止解放走行速度 = mps_from_kmph(7.5);
+        static constexpr mps 停止解放走行速度 = 7.5_kmph;
 
         信号順守();
         ~信号順守();
@@ -94,11 +94,11 @@ namespace autopilot
             // リセット前後に std::numeric_limits<int>::max() が
             // 信号インデックスとして送られてくることがあるが無視する
         }
-        速度型 現在制限速度(const 共通状態 &状態) const;
-        速度型 現在常用パターン速度(const 共通状態 &状態) const;
+        mps 現在制限速度(const 共通状態 &状態) const;
+        mps 現在常用パターン速度(const 共通状態 &状態) const;
 
     private:
-        std::map<信号インデックス, 速度型> _信号速度表;
+        std::map<信号インデックス, mps> _信号速度表;
         閉塞型 _現在閉塞;
         std::map<m, 閉塞型> _前方閉塞一覧;
 

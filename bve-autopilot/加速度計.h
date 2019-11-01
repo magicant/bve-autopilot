@@ -27,7 +27,7 @@ namespace autopilot
     {
     public:
         struct 観測 {
-            速度型 _速度;
+            mps _速度;
             s _時刻;
         };
 

@@ -114,24 +114,24 @@ namespace autopilot
                 return main.ato有効();
             })},
             {L"speedlimit", パネル出力対象([](const Main & main) {
-                速度型 制限速度 = main.現在制限速度();
-                double 出力 = kmph_from_mps(制限速度);
+                kmph 制限速度 = main.現在制限速度();
+                double 出力 = 制限速度.value;
                 if (!std::isfinite(出力)) {
                     出力 = -20;
                 }
                 return static_cast<int>(std::round(出力));
             })},
             {L"speedpattern", パネル出力対象([](const Main & main) {
-                速度型 制限速度 = main.現在常用パターン速度();
-                double 出力 = kmph_from_mps(制限速度) * 100;
+                kmph 制限速度 = main.現在常用パターン速度();
+                double 出力 = 制限速度.value * 100;
                 if (!std::isfinite(出力)) {
                     出力 = -20.0 * 100;
                 }
                 return static_cast<int>(std::round(出力));
             })},
             {L"orpspeedlimit", パネル出力対象([](const Main &main) {
-                速度型 制限速度 = main.現在orp照査速度();
-                double 出力 = kmph_from_mps(制限速度) * 100;
+                kmph 制限速度 = main.現在orp照査速度();
+                double 出力 = 制限速度.value * 100;
                 if (!std::isfinite(出力)) {
                     出力 = -20.0 * 100;
                 }

@@ -30,7 +30,7 @@ namespace autopilot
 
         bool 停車中(const 共通状態 &状態)
         {
-            return 状態.現在速度() < mps_from_kmph(0.05);
+            return 状態.現在速度() < static_cast<mps>(0.05_kmph);
         }
 
     }
@@ -68,7 +68,7 @@ namespace autopilot
         }
 
         if (入力ノッチ < 0 || _出力ノッチ < 0) { // 制動中
-            s 閾 = 1.5_s / 状態.制動().自動ノッチ数();
+            s 閾 = 1.5_s / static_cast<double>(状態.制動().自動ノッチ数());
             if (abs(現在時刻 - _最終制動操作時刻) < 閾) {
                 return;
             }
