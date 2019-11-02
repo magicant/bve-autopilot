@@ -35,10 +35,16 @@ namespace autopilot
         int 出力ノッチ() const { return _出力ノッチ; }
 
     private:
+        mps2 _出力減速度 = 0.0_mps2;
         int _出力ノッチ = 0;
 
-        s _最終力行操作時刻 = -s::無限大();
-        s _最終制動操作時刻 = -s::無限大();
+        s _最終出力減速度計算時刻 = -s::無限大();
+        s _最終力行時刻 = -s::無限大();
+        s _最終制動時刻 = -s::無限大();
+
+        mps2 新出力減速度(int 入力ノッチ, const 共通状態 &状態, bool is_atc)
+            const;
+        int 新出力ノッチ(int 入力ノッチ, const 共通状態 &状態) const;
     };
 
 }
