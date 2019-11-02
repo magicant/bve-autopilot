@@ -36,7 +36,7 @@ namespace autopilot
         ~orp() = default;
 
         void リセット();
-        void 設定(速度型 初期照査速度, 距離型 初期位置, 距離型 限界位置);
+        void 設定(mps 初期照査速度, m 初期位置, m 限界位置);
 
         void 信号現示変化(信号インデックス 指示);
         void 地上子通過(const ATS_BEACONDATA &地上子,
@@ -50,13 +50,13 @@ namespace autopilot
         // 力行は正の値、制動は負の値
         int 出力ノッチ() const { return _出力ノッチ; }
 
-        速度型 照査速度() const { return _照査速度; }
+        mps 照査速度() const { return _照査速度; }
 
     private:
         信号インデックス _信号指示;
         減速パターン _照査パターン, _運転パターン;
         int _出力ノッチ;
-        速度型 _照査速度;
+        mps _照査速度;
     };
 
 }

@@ -87,9 +87,9 @@ namespace autopilot
         _tasc初期起動(true),
         _ato初期起動(true),
         _車両長(20),
-        _加速終了遅延(2.0),
-        _常用最大減速度(mps_from_kmph(3)),
-        _制動反応時間(0.2),
+        _加速終了遅延(2.0_s),
+        _常用最大減速度(3.0_kmphps),
+        _制動反応時間(0.2_s),
         _制動拡張ノッチ数(0),
         _転動防止制動割合(0.5),
         _pressure_rates{},
@@ -139,9 +139,9 @@ namespace autopilot
             L"dynamics", L"carlength", L"", buffer, buffer_size,
             設定ファイル名);
         if (0 < size && size < buffer_size - 1) {
-            距離型 車両長 = std::wcstod(buffer, nullptr);
+            double 車両長 = std::wcstod(buffer, nullptr);
             if (0 < 車両長 && std::isfinite(車両長)) {
-                _車両長 = 車両長;
+                _車両長 = static_cast<m>(車両長);
             }
         }
 
@@ -150,9 +150,9 @@ namespace autopilot
             L"power", L"offdelay", L"", buffer, buffer_size,
             設定ファイル名);
         if (0 < size && size < buffer_size - 1) {
-            時間型 遅延 = std::wcstod(buffer, nullptr);
+            double 遅延 = std::wcstod(buffer, nullptr);
             if (0 <= 遅延 && std::isfinite(遅延)) {
-                _加速終了遅延 = 遅延;
+                _加速終了遅延 = static_cast<s>(遅延);
             }
         }
 
@@ -161,9 +161,9 @@ namespace autopilot
             L"braking", L"maxdeceleration", L"", buffer, buffer_size,
             設定ファイル名);
         if (0 < size && size < buffer_size - 1) {
-            加速度型 減速度 = std::wcstod(buffer, nullptr);
+            double 減速度 = std::wcstod(buffer, nullptr);
             if (0 < 減速度 && std::isfinite(減速度)) {
-                _常用最大減速度 = mps_from_kmph(減速度);
+                _常用最大減速度 = static_cast<kmphps>(減速度);
             }
         }
 
@@ -172,12 +172,12 @@ namespace autopilot
             L"braking", L"effectlag", L"", buffer, buffer_size,
             設定ファイル名);
         if (0 < size && size < buffer_size - 1) {
-            時間型 反応時間 = std::wcstod(buffer, nullptr);
+            double 反応時間 = std::wcstod(buffer, nullptr);
             if (反応時間 == 0) {
-                _制動反応時間 = 0; // 負の 0 は正の 0 にする
+                _制動反応時間 = 0.0_s; // 負の 0 は正の 0 にする
             }
             else if (0 < 反応時間 && std::isfinite(反応時間)) {
-                _制動反応時間 = 反応時間;
+                _制動反応時間 = static_cast<s>(反応時間);
             }
         }
 

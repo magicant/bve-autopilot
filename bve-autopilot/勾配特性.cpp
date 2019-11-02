@@ -31,16 +31,16 @@ namespace autopilot
     namespace
     {
 
-        constexpr 加速度型 重力加速度 = 9.80665; // m/s/s
+        constexpr mps2 重力加速度 = 9.80665_mps2;
 
     }
 
     struct 勾配特性::勾配区間 : 区間
     {
         double 勾配;
-        加速度型 影響加速度;
+        mps2 影響加速度;
 
-        勾配区間(距離型 始点, 距離型 終点, double 勾配) :
+        勾配区間(m 始点, m 終点, double 勾配) :
             区間{ 始点, 終点 },
             勾配{ 勾配 },
             影響加速度{ -0.75 * 重力加速度 * 勾配 } { }
@@ -56,7 +56,7 @@ namespace autopilot
         _区間リスト.clear();
     }
 
-    void 勾配特性::勾配区間追加(距離型 始点, double 勾配)
+    void 勾配特性::勾配区間追加(m 始点, double 勾配)
     {
         // 新しい制限区間に上書きされる区間を消す
         _区間リスト.remove_if([始点](const 勾配区間 & 区間) {
@@ -68,11 +68,11 @@ namespace autopilot
             区間.終点 = std::min(区間.終点, 始点);
         }
 
-        距離型 終点 = std::numeric_limits<距離型>::infinity();
+        m 終点 = m::無限大();
         _区間リスト.emplace_front(始点, 終点, 勾配);
     }
 
-    void 勾配特性::通過(距離型 位置)
+    void 勾配特性::通過(m 位置)
     {
         // 通過済みの区間を消す
         _区間リスト.remove_if([位置](const 勾配区間 & 区間) {
@@ -80,18 +80,18 @@ namespace autopilot
         });
     }
 
-    加速度型 勾配特性::勾配加速度(区間 対象範囲) const
+    mps2 勾配特性::勾配加速度(区間 対象範囲) const
     {
-        距離型 全体長さ = 対象範囲.長さ();
-        if (!(全体長さ > 0)) {
-            return 0;
+        m 全体長さ = 対象範囲.長さ();
+        if (!(全体長さ > 0.0_m)) {
+            return 0.0_mps2;
         }
 
-        加速度型 加速度 = 0;
+        mps2 加速度 = 0.0_mps2;
         for (const 勾配区間 &区間 : _区間リスト) {
             auto 影響区間 = 重なり(区間, 対象範囲);
-            距離型 影響長さ = 影響区間.長さ();
-            if (!(影響長さ > 0)) {
+            m 影響長さ = 影響区間.長さ();
+            if (!(影響長さ > 0.0_m)) {
                 continue;
             }
 

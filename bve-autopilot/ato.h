@@ -42,15 +42,15 @@ namespace autopilot
         void リセット();
         void 発進(const 共通状態 &状態);
         void 信号現示変化(信号インデックス 指示);
-        void tasc目標停止位置変化(距離型 位置) {
+        void tasc目標停止位置変化(m 位置) {
             _信号.tasc目標停止位置変化(位置);
         }
         void 地上子通過(const ATS_BEACONDATA &地上子, const 共通状態 &状態);
         void 経過(const 共通状態 &状態);
 
-        速度型 現在制限速度(const 共通状態 &状態) const;
-        速度型 現在常用パターン速度(const 共通状態 &状態) const;
-        速度型 現在orp照査速度() const;
+        mps 現在制限速度(const 共通状態 &状態) const;
+        mps 現在常用パターン速度(const 共通状態 &状態) const;
+        mps 現在orp照査速度() const;
 
         // 力行は正の値、制動は負の値
         int 出力ノッチ() const { return _出力ノッチ; }

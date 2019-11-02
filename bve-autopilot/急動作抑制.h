@@ -37,10 +37,8 @@ namespace autopilot
     private:
         int _出力ノッチ = 0;
 
-        時間型 _最終力行操作時刻 =
-            -std::numeric_limits<時間型>::infinity();
-        時間型 _最終制動操作時刻 =
-            -std::numeric_limits<時間型>::infinity();
+        s _最終力行操作時刻 = -s::無限大();
+        s _最終制動操作時刻 = -s::無限大();
     };
 
 }

@@ -39,8 +39,8 @@ namespace autopilot
                 return 手動ノッチ;
             }
 
-            加速度型 手動 = 制動.標準ノッチ減速度(手動ノッチ);
-            加速度型 自動 = 制動.自動ノッチ減速度(自動ノッチ);
+            mps2 手動 = 制動.標準ノッチ減速度(手動ノッチ);
+            mps2 自動 = 制動.自動ノッチ減速度(自動ノッチ);
             if (手動 >= 自動) {
                 return 手動ノッチ;
             }
@@ -59,7 +59,7 @@ namespace autopilot
         _ato有効{true},
         _通過済地上子{}
     {
-        _tasc.目標停止位置を監視([&](距離型 位置) {
+        _tasc.目標停止位置を監視([&](m 位置) {
             _ato.tasc目標停止位置変化(位置);
         });
     }
@@ -69,17 +69,17 @@ namespace autopilot
         _tasc.目標停止位置を監視(nullptr);
     }
 
-    速度型 Main::現在制限速度() const
+    mps Main::現在制限速度() const
     {
         return _ato.現在制限速度(_状態);
     }
 
-    速度型 Main::現在常用パターン速度() const
+    mps Main::現在常用パターン速度() const
     {
         return _ato.現在常用パターン速度(_状態);
     }
 
-    速度型 Main::現在orp照査速度() const
+    mps Main::現在orp照査速度() const
     {
         return _ato.現在orp照査速度();
     }
@@ -161,7 +161,7 @@ namespace autopilot
 
     void Main::地上子通過(const ATS_BEACONDATA & 地上子)
     {
-        if (_状態.現在速度() == 0) {
+        if (_状態.現在速度() == 0.0_mps) {
             // 「停車場へ移動」の時は、移動先地点までの地上子をそれぞれ
             // 通過するがまだ経過メソッドが呼ばれていないので位置計算が
             // 狂う。通過メソッドが呼ばれるまで地上子を処理せず溜めておく。

@@ -48,12 +48,13 @@ namespace autopilot
 
         int tasc残距離桁::operator()(const Main &main) const
         {
-            距離型 残距離 =
+            cm 残距離 =
                 main.tasc状態().目標停止位置() - main.状態().現在位置();
-            if (!std::isfinite(残距離)) {
+            double 値 = 残距離.value;
+            if (!std::isfinite(値)) {
                 return 無効値;
             }
-            int v = static_cast<int>(std::abs(残距離) * 100);
+            int v = static_cast<int>(std::abs(値));
             for (int i = 0; i < _桁; ++i) {
                 v /= 10;
             }
@@ -84,20 +85,22 @@ namespace autopilot
                 return std::max(-main.tasc状態().出力ノッチ(), 0);
             })},
             {L"tascdistance", パネル出力対象([](const Main &main) {
-                距離型 残距離 =
+                cm 残距離 =
                     main.tasc状態().目標停止位置() - main.状態().現在位置();
-                if (!std::isfinite(残距離)) {
+                double 値 = 残距離.value;
+                if (!std::isfinite(値)) {
                     return 0;
                 }
-                return static_cast<int>(残距離 * 100);
+                return static_cast<int>(値);
             })},
             {L"tascdistancesign", パネル出力対象([](const Main &main) {
-                距離型 残距離 =
+                auto 残距離 =
                     main.tasc状態().目標停止位置() - main.状態().現在位置();
-                if (!std::isfinite(残距離)) {
+                double 値 = 残距離.value;
+                if (!std::isfinite(値)) {
                     return 0;
                 }
-                return 残距離 >= 0 ? 1 : 2;
+                return 値 >= 0.0 ? 1 : 2;
             })},
             {L"tascdistancedm2", パネル出力対象(tasc残距離桁(0))},
             {L"tascdistancedm1", パネル出力対象(tasc残距離桁(1))},
@@ -111,24 +114,24 @@ namespace autopilot
                 return main.ato有効();
             })},
             {L"speedlimit", パネル出力対象([](const Main & main) {
-                速度型 制限速度 = main.現在制限速度();
-                double 出力 = kmph_from_mps(制限速度);
+                kmph 制限速度 = main.現在制限速度();
+                double 出力 = 制限速度.value;
                 if (!std::isfinite(出力)) {
                     出力 = -20;
                 }
                 return static_cast<int>(std::round(出力));
             })},
             {L"speedpattern", パネル出力対象([](const Main & main) {
-                速度型 制限速度 = main.現在常用パターン速度();
-                double 出力 = kmph_from_mps(制限速度) * 100;
+                kmph 制限速度 = main.現在常用パターン速度();
+                double 出力 = 制限速度.value * 100;
                 if (!std::isfinite(出力)) {
                     出力 = -20.0 * 100;
                 }
                 return static_cast<int>(std::round(出力));
             })},
             {L"orpspeedlimit", パネル出力対象([](const Main &main) {
-                速度型 制限速度 = main.現在orp照査速度();
-                double 出力 = kmph_from_mps(制限速度) * 100;
+                kmph 制限速度 = main.現在orp照査速度();
+                double 出力 = 制限速度.value * 100;
                 if (!std::isfinite(出力)) {
                     出力 = -20.0 * 100;
                 }

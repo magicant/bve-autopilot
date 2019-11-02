@@ -40,27 +40,26 @@ namespace autopilot
 
         void 制限区間追加(
             制限グラフ &グラフ, int 地上子値, const 共通状態 &状態,
-            速度型 速度マージン = 0)
+            mps 速度マージン = 0.0_mps)
         {
-            距離型 距離 = 地上子値 / 1000;
-            速度型 速度 = mps_from_kmph(地上子値 % 1000);
-            距離型 始点 = 状態.現在位置() + 距離;
+            m 距離 = static_cast<m>(地上子値 / 1000);
+            mps 速度 = static_cast<kmph>(地上子値 % 1000);
+            m 始点 = 状態.現在位置() + 距離;
 
-            if (速度 == 0) {
-                速度 = std::numeric_limits<速度型>::infinity();
+            if (速度 == 0.0_mps) {
+                速度 = mps::無限大();
             }
             速度 -= 速度マージン;
 
-            if (速度 > 0) {
-                距離型 減速目標地点 = 始点 - 1.0 * 速度;
+            if (速度 > 0.0_mps) {
+                m 減速目標地点 = 始点 - 1.0_s * 速度;
                 グラフ.制限区間追加(減速目標地点, 始点, 速度);
             }
         }
 
-        void 制限区間終了(制限グラフ &グラフ, 距離型 終了位置)
+        void 制限区間終了(制限グラフ &グラフ, m 終了位置)
         {
-            グラフ.制限区間追加(
-                終了位置, 終了位置, std::numeric_limits<速度型>::infinity());
+            グラフ.制限区間追加(終了位置, 終了位置, mps::無限大());
         }
 
     }
@@ -110,19 +109,19 @@ namespace autopilot
             switch (地上子.Type) {
             case 6: // 制限速度設定
                 制限区間追加(
-                    _制限速度6, 地上子.Optional, 状態, mps_from_kmph(10));
+                    _制限速度6, 地上子.Optional, 状態, 10.0_kmph);
                 break;
             case 8: // 制限速度設定
                 制限区間追加(
-                    _制限速度8, 地上子.Optional, 状態, mps_from_kmph(10));
+                    _制限速度8, 地上子.Optional, 状態, 10.0_kmph);
                 break;
             case 9: // 制限速度設定
                 制限区間追加(
-                    _制限速度9, 地上子.Optional, 状態, mps_from_kmph(10));
+                    _制限速度9, 地上子.Optional, 状態, 10.0_kmph);
                 break;
             case 10: // 制限速度設定
                 制限区間追加(
-                    _制限速度10, 地上子.Optional, 状態, mps_from_kmph(10));
+                    _制限速度10, 地上子.Optional, 状態, 10.0_kmph);
                 break;
             case 16: // 制限速度解除
                 制限区間終了(_制限速度6, 状態.現在位置());
@@ -145,7 +144,7 @@ namespace autopilot
 
     void ato::経過(const 共通状態 &状態)
     {
-        距離型 最後尾 = 状態.現在位置() - 状態.列車長();
+        m 最後尾 = 状態.現在位置() - 状態.列車長();
         _制限速度1006.通過(最後尾);
         _制限速度1007.通過(最後尾);
         _制限速度6.通過(最後尾);
@@ -156,12 +155,14 @@ namespace autopilot
         _orp.経過(状態);
 
         if (_制御状態 == 制御状態::発進) {
-            if (状態.現在速度() > 0 && 状態.加速度() < 0 || !発進可能(状態)) {
+            if (状態.現在速度() > 0.0_mps && 状態.加速度() < 0.0_mps2 ||
+                !発進可能(状態))
+            {
                 _制御状態 = 制御状態::走行;
             }
         }
         if (_制御状態 == 制御状態::走行) {
-            if (状態.現在速度() <= mps_from_kmph(0.05)) {
+            if (状態.現在速度() <= static_cast<mps>(0.05_kmph)) {
                 _制御状態 = 制御状態::停止;
             }
         }
@@ -185,10 +186,10 @@ namespace autopilot
         }
     }
 
-    速度型 ato::現在制限速度(const 共通状態 &状態) const
+    mps ato::現在制限速度(const 共通状態 &状態) const
     {
         区間 列車範囲 = 状態.現在範囲();
-        速度型 速度 = std::min({
+        mps 速度 = std::min({
             _制限速度1006.制限速度(列車範囲),
             _制限速度1007.制限速度(列車範囲),
             _制限速度6.制限速度(列車範囲),
@@ -199,14 +200,14 @@ namespace autopilot
             });
 
         if (_orp.照査中() && _orp.照査速度() <= 速度) {
-            return std::numeric_limits<速度型>::infinity();
+            return mps::無限大();
         }
         return 速度;
     }
 
-    速度型 ato::現在常用パターン速度(const 共通状態 &状態) const
+    mps ato::現在常用パターン速度(const 共通状態 &状態) const
     {
-        速度型 速度 = std::min({
+        mps 速度 = std::min({
             _制限速度1006.現在常用パターン速度(状態),
             _制限速度1007.現在常用パターン速度(状態),
             _制限速度6.現在常用パターン速度(状態),
@@ -222,10 +223,10 @@ namespace autopilot
         return 速度;
     }
 
-    速度型 ato::現在orp照査速度() const
+    mps ato::現在orp照査速度() const
     {
         if (!_orp.照査中()) {
-            return std::numeric_limits<速度型>::infinity();
+            return mps::無限大();
         }
 
         return _orp.照査速度();
