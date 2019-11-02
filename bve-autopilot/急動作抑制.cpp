@@ -25,16 +25,6 @@
 namespace autopilot
 {
 
-    namespace
-    {
-
-        bool 停車中(const 共通状態 &状態)
-        {
-            return 状態.現在速度() < static_cast<mps>(0.05_kmph);
-        }
-
-    }
-
     void 急動作抑制::リセット()
     {
         *this = 急動作抑制{};
@@ -45,7 +35,7 @@ namespace autopilot
         if (入力ノッチ == _出力ノッチ) {
             return;
         }
-        if (停車中(状態)) {
+        if (状態.停車中()) {
             _出力ノッチ = 入力ノッチ;
             return;
         }

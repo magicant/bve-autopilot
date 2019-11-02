@@ -162,7 +162,7 @@ namespace autopilot
             }
         }
         if (_制御状態 == 制御状態::走行) {
-            if (状態.現在速度() <= static_cast<mps>(0.05_kmph)) {
+            if (状態.停車中()) {
                 _制御状態 = 制御状態::停止;
             }
         }

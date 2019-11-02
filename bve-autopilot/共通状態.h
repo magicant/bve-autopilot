@@ -66,6 +66,9 @@ namespace autopilot {
         区間 現在範囲() const;
         s 現在時刻() const { return static_cast<ms>(_状態.Time); }
         mps 現在速度() const { return static_cast<kmph>(_状態.Speed); }
+        bool 停車中() const {
+            return static_cast<kmph>(_状態.Speed) < 0.05_kmph;
+        }
         走行モデル 現在走行状態() const {
             return 走行モデル{ 現在位置(), 現在速度(), 現在時刻() };
         }
