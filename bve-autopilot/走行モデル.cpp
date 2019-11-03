@@ -102,7 +102,7 @@ namespace autopilot {
     mps2 走行モデル::指定速度まで走行(mps 速度, mps2 初加速度, mps3 加加速度)
     {
         // 速度を位置、加速度を速度だと思って
-        // 新しい速度とか速度をシミュレートする
+        // 新しい速度と加速度をシミュレートする
         走行モデル 速度モデル{
             static_cast<m>(_速度.value),
             static_cast<mps>(初加速度.value),
