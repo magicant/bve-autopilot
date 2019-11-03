@@ -67,4 +67,10 @@ namespace autopilot {
         s _時刻;
     };
 
+    class 共通状態;
+
+    void 短く力行(
+        走行モデル &モデル, int 力行ノッチ, mps2 想定加速度,
+        const 共通状態 &状態);
+
 }
