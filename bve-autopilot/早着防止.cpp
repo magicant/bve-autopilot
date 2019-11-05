@@ -30,6 +30,8 @@ namespace autopilot
     namespace
     {
 
+        constexpr s バッファ = 0.5_s;
+
         constexpr s 正午 = static_cast<s>(12 * 60 * 60);
         constexpr s 一日 = static_cast<s>(24 * 60 * 60);
 
@@ -74,7 +76,7 @@ namespace autopilot
     {
         // 古い予定を消す
         _予定表.remove_if([&](const 走行モデル &予定) {
-            return 予定時刻(予定, 状態) < 状態.現在時刻();
+            return 予定時刻(予定, 状態) + バッファ < 状態.現在時刻();
             });
 
         _出力ノッチ = 加速可(状態) ? 状態.車両仕様().PowerNotches :
@@ -116,7 +118,15 @@ namespace autopilot
                 走行.指定位置まで走行(減速開始.位置());
 
                 s 到達時刻 = 走行.時刻() + 減速時間;
-                return 到達時刻 >= 予定時刻(予定, 状態);
+                s 基準時刻 = 予定時刻(予定, 状態);
+                // 頻繁な力行を避けるため時刻をずらす
+                if (状態.前回出力().Power > 0) {
+                    基準時刻 -= バッファ;
+                }
+                else {
+                    基準時刻 += バッファ;
+                }
+                return 到達時刻 >= 基準時刻;
             });
     }
 
