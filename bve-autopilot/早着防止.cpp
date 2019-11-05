@@ -49,6 +49,14 @@ namespace autopilot
         *this = 早着防止{};
     }
 
+    void 早着防止::発進(const 共通状態 &状態)
+    {
+        // 通過済みの予定を消す
+        _予定表.remove_if([&](const 走行モデル &予定) {
+            return 予定.位置() <= 状態.現在位置() + 5.0_m;
+            });
+    }
+
     void 早着防止::地上子通過(
         const ATS_BEACONDATA &地上子, const 共通状態 &状態)
     {
@@ -65,7 +73,6 @@ namespace autopilot
     void 早着防止::経過(const 共通状態 &状態)
     {
         // 古い予定を消す
-        // TODO 速度が 0 の予定にすでに到達しているときは削除した方が良い
         _予定表.remove_if([&](const 走行モデル &予定) {
             return 予定時刻(予定, 状態) < 状態.現在時刻();
             });

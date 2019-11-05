@@ -31,6 +31,7 @@ namespace autopilot
     {
     public:
         void リセット();
+        void 発進(const 共通状態 &状態);
         void 地上子通過(const ATS_BEACONDATA &地上子, const 共通状態 &状態);
         void 経過(const 共通状態 &状態);
 
