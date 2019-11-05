@@ -77,7 +77,10 @@ namespace autopilot
             return 予定時刻(予定, 状態) < 状態.現在時刻();
             });
 
-        _出力ノッチ = 加速可(状態) ? 状態.車両仕様().PowerNotches : 0;
+        _出力ノッチ = 加速可(状態) ? 状態.車両仕様().PowerNotches :
+            状態.現在速度() <= static_cast<mps>(5.0_kmph) ? 1 : 0;
+        // 止まったままじっとしてるのもあれなので
+        // 5 km/h までは加速するようにする
     }
 
     void 早着防止::通過時刻設定(const ATS_BEACONDATA &地上子)
