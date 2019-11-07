@@ -180,6 +180,7 @@
     <ClInclude Include="区間.h" />
     <ClInclude Include="単位.h" />
     <ClInclude Include="急動作抑制.h" />
+    <ClInclude Include="早着防止.h" />
     <ClInclude Include="減速パターン.h" />
     <ClInclude Include="環境設定.h" />
     <ClInclude Include="走行モデル.h" />
@@ -206,6 +207,7 @@
     <ClCompile Include="加速度計.cpp" />
     <ClCompile Include="勾配特性.cpp" />
     <ClCompile Include="急動作抑制.cpp" />
+    <ClCompile Include="早着防止.cpp" />
     <ClCompile Include="減速パターン.cpp" />
     <ClCompile Include="環境設定.cpp" />
     <ClCompile Include="走行モデル.cpp" />
