@@ -48,15 +48,16 @@ namespace autopilot {
         mps2 指定時刻まで走行(s 時刻, mps2 初加速度 = {}, mps3 加加速度 = {});
 
         // 等加速度運動
-        void 指定距離走行(m 距離, mps2 加速度 = {});
-        void 指定位置まで走行(m 位置, mps2 加速度 = {});
+        void 指定距離走行(m 距離, mps2 加速度 = {}, bool 後退 = false);
+        void 指定位置まで走行(m 位置, mps2 加速度 = {}, bool 後退 = false);
         void 指定速度まで走行(mps 速度, mps2 加速度 = {});
 
         // 等加加速度運動
         mps2 指定位置まで走行(m 位置, mps2 初加速度, mps3 加加速度);
         void 等加加速度で指定加速度まで走行(
             mps2 初加速度, mps2 終加速度, mps3 加加速度);
-        mps2 指定速度まで走行(mps 速度, mps2 初加速度, mps3 加加速度);
+        mps2 指定速度まで走行(
+            mps 速度, mps2 初加速度, mps3 加加速度, bool 減速);
 
         // 等加速度運動
         static mps2 距離と速度による加速度(m 距離, mps 初速度, mps 終速度);
