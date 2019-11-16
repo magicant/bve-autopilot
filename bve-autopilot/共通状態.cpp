@@ -18,11 +18,11 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #include "stdafx.h"
+#include "共通状態.h"
 #include <algorithm>
 #include <cmath>
 #include <cstdlib>
 #include <limits>
-#include "共通状態.h"
 #include "物理量.h"
 
 #pragma warning(disable:4819)
