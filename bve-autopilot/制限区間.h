@@ -19,8 +19,8 @@
 
 #pragma once
 #include "区間.h"
-#include "単位.h"
 #include "減速パターン.h"
+#include "物理量.h"
 
 namespace autopilot
 {

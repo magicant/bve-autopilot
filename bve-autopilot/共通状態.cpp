@@ -23,7 +23,7 @@
 #include <cstdlib>
 #include <limits>
 #include "共通状態.h"
-#include "単位.h"
+#include "物理量.h"
 
 #pragma warning(disable:4819)
 

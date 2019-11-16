@@ -23,9 +23,9 @@
 #include "orp.h"
 #include "信号順守.h"
 #include "制限グラフ.h"
-#include "単位.h"
 #include "急動作抑制.h"
 #include "早着防止.h"
+#include "物理量.h"
 
 namespace autopilot
 {

@@ -21,7 +21,7 @@
 #include <limits>
 #include <map>
 #include "制限グラフ.h"
-#include "単位.h"
+#include "物理量.h"
 
 #pragma warning(push)
 #pragma warning(disable:4819)

@@ -19,7 +19,7 @@
 
 #pragma once
 #include <limits>
-#include "単位.h"
+#include "物理量.h"
 
 namespace autopilot
 {

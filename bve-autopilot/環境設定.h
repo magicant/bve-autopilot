@@ -21,7 +21,7 @@
 #include <unordered_map>
 #include <vector>
 #include "パネル出力.h"
-#include "単位.h"
+#include "物理量.h"
 
 #pragma warning(push)
 #pragma warning(disable:4819)

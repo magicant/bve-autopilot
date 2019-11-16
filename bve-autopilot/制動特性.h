@@ -21,7 +21,7 @@
 #include <vector>
 #include "制動力推定.h"
 #include "加速度計.h"
-#include "単位.h"
+#include "物理量.h"
 
 namespace autopilot
 {

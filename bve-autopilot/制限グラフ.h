@@ -20,7 +20,7 @@
 #pragma once
 #include <forward_list>
 #include "制限区間.h"
-#include "単位.h"
+#include "物理量.h"
 
 #pragma warning(push)
 #pragma warning(disable:4819)

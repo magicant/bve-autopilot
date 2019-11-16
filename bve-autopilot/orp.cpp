@@ -24,7 +24,7 @@
 #include <limits>
 #include "信号順守.h"
 #include "共通状態.h"
-#include "単位.h"
+#include "物理量.h"
 #include "走行モデル.h"
 
 namespace autopilot

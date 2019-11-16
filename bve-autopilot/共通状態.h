@@ -23,8 +23,8 @@
 #include "加速度計.h"
 #include "勾配特性.h"
 #include "区間.h"
-#include "単位.h"
 #include "環境設定.h"
+#include "物理量.h"
 #include "走行モデル.h"
 
 #pragma warning(push)

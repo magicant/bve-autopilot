@@ -22,8 +22,8 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
-#include "単位.h"
 #include "減速パターン.h"
+#include "物理量.h"
 #include "走行モデル.h"
 
 namespace autopilot {

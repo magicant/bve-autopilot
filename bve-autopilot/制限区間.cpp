@@ -21,7 +21,7 @@
 #include "制限区間.h"
 #include <algorithm>
 #include <cmath>
-#include "単位.h"
+#include "物理量.h"
 #include "減速パターン.h"
 
 namespace autopilot

@@ -18,8 +18,8 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
-#include "単位.h"
 #include "減速パターン.h"
+#include "物理量.h"
 
 namespace autopilot
 {

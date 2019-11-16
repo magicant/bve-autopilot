@@ -20,7 +20,7 @@
 #pragma once
 #include <utility>
 #include "制動特性.h"
-#include "単位.h"
+#include "物理量.h"
 #include "走行モデル.h"
 
 namespace autopilot
