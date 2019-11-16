@@ -22,11 +22,30 @@
 #include <algorithm>
 #include <limits>
 #include "共通状態.h"
+#include "区間.h"
+#include "減速パターン.h"
+#include "物理量.h"
 
 #pragma warning(disable:4819)
 
 namespace autopilot
 {
+
+    struct 制限グラフ::制限区間 : 区間
+    {
+        m 減速目標地点;
+        mps 速度;
+
+        制限区間(m 減速目標地点, m 始点, m 終点, mps 速度) :
+            区間{始点, 終点}, 減速目標地点{減速目標地点}, 速度{速度} { }
+        ~制限区間() = default;
+
+        減速パターン 目標パターン(mps2 初期減速度) const;
+        減速パターン 限界パターン(mps2 減速度) const;
+    };
+
+    制限グラフ::制限グラフ() = default;
+    制限グラフ::~制限グラフ() = default;
 
     void 制限グラフ::消去()
     {
@@ -95,6 +114,20 @@ namespace autopilot
         }
 
         return ノッチ;
+    }
+
+    減速パターン 制限グラフ::制限区間::目標パターン(mps2 初期減速度) const
+    {
+        constexpr mps 速度マージン = 0.5_kmph;
+        mps 目標速度 = std::max(速度 - 速度マージン, 0.0_mps);
+        mps2 最終減速度 = 目標速度 == 0.0_mps ?
+            減速パターン::停止最終減速度 : 減速パターン::標準最終減速度;
+        return 減速パターン{減速目標地点, 目標速度, 初期減速度, 最終減速度};
+    }
+
+    減速パターン 制限グラフ::制限区間::限界パターン(mps2 減速度) const
+    {
+        return 減速パターン{始点, 速度, 減速度};
     }
 
 }

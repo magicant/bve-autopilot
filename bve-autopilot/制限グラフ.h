@@ -19,7 +19,7 @@
 
 #pragma once
 #include <forward_list>
-#include "制限区間.h"
+#include "区間.h"
 #include "物理量.h"
 
 #pragma warning(push)
@@ -33,6 +33,9 @@ namespace autopilot
     class 制限グラフ
     {
     public:
+        制限グラフ();
+        ~制限グラフ();
+
         void 消去();
         void 制限区間追加(m 減速目標地点, m 始点, mps 速度);
         void 通過(m 位置);
@@ -48,6 +51,8 @@ namespace autopilot
         int 出力ノッチ(const 共通状態 &状態) const;
 
     private:
+        struct 制限区間;
+
         std::forward_list<制限区間> _区間リスト;
     };
 

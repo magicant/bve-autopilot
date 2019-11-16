@@ -19,7 +19,6 @@
 
 #pragma once
 #include "制動特性.h"
-#include "制限区間.h"
 #include "加速度計.h"
 #include "勾配グラフ.h"
 #include "区間.h"

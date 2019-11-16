@@ -174,7 +174,6 @@
     <ClInclude Include="制動力推定.h" />
     <ClInclude Include="制動特性.h" />
     <ClInclude Include="制限グラフ.h" />
-    <ClInclude Include="制限区間.h" />
     <ClInclude Include="加速度計.h" />
     <ClInclude Include="勾配グラフ.h" />
     <ClInclude Include="区間.h" />
@@ -203,7 +202,6 @@
     <ClCompile Include="制動力推定.cpp" />
     <ClCompile Include="制動特性.cpp" />
     <ClCompile Include="制限グラフ.cpp" />
-    <ClCompile Include="制限区間.cpp" />
     <ClCompile Include="加速度計.cpp" />
     <ClCompile Include="勾配グラフ.cpp" />
     <ClCompile Include="急動作抑制.cpp" />

@@ -21,6 +21,7 @@
 #include "早着防止.h"
 #include <algorithm>
 #include "共通状態.h"
+#include "減速パターン.h"
 
 #pragma warning(disable:4819)
 
