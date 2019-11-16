@@ -1,4 +1,4 @@
-// 勾配特性.h : 勾配による列車の挙動への影響を計算します
+// 勾配グラフ.h : 勾配による列車の挙動への影響を計算します
 //
 // Copyright © 2019 Watanabe, Yuki
 //
@@ -28,13 +28,11 @@
 namespace autopilot
 {
 
-    class 勾配特性
+    class 勾配グラフ
     {
     public:
-        勾配特性();
-        勾配特性(const 勾配特性 &) = delete;
-        ~勾配特性();
-        勾配特性 &operator =(const 勾配特性 &) = delete;
+        勾配グラフ();
+        ~勾配グラフ();
 
         void 消去();
         void 勾配区間追加(m 始点, double 勾配);

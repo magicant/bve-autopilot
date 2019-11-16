@@ -21,7 +21,7 @@
 #include "制動特性.h"
 #include "制限区間.h"
 #include "加速度計.h"
-#include "勾配特性.h"
+#include "勾配グラフ.h"
 #include "区間.h"
 #include "環境設定.h"
 #include "物理量.h"
@@ -82,7 +82,7 @@ namespace autopilot {
         mps2 加速度() const { return _加速度計.加速度(); }
         const 制動特性 & 制動() const { return _制動特性; }
         int 転動防止自動ノッチ() const;
-        const 勾配特性 &勾配() const { return _勾配特性; }
+        const 勾配グラフ &勾配() const { return _勾配グラフ; }
         mps2 進路勾配加速度(m 目標位置) const;
         mps2 車両勾配加速度() const;
         const ATS_HANDLES & 前回出力() const { return _前回出力; }
@@ -97,7 +97,7 @@ namespace autopilot {
         int _逆転器ノッチ = 0, _力行ノッチ = 0, _制動ノッチ = 0;
         加速度計 _加速度計;
         制動特性 _制動特性;
-        勾配特性 _勾配特性;
+        勾配グラフ _勾配グラフ;
         ATS_HANDLES _前回出力 = {};
 
         void 勾配追加(int 地上子値);

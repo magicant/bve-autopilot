@@ -66,9 +66,6 @@
     <ClInclude Include="パネル出力.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="勾配特性.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="信号順守.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -88,6 +85,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="物理量.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="勾配グラフ.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -131,9 +131,6 @@
     <ClCompile Include="制限区間.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="勾配特性.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="信号順守.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -150,6 +147,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="早着防止.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="勾配グラフ.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

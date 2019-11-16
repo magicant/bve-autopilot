@@ -1,4 +1,4 @@
-// 勾配特性.cpp : 勾配による列車の挙動への影響を計算します
+// 勾配グラフ.cpp : 勾配による列車の挙動への影響を計算します
 //
 // Copyright © 2019 Watanabe, Yuki
 //
@@ -18,7 +18,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #include "stdafx.h"
-#include "勾配特性.h"
+#include "勾配グラフ.h"
 #include <algorithm>
 #include <cmath>
 #include "区間.h"
@@ -35,7 +35,7 @@ namespace autopilot
 
     }
 
-    struct 勾配特性::勾配区間 : 区間
+    struct 勾配グラフ::勾配区間 : 区間
     {
         double 勾配;
         mps2 影響加速度;
@@ -48,15 +48,15 @@ namespace autopilot
 
     };
 
-    勾配特性::勾配特性() = default;
-    勾配特性::~勾配特性() = default;
+    勾配グラフ::勾配グラフ() = default;
+    勾配グラフ::~勾配グラフ() = default;
 
-    void 勾配特性::消去()
+    void 勾配グラフ::消去()
     {
         _区間リスト.clear();
     }
 
-    void 勾配特性::勾配区間追加(m 始点, double 勾配)
+    void 勾配グラフ::勾配区間追加(m 始点, double 勾配)
     {
         // 新しい制限区間に上書きされる区間を消す
         _区間リスト.remove_if([始点](const 勾配区間 & 区間) {
@@ -72,7 +72,7 @@ namespace autopilot
         _区間リスト.emplace_front(始点, 終点, 勾配);
     }
 
-    void 勾配特性::通過(m 位置)
+    void 勾配グラフ::通過(m 位置)
     {
         // 通過済みの区間を消す
         _区間リスト.remove_if([位置](const 勾配区間 & 区間) {
@@ -80,7 +80,7 @@ namespace autopilot
         });
     }
 
-    mps2 勾配特性::勾配加速度(区間 対象範囲) const
+    mps2 勾配グラフ::勾配加速度(区間 対象範囲) const
     {
         m 全体長さ = 対象範囲.長さ();
         if (!(全体長さ > 0.0_m)) {
