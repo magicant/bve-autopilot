@@ -173,6 +173,7 @@
     <ClInclude Include="共通状態.h" />
     <ClInclude Include="制動力推定.h" />
     <ClInclude Include="制動特性.h" />
+    <ClInclude Include="制御指令.h" />
     <ClInclude Include="制限グラフ.h" />
     <ClInclude Include="加速度計.h" />
     <ClInclude Include="勾配グラフ.h" />
