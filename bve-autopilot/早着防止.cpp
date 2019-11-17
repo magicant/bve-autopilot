@@ -107,7 +107,8 @@ namespace autopilot
                 走行モデル 走行 = 状態.現在走行状態();
 
                 // 現在状態から一定時間加速する動きをまずシミュレートする
-                int 力行ノッチ = 状態.車両仕様().PowerNotches;
+                力行ノッチ 力行ノッチ{
+                    static_cast<unsigned>(状態.車両仕様().PowerNotches)};
                 短く力行(走行, 力行ノッチ, 5.0_kmphps, 状態);
 
                 // 減速にかかる時間を計算する
