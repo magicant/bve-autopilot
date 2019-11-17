@@ -104,7 +104,7 @@ namespace autopilot
         else {
             新出力ノッチ = std::floor(新出力ノッチ);
         }
-        return 自動制動自然数ノッチ{static_cast<unsigned>(-新出力ノッチ)};
+        return 自動制動自然数ノッチ{static_cast<unsigned>(新出力ノッチ)};
     }
 
 }

@@ -18,6 +18,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include "制御指令.h"
 #include "物理量.h"
 
 namespace autopilot
@@ -34,7 +35,7 @@ namespace autopilot
         }
         mps2 推定最大減速度() const { return _推定最大減速度; }
 
-        void 経過(double 前回出力割合, const 共通状態 &状態);
+        void 経過(制動力割合 前回出力割合, const 共通状態 &状態);
 
     private:
         /// 環境設定で指定された、最大常用ブレーキの平均減速度
@@ -48,7 +49,7 @@ namespace autopilot
         s _前回不安定時刻 = {};
         s _前回観測時刻 = {};
 
-        void 最大減速度を推定(double 割合, const 共通状態 &状態);
+        void 最大減速度を推定(制動力割合 割合, const 共通状態 &状態);
     };
 
 }

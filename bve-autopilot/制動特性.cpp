@@ -143,7 +143,7 @@ namespace autopilot
     void 制動特性::経過(const 共通状態 &状態)
     {
         double 割合 = this->割合(状態.前回出力().Brake);
-        _制動力推定.経過(割合, 状態);
+        _制動力推定.経過(制動力割合{割合}, 状態);
     }
 
     double 制動特性::割合(int ノッチ番号) const
