@@ -18,6 +18,8 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include <algorithm>
+#include <limits>
 #include <variant>
 
 namespace autopilot
@@ -95,7 +97,56 @@ namespace autopilot
 
     using 制御指令 =
         std::variant<手動制動自然数ノッチ, 自動制動自然数ノッチ, 力行ノッチ>;
-    using 自動制御指令 = std::variant<自動制動自然数ノッチ, 力行ノッチ>;
+
+    class 自動制御指令 {
+    public:
+        constexpr 自動制御指令() : _value{} {}
+        constexpr 自動制御指令(const 自動制動自然数ノッチ &ノッチ) :
+            _value{-to_int(ノッチ.value)} {}
+        constexpr 自動制御指令(const 力行ノッチ &ノッチ) :
+            _value(to_int(ノッチ.value)) {}
+
+        constexpr 自動制動自然数ノッチ 制動成分() const {
+            return static_cast<自動制動自然数ノッチ>(
+                _value <= 0 ? static_cast<unsigned>(-_value) : 0);
+        }
+        constexpr 力行ノッチ 力行成分() const {
+            return static_cast<力行ノッチ>(
+                _value >= 0 ? static_cast<unsigned>(_value) : 0);
+        }
+
+        // FIXME To be removed
+        constexpr 自動制御指令(int v) : _value{v} {}
+        constexpr int value() const { return _value; }
+
+        constexpr bool operator==(const 自動制御指令 &v) {
+            return _value == v._value;
+        }
+        constexpr bool operator!=(const 自動制御指令 &v) {
+            return _value != v._value;
+        }
+        constexpr bool operator<(const 自動制御指令 &v) {
+            return _value < v._value;
+        }
+        constexpr bool operator<=(const 自動制御指令 &v) {
+            return _value <= v._value;
+        }
+        constexpr bool operator>(const 自動制御指令 &v) {
+            return _value > v._value;
+        }
+        constexpr bool operator>=(const 自動制御指令 &v) {
+            return _value >= v._value;
+        }
+
+    private:
+        constexpr static int to_int(const unsigned &v) {
+            return static_cast<int>(std::min(
+                v, static_cast<unsigned>(std::numeric_limits<int>::max())));
+        }
+
+        // 力行なら正、制動なら負
+        int _value;
+    };
 
     /// 制動の強さを何らかの単位で表す実数
     template<typename Self>
@@ -147,6 +198,8 @@ namespace autopilot
     struct 自動制動実数ノッチ : 制動力<自動制動実数ノッチ>
     {
         using 制動力::制動力;
+        constexpr 自動制動実数ノッチ(const 自動制動自然数ノッチ &v) :
+            制動力{v.value} {}
     };
 
     /// 制動の強さを最大常用ブレーキに対する割合で表したもの

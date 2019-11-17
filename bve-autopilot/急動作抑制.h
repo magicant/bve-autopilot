@@ -1,4 +1,4 @@
-// 急動作抑制.h : 急制動・急加速を避けるために出力ノッチを調整します
+// 急動作抑制.h : 急制動・急加速を避けるために出力指令を調整します
 //
 // Copyright © 2019 Watanabe, Yuki
 //
@@ -19,6 +19,7 @@
 
 #pragma once
 #include <limits>
+#include "制御指令.h"
 #include "物理量.h"
 
 namespace autopilot
@@ -30,21 +31,22 @@ namespace autopilot
     {
     public:
         void リセット();
-        void 経過(int 入力ノッチ, const 共通状態 &状態, bool is_atc);
+        void 経過(自動制御指令 入力指令, const 共通状態 &状態, bool is_atc);
 
-        int 出力ノッチ() const { return _出力ノッチ; }
+        自動制御指令 出力指令() const { return _出力指令; }
 
     private:
         mps2 _出力減速度 = 0.0_mps2;
-        int _出力ノッチ = 0;
+        自動制御指令 _出力指令;
 
         s _最終出力減速度計算時刻 = -s::無限大();
         s _最終力行時刻 = -s::無限大();
         s _最終制動時刻 = -s::無限大();
 
-        mps2 新出力減速度(int 入力ノッチ, const 共通状態 &状態, bool is_atc)
-            const;
-        int 新出力ノッチ(int 入力ノッチ, const 共通状態 &状態) const;
+        mps2 新出力減速度(
+            自動制御指令 入力指令, const 共通状態 &状態, bool is_atc) const;
+        自動制御指令 新出力指令(
+            自動制御指令 入力指令, const 共通状態 &状態) const;
     };
 
 }
