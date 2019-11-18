@@ -42,12 +42,18 @@ namespace autopilot {
     void 共通状態::車両仕様設定(const ATS_VEHICLESPEC & 仕様)
     {
         _車両仕様 = 仕様;
+        std::vector<制動力割合> pr; // FIXME
+        for (double p : _設定.pressure_rates()) {
+            pr.emplace_back(p);
+        }
         _制動特性.性能設定(
-            仕様.BrakeNotches,
-            _設定.制動拡張ノッチ数(),
+            手動制動自然数ノッチ{static_cast<unsigned>(仕様.BrakeNotches)},
+            // FIXME Remove unnecessary cast
+            自動制動自然数ノッチ{
+                static_cast<unsigned>(_設定.制動拡張ノッチ数())},
             _設定.常用最大減速度(),
             _設定.制動反応時間(),
-            _設定.pressure_rates());
+            pr);
     }
 
     void 共通状態::地上子通過(const ATS_BEACONDATA & 地上子)
@@ -111,10 +117,11 @@ namespace autopilot {
 
     int 共通状態::転動防止自動ノッチ() const
     {
-        double 割合 = _設定.転動防止制動割合();
-        double ノッチ = _制動特性.割合自動ノッチ(割合);
-        int ノッチi = static_cast<int>(std::ceil(ノッチ));
-        return std::min(ノッチi, _制動特性.自動ノッチ数());
+        制動力割合 割合{_設定.転動防止制動割合()}; // FIXME assign
+        自動制動実数ノッチ ノッチ = _制動特性.自動ノッチ(割合);
+        int ノッチi = static_cast<int>(std::ceil(ノッチ.value));
+        return std::min(
+            ノッチi, static_cast<int>(_制動特性.自動最大ノッチ().value));
     }
 
     mps2 共通状態::進路勾配加速度(m 目標位置) const

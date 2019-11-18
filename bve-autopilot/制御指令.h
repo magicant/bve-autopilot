@@ -30,6 +30,7 @@ namespace autopilot
     struct 自然数ノッチ
     {
         unsigned value;
+        constexpr 自然数ノッチ() : value{} {}
         constexpr explicit 自然数ノッチ(unsigned v) : value(v) {}
     };
 
@@ -153,6 +154,7 @@ namespace autopilot
     struct 制動力
     {
         double value;
+        constexpr 制動力() : value{} {}
         constexpr explicit 制動力(double v) : value(v) {}
     };
 

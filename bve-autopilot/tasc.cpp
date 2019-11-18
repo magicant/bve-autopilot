@@ -58,8 +58,12 @@ namespace autopilot {
     void tasc::制動操作(const 共通状態 &状態)
     {
         if (!状態.戸閉()) {
-            mps2 手動 = 状態.制動().標準ノッチ減速度(状態.制動ノッチ());
-            mps2 自動 = 状態.制動().自動ノッチ減速度(-_出力ノッチ);
+            mps2 手動 = 状態.制動().減速度(
+                // FIXME Remove unnecessary cast
+                手動制動自然数ノッチ{static_cast<unsigned>(状態.制動ノッチ())});
+            mps2 自動 = 状態.制動().減速度(
+                // FIXME Remove unnecessary cast
+                自動制動自然数ノッチ{static_cast<unsigned>(-_出力ノッチ)});
             if (手動 >= 自動) {
                 _緩解 = true;
             }

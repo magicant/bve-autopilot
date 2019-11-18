@@ -51,9 +51,12 @@ namespace autopilot
             mps2 勾配影響 = 状態.車両勾配加速度();
             mps2 出力減速度 =
                 std::max(目標減速度 + 勾配影響, static_cast<mps2>(1.0_kmphps));
-            double 制動ノッチd = 状態.制動().自動ノッチ(出力減速度);
-            int 制動ノッチi = static_cast<int>(std::ceil(制動ノッチd));
-            return -std::min(制動ノッチi, 状態.制動().自動ノッチ数());
+            自動制動実数ノッチ 制動ノッチ実数 =
+                状態.制動().自動ノッチ(出力減速度);
+            int 制動ノッチ = static_cast<int>(std::ceil(制動ノッチ実数.value));
+            return -std::min(
+                制動ノッチ,
+                static_cast<int>(状態.制動().自動最大ノッチ().value));
         }
 
     }
