@@ -20,6 +20,7 @@
 #pragma once
 #include <unordered_map>
 #include <vector>
+#include "制御指令.h"
 #include "パネル出力.h"
 #include "物理量.h"
 
@@ -52,9 +53,11 @@ namespace autopilot
         s 加速終了遅延() const { return _加速終了遅延; }
         mps2 常用最大減速度() const { return _常用最大減速度; }
         s 制動反応時間() const { return _制動反応時間; }
-        int 制動拡張ノッチ数() const { return _制動拡張ノッチ数; }
-        double 転動防止制動割合() const { return _転動防止制動割合; }
-        const std::vector<double> &pressure_rates() const {
+        自動制動自然数ノッチ 制動最大拡張ノッチ() const {
+            return _制動最大拡張ノッチ;
+        }
+        制動力割合 転動防止制動割合() const { return _転動防止制動割合; }
+        const std::vector<制動力割合> &pressure_rates() const {
             return _pressure_rates;
         }
 
@@ -73,9 +76,9 @@ namespace autopilot
         s _加速終了遅延;
         mps2 _常用最大減速度;
         s _制動反応時間;
-        int _制動拡張ノッチ数;
-        double _転動防止制動割合;
-        std::vector<double> _pressure_rates;
+        自動制動自然数ノッチ _制動最大拡張ノッチ;
+        制動力割合 _転動防止制動割合;
+        std::vector<制動力割合> _pressure_rates;
 
         std::unordered_map<キー操作, キー番号> _キー割り当て;
         std::unordered_map<int, パネル出力対象> _パネル出力対象登録簿;
