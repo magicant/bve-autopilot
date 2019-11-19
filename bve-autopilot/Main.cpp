@@ -192,7 +192,7 @@ namespace autopilot
         // TASC と ATO の出力ノッチをまとめる
         int 自動ノッチ = _状態.車両仕様().PowerNotches;
         if (_tasc有効) {
-            自動ノッチ = std::min(自動ノッチ, _tasc.出力ノッチ());
+            自動ノッチ = std::min(自動ノッチ, _tasc.出力ノッチ().value());
         }
         if (_ato有効) {
             自動ノッチ = std::min(自動ノッチ, _ato.出力ノッチ());

@@ -82,7 +82,8 @@ namespace autopilot
                 if (!main.tasc有効()) {
                     return 0;
                 }
-                return std::max(-main.tasc状態().出力ノッチ(), 0);
+                return static_cast<int>(
+                    main.tasc状態().出力ノッチ().制動成分().value);
             })},
             {L"tascdistance", パネル出力対象([](const Main &main) {
                 cm 残距離 =

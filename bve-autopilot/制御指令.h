@@ -120,22 +120,22 @@ namespace autopilot
         constexpr 自動制御指令(int v) : _value{v} {}
         constexpr int value() const { return _value; }
 
-        constexpr bool operator==(const 自動制御指令 &v) {
+        constexpr bool operator==(const 自動制御指令 &v) const {
             return _value == v._value;
         }
-        constexpr bool operator!=(const 自動制御指令 &v) {
+        constexpr bool operator!=(const 自動制御指令 &v) const {
             return _value != v._value;
         }
-        constexpr bool operator<(const 自動制御指令 &v) {
+        constexpr bool operator<(const 自動制御指令 &v) const {
             return _value < v._value;
         }
-        constexpr bool operator<=(const 自動制御指令 &v) {
+        constexpr bool operator<=(const 自動制御指令 &v) const {
             return _value <= v._value;
         }
-        constexpr bool operator>(const 自動制御指令 &v) {
+        constexpr bool operator>(const 自動制御指令 &v) const {
             return _value > v._value;
         }
-        constexpr bool operator>=(const 自動制御指令 &v) {
+        constexpr bool operator>=(const 自動制御指令 &v) const {
             return _value >= v._value;
         }
 
