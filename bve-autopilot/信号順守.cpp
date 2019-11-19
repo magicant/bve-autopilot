@@ -45,7 +45,7 @@ namespace autopilot
             速度表[指示] = 速度;
         }
 
-        int atc停止出力ノッチ(const 共通状態 &状態)
+        自動制御指令 atc停止出力ノッチ(const 共通状態 &状態)
         {
             mps2 目標減速度 = 状態.現在速度() / 2.0_s;
             mps2 勾配影響 = 状態.車両勾配加速度();
@@ -53,10 +53,9 @@ namespace autopilot
                 std::max(目標減速度 + 勾配影響, static_cast<mps2>(1.0_kmphps));
             自動制動実数ノッチ 制動ノッチ実数 =
                 状態.制動().自動ノッチ(出力減速度);
-            int 制動ノッチ = static_cast<int>(std::ceil(制動ノッチ実数.value));
-            return -std::min(
-                制動ノッチ,
-                static_cast<int>(状態.制動().自動最大ノッチ().value));
+            自動制動自然数ノッチ 制動ノッチ{
+                static_cast<unsigned>(std::ceil(制動ノッチ実数.value))};
+            return std::min(制動ノッチ, 状態.制動().自動最大ノッチ());
         }
 
     }
@@ -367,12 +366,12 @@ namespace autopilot
         }
     }
 
-    int 信号順守::出力ノッチ(const 共通状態 &状態) const
+    自動制御指令 信号順守::出力ノッチ(const 共通状態 &状態) const
     {
         if (is_atc() && _現在閉塞.信号速度 == 0.0_mps) {
             return atc停止出力ノッチ(状態);
         }
-        return _信号グラフ.出力ノッチ(状態).value();
+        return _信号グラフ.出力ノッチ(状態);
     }
 
     mps 信号順守::現在制限速度(const 共通状態 &状態) const

@@ -20,6 +20,7 @@
 #pragma once
 #include <limits>
 #include <map>
+#include "制御指令.h"
 #include "制限グラフ.h"
 #include "物理量.h"
 
@@ -85,8 +86,7 @@ namespace autopilot
 
         void 経過(const 共通状態 &状態);
 
-        // 力行は正の値、制動は負の値
-        int 出力ノッチ(const 共通状態 &状態) const;
+        自動制御指令 出力ノッチ(const 共通状態 &状態) const;
 
         bool is_atc() const {
             return 10 <= _現在閉塞.信号指示 &&
