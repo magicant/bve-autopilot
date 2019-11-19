@@ -372,7 +372,7 @@ namespace autopilot
         if (is_atc() && _現在閉塞.信号速度 == 0.0_mps) {
             return atc停止出力ノッチ(状態);
         }
-        return _信号グラフ.出力ノッチ(状態);
+        return _信号グラフ.出力ノッチ(状態).value();
     }
 
     mps 信号順守::現在制限速度(const 共通状態 &状態) const

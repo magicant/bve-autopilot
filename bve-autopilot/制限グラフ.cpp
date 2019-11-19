@@ -101,15 +101,15 @@ namespace autopilot
         return 速度;
     }
 
-    int 制限グラフ::出力ノッチ(const 共通状態 &状態) const
+    自動制御指令 制限グラフ::出力ノッチ(const 共通状態 &状態) const
     {
-        int ノッチ = std::numeric_limits<int>::max();
+        自動制御指令 ノッチ = 力行ノッチ{std::numeric_limits<unsigned>::max()};
 
         for (制限区間 区間 : _区間リスト) {
             mps2 勾配影響 = std::max(状態.進路勾配加速度(区間.始点), 0.0_mps2);
             mps2 目標減速度 = 状態.目安減速度() - 勾配影響;
             減速パターン パターン = 区間.目標パターン(目標減速度);
-            int パターンノッチ = パターン.出力ノッチ(状態).value();
+            自動制御指令 パターンノッチ = パターン.出力ノッチ(状態);
             ノッチ = std::min(ノッチ, パターンノッチ);
         }
 
