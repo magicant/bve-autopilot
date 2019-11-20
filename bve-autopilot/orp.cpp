@@ -34,6 +34,8 @@ namespace autopilot
     {
 
         constexpr orp::信号インデックス orp信号インデックス = 35;
+        constexpr 自動制御指令 緩解指令 =
+            力行ノッチ{std::numeric_limits<unsigned>::max()};
         constexpr mps 照査速度下限 = 7.5_kmph;
         constexpr mps 最終目標速度 = 照査速度下限 - static_cast<mps>(0.5_kmph);
         constexpr mps 運転速度マージン = 4.0_kmph;
@@ -44,7 +46,7 @@ namespace autopilot
         _信号指示{-1},
         _照査パターン{m::無限大(), 照査速度下限, 0.0_mps2},
         _運転パターン{m::無限大(), 最終目標速度, 0.0_mps2},
-        _出力ノッチ{std::numeric_limits<int>::max()},
+        _出力ノッチ{緩解指令},
         _照査速度{mps::無限大()}
     {
     }
@@ -52,7 +54,7 @@ namespace autopilot
     void orp::リセット()
     {
         _照査パターン.目標位置 = _運転パターン.目標位置 = m::無限大();
-        _出力ノッチ = std::numeric_limits<int>::max();
+        _出力ノッチ = 緩解指令;
     }
 
     void orp::設定(mps 初期照査速度, m 初期位置, m 限界位置)
@@ -126,10 +128,7 @@ namespace autopilot
             _照査パターン.目標位置 = _運転パターン.目標位置 = -m::無限大();
         }
 
-        _出力ノッチ =
-            制御中() ?
-            _運転パターン.出力ノッチ(状態).value() :
-            std::numeric_limits<int>::max();
+        _出力ノッチ = 制御中() ? _運転パターン.出力ノッチ(状態) : 緩解指令;
         _照査速度 = _照査パターン.期待速度(状態.現在位置());
     }
 
