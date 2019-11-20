@@ -22,6 +22,7 @@
 #include <map>
 #include "orp.h"
 #include "信号順守.h"
+#include "制御指令.h"
 #include "制限グラフ.h"
 #include "急動作抑制.h"
 #include "早着防止.h"
@@ -54,8 +55,7 @@ namespace autopilot
         mps 現在orp照査速度() const;
         bool 力行抑止中() const { return _早着防止.出力ノッチ() <= 1; }
 
-        // 力行は正の値、制動は負の値
-        int 出力ノッチ() const { return _出力ノッチ; }
+        自動制御指令 出力ノッチ() const { return _出力ノッチ; }
 
     private:
         enum class 制御状態 { 停止, 発進, 走行, };
@@ -66,7 +66,7 @@ namespace autopilot
         orp _orp;
         早着防止 _早着防止;
         制御状態 _制御状態 = 制御状態::走行;
-        int _出力ノッチ = 0;
+        自動制御指令 _出力ノッチ;
         急動作抑制 _急動作抑制;
     };
 
