@@ -69,7 +69,7 @@ namespace autopilot
                 return main.状態().前回出力().Brake;
             })},
             {L"power", パネル出力対象([](const Main & main) {
-                return main.状態().前回出力().Power;
+                return main.状態().前回力行ノッチ();
             })},
 
             {L"tascenabled", パネル出力対象([](const Main & main) {
