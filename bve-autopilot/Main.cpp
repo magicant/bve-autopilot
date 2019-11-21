@@ -30,26 +30,24 @@ namespace autopilot
     {
 
         int 出力制動ノッチ番号(
-            手動制動自然数ノッチ 手動ノッチ,
-            int 自動ノッチ, const 制動特性 &制動) // FIXME
+            手動制動自然数ノッチ 手動ノッチ, 自動制動自然数ノッチ 自動ノッチ,
+            const 制動特性 &制動)
         {
             if (手動ノッチ > 制動.標準最大ノッチ()) {
                 // 非常ブレーキは常に優先する
                 return static_cast<int>(手動ノッチ.value);
             }
-            if (自動ノッチ <= 0) {
+            if (自動ノッチ == 自動制動自然数ノッチ{0}) {
                 return static_cast<int>(手動ノッチ.value);
             }
 
             mps2 手動 = 制動.減速度(手動ノッチ);
-            mps2 自動 = 制動.減速度(
-                自動制動自然数ノッチ{static_cast<unsigned>(自動ノッチ)});
+            mps2 自動 = 制動.減速度(自動ノッチ);
             if (手動 >= 自動) {
                 return static_cast<int>(手動ノッチ.value);
             }
             else {
-                return 制動.自動ノッチ番号(
-                    自動制動自然数ノッチ{static_cast<unsigned>(自動ノッチ)});
+                return 制動.自動ノッチ番号(自動ノッチ);
             }
         }
 
@@ -207,9 +205,7 @@ namespace autopilot
 
         ATS_HANDLES ハンドル位置;
         ハンドル位置.Brake = 出力制動ノッチ番号(
-            _状態.入力制動ノッチ(),
-            -static_cast<int>(自動ノッチ.制動成分().value),
-            _状態.制動());
+            _状態.入力制動ノッチ(), 自動ノッチ.制動成分(), _状態.制動());
         if (_状態.入力力行ノッチ() >= 0) {
             ハンドル位置.Power = std::max(
                 static_cast<int>(自動ノッチ.力行成分().value),
