@@ -19,6 +19,7 @@
 
 #pragma once
 #include "制動特性.h"
+#include "制御指令.h"
 #include "加速度計.h"
 #include "勾配グラフ.h"
 #include "区間.h"
@@ -58,6 +59,9 @@ namespace autopilot {
         const 環境設定 & 設定() const { return _設定; }
         互換モード型 互換モード() const { return _互換モード; }
         const ATS_VEHICLESPEC & 車両仕様() const { return _車両仕様; }
+        力行ノッチ 最大力行ノッチ() const {
+            return 力行ノッチ{static_cast<unsigned>(_車両仕様.PowerNotches)};
+        }
         m 列車長() const {
             return _設定.車両長() * static_cast<double>(_車両仕様.Cars);
         }
@@ -75,12 +79,13 @@ namespace autopilot {
         float 現在ブレーキシリンダー圧() const { return _状態.BcPressure; }
         mps2 目安減速度() const { return _目安減速度; }
         bool 戸閉() const { return _戸閉; }
-        int 逆転器ノッチ() const { return _逆転器ノッチ; }
-        int 力行ノッチ() const { return _力行ノッチ; }
-        int 制動ノッチ() const { return _制動ノッチ; }
+        int 入力逆転器ノッチ() const { return _入力逆転器ノッチ; }
+        /// 抑速ノッチでは値は負になる
+        int 入力力行ノッチ() const { return _入力力行ノッチ; }
+        手動制動自然数ノッチ 入力制動ノッチ() const { return _入力制動ノッチ; }
         mps2 加速度() const { return _加速度計.加速度(); }
         const 制動特性 & 制動() const { return _制動特性; }
-        int 転動防止自動ノッチ() const;
+        自動制動自然数ノッチ 転動防止自動ノッチ() const;
         const 勾配グラフ &勾配() const { return _勾配グラフ; }
         mps2 進路勾配加速度(m 目標位置) const;
         mps2 車両勾配加速度() const;
@@ -93,7 +98,8 @@ namespace autopilot {
         ATS_VEHICLESTATE _状態 = {};
         mps2 _目安減速度 = {};
         bool _戸閉 = false;
-        int _逆転器ノッチ = 0, _力行ノッチ = 0, _制動ノッチ = 0;
+        int _入力逆転器ノッチ = 0, _入力力行ノッチ = 0;
+        手動制動自然数ノッチ _入力制動ノッチ;
         加速度計 _加速度計;
         制動特性 _制動特性;
         勾配グラフ _勾配グラフ;

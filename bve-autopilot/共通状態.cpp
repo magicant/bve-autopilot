@@ -91,17 +91,17 @@ namespace autopilot {
 
     void 共通状態::逆転器操作(int ノッチ)
     {
-        _逆転器ノッチ = ノッチ;
+        _入力逆転器ノッチ = ノッチ;
     }
 
     void 共通状態::力行操作(int ノッチ)
     {
-        _力行ノッチ = ノッチ;
+        _入力力行ノッチ = ノッチ;
     }
 
     void 共通状態::制動操作(int ノッチ)
     {
-        _制動ノッチ = ノッチ;
+        _入力制動ノッチ = 手動制動自然数ノッチ{static_cast<unsigned>(ノッチ)};
     }
 
     区間 共通状態::現在範囲() const
@@ -109,13 +109,13 @@ namespace autopilot {
         return 区間{ 現在位置() - 列車長(), 現在位置() };
     }
 
-    int 共通状態::転動防止自動ノッチ() const
+    自動制動自然数ノッチ 共通状態::転動防止自動ノッチ() const
     {
         制動力割合 割合 = _設定.転動防止制動割合();
         自動制動実数ノッチ ノッチ = _制動特性.自動ノッチ(割合);
-        int ノッチi = static_cast<int>(std::ceil(ノッチ.value));
-        return std::min(
-            ノッチi, static_cast<int>(_制動特性.自動最大ノッチ().value));
+        自動制動自然数ノッチ ノッチi{
+            static_cast<unsigned>(std::ceil(ノッチ.value))};
+        return std::min(ノッチi, _制動特性.自動最大ノッチ());
     }
 
     mps2 共通状態::進路勾配加速度(m 目標位置) const

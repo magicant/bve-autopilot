@@ -30,21 +30,22 @@ namespace autopilot
     {
 
         int 出力制動ノッチ番号(
-            int 手動ノッチ, int 自動ノッチ, const 制動特性 &制動) // FIXME
+            手動制動自然数ノッチ 手動ノッチ,
+            int 自動ノッチ, const 制動特性 &制動) // FIXME
         {
-            if (手動ノッチ > 制動.標準最大ノッチ().value) {
-                return 手動ノッチ; // 非常ブレーキは常に優先する
+            if (手動ノッチ > 制動.標準最大ノッチ()) {
+                // 非常ブレーキは常に優先する
+                return static_cast<int>(手動ノッチ.value);
             }
             if (自動ノッチ <= 0) {
-                return 手動ノッチ;
+                return static_cast<int>(手動ノッチ.value);
             }
 
-            mps2 手動 = 制動.減速度(
-                手動制動自然数ノッチ{static_cast<unsigned>(手動ノッチ)});
+            mps2 手動 = 制動.減速度(手動ノッチ);
             mps2 自動 = 制動.減速度(
                 自動制動自然数ノッチ{static_cast<unsigned>(自動ノッチ)});
             if (手動 >= 自動) {
-                return 手動ノッチ;
+                return static_cast<int>(手動ノッチ.value);
             }
             else {
                 return 制動.自動ノッチ番号(
@@ -119,8 +120,8 @@ namespace autopilot
     {
         // モード切替
         if (キー == _状態.設定().キー割り当て().at(キー操作::モード切替)) {
-            if (_状態.逆転器ノッチ() == 0 &&
-                _状態.制動ノッチ() > _状態.制動().標準最大ノッチ().value)
+            if (_状態.入力逆転器ノッチ() == 0 &&
+                _状態.入力制動ノッチ() > _状態.制動().標準最大ノッチ())
             {
                 if (_ato有効) {
                     _ato有効 = false;
@@ -190,8 +191,7 @@ namespace autopilot
         _ato.経過(_状態);
 
         // TASC と ATO の出力ノッチをまとめる
-        自動制御指令 自動ノッチ =
-            力行ノッチ{static_cast<unsigned>(_状態.車両仕様().PowerNotches)};
+        自動制御指令 自動ノッチ = _状態.最大力行ノッチ();
         if (_tasc有効) {
             自動ノッチ = std::min(自動ノッチ, _tasc.出力ノッチ());
         }
@@ -199,24 +199,26 @@ namespace autopilot
             自動ノッチ = std::min(自動ノッチ, _ato.出力ノッチ());
         }
 
-        if (!_ato有効 || _状態.制動ノッチ() > 0 || _状態.逆転器ノッチ() <= 0) {
+        if (!_ato有効 || _状態.入力制動ノッチ() > 手動制動自然数ノッチ{0} ||
+            _状態.入力逆転器ノッチ() <= 0)
+        {
             自動ノッチ = std::min(自動ノッチ, 自動制御指令{力行ノッチ{0}});
         }
 
         ATS_HANDLES ハンドル位置;
         ハンドル位置.Brake = 出力制動ノッチ番号(
-            _状態.制動ノッチ(),
+            _状態.入力制動ノッチ(),
             -static_cast<int>(自動ノッチ.制動成分().value),
             _状態.制動());
-        if (_状態.力行ノッチ() >= 0) {
+        if (_状態.入力力行ノッチ() >= 0) {
             ハンドル位置.Power = std::max(
                 static_cast<int>(自動ノッチ.力行成分().value),
-                _状態.力行ノッチ());
+                _状態.入力力行ノッチ());
         }
         else {
-            ハンドル位置.Power = _状態.力行ノッチ();
+            ハンドル位置.Power = _状態.入力力行ノッチ();
         }
-        ハンドル位置.Reverser = _状態.逆転器ノッチ();
+        ハンドル位置.Reverser = _状態.入力逆転器ノッチ();
         ハンドル位置.ConstantSpeed = ATS_CONSTANTSPEED_CONTINUE;
 
         _状態.出力(ハンドル位置);
