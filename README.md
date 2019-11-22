@@ -91,3 +91,5 @@ Bve trainsim 5.7.6224.40815 で動作確認しています。BVE4 や OpenBVE �
 ## 解説
 
 [algorithm.md](algorithm.md) ファイルにアルゴリズムの解説を書きました。
+
+![bve-autopilot クラス図](https://docs.google.com/drawings/d/e/2PACX-1vS04CQzvJoFkLqhHuT_zZZW-YbpnRhUtPCcCVHPN-CMPTM_-LAcdUqEHE2YRKOrQcYnIqTFau8X7KWR/pub?w=960&h=720)
