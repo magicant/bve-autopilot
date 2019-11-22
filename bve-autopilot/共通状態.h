@@ -89,10 +89,10 @@ namespace autopilot {
         const 勾配グラフ &勾配() const { return _勾配グラフ; }
         mps2 進路勾配加速度(m 目標位置) const;
         mps2 車両勾配加速度() const;
-        const ATS_HANDLES & 前回出力() const { return _前回出力; }
         int 前回逆転器ノッチ() const { return _前回出力.Reverser; }
         /// 抑速ノッチでは値は負になる
         int 前回力行ノッチ() const { return _前回出力.Power; }
+        制動指令 前回制動指令() const { return 制動指令{_前回出力.Brake}; }
 
     private:
         環境設定 _設定;

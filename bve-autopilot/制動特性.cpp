@@ -103,27 +103,27 @@ namespace autopilot
         return 推定最大減速度() * 割合.value;
     }
 
-    int 制動特性::自動ノッチ番号(自動制動自然数ノッチ ノッチ) const
+    制動指令 制動特性::指令(自動制動自然数ノッチ ノッチ) const
     {
         if (ノッチ.value == 0) {
-            return 0;
+            return 制動指令{0};
         }
         if (_拡張ノッチ列.empty()) {
-            return static_cast<int>(ノッチ.value);
+            return 手動制動自然数ノッチ{ノッチ.value};
         }
-        return static_cast<int>(ノッチ.value + _標準最大ノッチ.value + 1);
+        return 制動指令{static_cast<int>(
+            ノッチ.value + _標準最大ノッチ.value + 1)};
     }
 
-    自動制動自然数ノッチ 制動特性::自動ノッチ(int ノッチ番号) const
+    自動制動自然数ノッチ 制動特性::自動ノッチ(制動指令 ノッチ) const
     {
-        int 標準最大 = static_cast<int>(_標準最大ノッチ.value);
+        auto ノッチ番号 = static_cast<unsigned>(ノッチ.value);
+        auto 標準最大 = static_cast<unsigned>(_標準最大ノッチ.value);
         if (ノッチ番号 > 標準最大 + 1) {
-            return 自動制動自然数ノッチ{
-                static_cast<unsigned>(ノッチ番号 - 標準最大 - 1)};
+            return 自動制動自然数ノッチ{ノッチ番号 - (標準最大 + 1)};
         }
         if (_拡張ノッチ列.empty()) {
-            return 自動制動自然数ノッチ{
-                static_cast<unsigned>(ノッチ番号)};
+            return 自動制動自然数ノッチ{ノッチ番号};
         }
 
         制動力割合 割合 = _標準ノッチ列.割合(ノッチ番号);
@@ -140,12 +140,13 @@ namespace autopilot
 
     void 制動特性::経過(const 共通状態 &状態)
     {
-        制動力割合 割合 = this->割合(状態.前回出力().Brake);
+        制動力割合 割合 = this->割合(状態.前回制動指令());
         _制動力推定.経過(割合, 状態);
     }
 
-    制動力割合 制動特性::割合(int ノッチ番号) const
+    制動力割合 制動特性::割合(制動指令 ノッチ) const
     {
+        auto ノッチ番号 = static_cast<unsigned>(ノッチ.value);
         auto 標準ノッチ列最大長 = _標準最大ノッチ.value + 2;
         if (ノッチ番号 >= 標準ノッチ列最大長) {
             auto 拡張ノッチ番号 = ノッチ番号 - 標準ノッチ列最大長;

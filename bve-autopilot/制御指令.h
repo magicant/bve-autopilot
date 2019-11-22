@@ -90,14 +90,27 @@ namespace autopilot
         using 自然数ノッチ::自然数ノッチ;
     };
 
+    /// BVE 本体側と実際にやり取りする制動指令の値
+    struct 制動指令 {
+        int value;
+        constexpr explicit 制動指令(int v = 0) : value{v} {}
+        constexpr 制動指令(手動制動自然数ノッチ v) :
+            value{static_cast<int>(v.value)} {}
+    };
+
+    constexpr bool operator==(const 制動指令 &a, const 制動指令 &b) {
+        return a.value == b.value;
+    }
+
+    constexpr bool operator!=(const 制動指令 &a, const 制動指令 &b) {
+        return a.value != b.value;
+    }
+
     /// 力行の強さ
     struct 力行ノッチ : 自然数ノッチ<力行ノッチ>
     {
         using 自然数ノッチ::自然数ノッチ;
     };
-
-    using 制御指令 =
-        std::variant<手動制動自然数ノッチ, 自動制動自然数ノッチ, 力行ノッチ>;
 
     class 自動制御指令 {
     public:

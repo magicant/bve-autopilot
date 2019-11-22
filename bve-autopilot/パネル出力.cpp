@@ -66,7 +66,7 @@ namespace autopilot
 
         const std::unordered_map<std::wstring, パネル出力対象> 対象名簿 = {
             {L"brake", パネル出力対象([](const Main & main) {
-                return main.状態().前回出力().Brake;
+                return main.状態().前回制動指令().value;
             })},
             {L"power", パネル出力対象([](const Main & main) {
                 return main.状態().前回力行ノッチ();
