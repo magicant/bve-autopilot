@@ -229,6 +229,7 @@ namespace autopilot
         else {
             ノッチ = std::ceil(ノッチ);
         }
+        ノッチ = std::max(ノッチ, 0.0);
         return 自動制動自然数ノッチ{static_cast<unsigned>(ノッチ)};
     }
 
