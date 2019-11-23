@@ -19,6 +19,7 @@
 
 #pragma once
 #include <forward_list>
+#include "制御指令.h"
 #include "物理量.h"
 #include "走行モデル.h"
 
@@ -35,12 +36,12 @@ namespace autopilot
         void 地上子通過(const ATS_BEACONDATA &地上子, const 共通状態 &状態);
         void 経過(const 共通状態 &状態);
 
-        int 出力ノッチ() const { return _出力ノッチ; }
+        自動制御指令 出力ノッチ() const { return _出力ノッチ; }
 
     private:
         s _次の設定時刻 = {};
         std::forward_list<走行モデル> _予定表;
-        int _出力ノッチ = 0;
+        自動制御指令 _出力ノッチ;
 
         void 通過時刻設定(const ATS_BEACONDATA &地上子);
         void 通過位置設定(const ATS_BEACONDATA &地上子, const 共通状態 &状態);

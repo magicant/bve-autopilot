@@ -66,10 +66,10 @@ namespace autopilot
 
         const std::unordered_map<std::wstring, パネル出力対象> 対象名簿 = {
             {L"brake", パネル出力対象([](const Main & main) {
-                return main.状態().前回出力().Brake;
+                return main.状態().前回制動指令().value;
             })},
             {L"power", パネル出力対象([](const Main & main) {
-                return main.状態().前回出力().Power;
+                return main.状態().前回力行ノッチ();
             })},
 
             {L"tascenabled", パネル出力対象([](const Main & main) {
@@ -82,7 +82,8 @@ namespace autopilot
                 if (!main.tasc有効()) {
                     return 0;
                 }
-                return std::max(-main.tasc状態().出力ノッチ(), 0);
+                return static_cast<int>(
+                    main.tasc状態().出力ノッチ().制動成分().value);
             })},
             {L"tascdistance", パネル出力対象([](const Main &main) {
                 cm 残距離 =

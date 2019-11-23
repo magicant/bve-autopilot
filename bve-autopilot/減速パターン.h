@@ -20,6 +20,7 @@
 #pragma once
 #include <utility>
 #include "制動特性.h"
+#include "制御指令.h"
 #include "物理量.h"
 #include "走行モデル.h"
 
@@ -55,13 +56,13 @@ namespace autopilot
         }
 
         mps2 出力減速度(m 現在位置, mps 現在速度) const;
-        int 出力制動ノッチ(
-            m 現在位置, mps 現在速度, int 現在制動ノッチ,
+        自動制動自然数ノッチ 出力制動ノッチ(
+            m 現在位置, mps 現在速度, 自動制動自然数ノッチ 現在制動ノッチ,
             mps2 勾配影響, const 共通状態 &状態) const;
         bool 力行する余裕あり(
-            int 力行ノッチ, mps2 想定加速度, s 想定惰行時間,
+            力行ノッチ 力行ノッチ, mps2 想定加速度, s 想定惰行時間,
             mps2 勾配影響, const 共通状態 &状態) const;
-        int 出力ノッチ(const 共通状態 &状態) const;
+        自動制御指令 出力ノッチ(const 共通状態 &状態) const;
 
         /// 指定した速度におけるパターン上の位置と時刻を返します。
         /// 時刻は、減速目標に到達する時刻を 0 とし、

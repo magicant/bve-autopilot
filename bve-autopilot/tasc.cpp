@@ -32,6 +32,8 @@ namespace autopilot {
     {
 
         constexpr m デフォルト最大許容誤差 = 0.5_m;
+        constexpr 自動制御指令 緩解指令 =
+            力行ノッチ{std::numeric_limits<unsigned>::max()};
 
     }
 
@@ -42,7 +44,7 @@ namespace autopilot {
         _最大許容誤差(デフォルト最大許容誤差),
         _目標減速度(2.5_kmphps),
         _緩解(false),
-        _出力ノッチ(std::numeric_limits<int>::max())
+        _出力ノッチ(緩解指令)
     {
     }
 
@@ -58,8 +60,8 @@ namespace autopilot {
     void tasc::制動操作(const 共通状態 &状態)
     {
         if (!状態.戸閉()) {
-            mps2 手動 = 状態.制動().標準ノッチ減速度(状態.制動ノッチ());
-            mps2 自動 = 状態.制動().自動ノッチ減速度(-_出力ノッチ);
+            mps2 手動 = 状態.制動().減速度(状態.入力制動ノッチ());
+            mps2 自動 = 状態.制動().減速度(_出力ノッチ.制動成分());
             if (手動 >= 自動) {
                 _緩解 = true;
             }
@@ -110,7 +112,7 @@ namespace autopilot {
     void tasc::経過(const 共通状態 & 状態)
     {
         if (_緩解) {
-            _出力ノッチ = std::numeric_limits<int>::max();
+            _出力ノッチ = 緩解指令;
             return;
         }
 
@@ -151,11 +153,12 @@ namespace autopilot {
 
         if (!状態.停車中()) {
             // 目標停止位置に近付いたらもう力行しない
-            _出力ノッチ = std::min(_出力ノッチ, 0);
+            _出力ノッチ = std::min(_出力ノッチ, 自動制御指令{});
         }
         else {
             // 停車中は制動し続ける
-            _出力ノッチ = std::min(_出力ノッチ, -状態.転動防止自動ノッチ());
+            _出力ノッチ = std::min(
+                _出力ノッチ, 自動制御指令{状態.転動防止自動ノッチ()});
         }
     }
 

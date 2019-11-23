@@ -19,6 +19,7 @@
 
 #pragma once
 #include <forward_list>
+#include "制御指令.h"
 #include "区間.h"
 #include "物理量.h"
 
@@ -47,8 +48,7 @@ namespace autopilot
 
         mps 現在常用パターン速度(const 共通状態 &状態) const;
 
-        // 力行は正の値、制動は負の値
-        int 出力ノッチ(const 共通状態 &状態) const;
+        自動制御指令 出力ノッチ(const 共通状態 &状態) const;
 
     private:
         struct 制限区間;

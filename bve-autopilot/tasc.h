@@ -20,6 +20,7 @@
 #pragma once
 #include <utility>
 #include "live.h"
+#include "制御指令.h"
 #include "共通状態.h"
 #include "物理量.h"
 #include "走行モデル.h"
@@ -41,8 +42,7 @@ namespace autopilot {
         m 目標停止位置() const { return _名目の目標停止位置.get(); }
         bool 制御中() const;
 
-        // 力行は正の値、制動は負の値
-        int 出力ノッチ() const { return _出力ノッチ; }
+        自動制御指令 出力ノッチ() const { return _出力ノッチ; }
 
         void 目標停止位置を監視(live<m>::observer_type &&observer) {
             _名目の目標停止位置.set_observer(std::move(observer));
@@ -55,7 +55,7 @@ namespace autopilot {
         m _最大許容誤差;
         mps2 _目標減速度;
         bool _緩解;
-        int _出力ノッチ;
+        自動制御指令 _出力ノッチ;
 
         void 目標停止位置を設定(m 残距離, const 共通状態 &状態);
         // 直前のフレームとの現在位置変化に従い、目標停止位置が整数である

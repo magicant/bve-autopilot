@@ -18,6 +18,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include "制御指令.h"
 #include "物理量.h"
 
 namespace autopilot {
@@ -71,7 +72,7 @@ namespace autopilot {
     class 共通状態;
 
     void 短く力行(
-        走行モデル &モデル, int 力行ノッチ, mps2 想定加速度,
+        走行モデル &モデル, 力行ノッチ 力行ノッチ, mps2 想定加速度,
         const 共通状態 &状態);
 
 }

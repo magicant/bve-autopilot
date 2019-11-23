@@ -37,8 +37,8 @@ namespace autopilot
     namespace
     {
 
-        std::vector<double> 実数列(LPCWSTR s) {
-            std::vector<double> values;
+        std::vector<制動力割合> 実数列(LPCWSTR s) {
+            std::vector<制動力割合> values;
             while (*s != L'\0') {
                 LPWSTR s2;
                 double value = std::wcstod(s, &s2);
@@ -46,7 +46,7 @@ namespace autopilot
                     ++s;
                     continue;
                 }
-                values.push_back(value);
+                values.emplace_back(value);
                 s = s2;
             }
             return values;
@@ -90,7 +90,7 @@ namespace autopilot
         _加速終了遅延(2.0_s),
         _常用最大減速度(3.0_kmphps),
         _制動反応時間(0.2_s),
-        _制動拡張ノッチ数(0),
+        _制動最大拡張ノッチ{0},
         _転動防止制動割合(0.5),
         _pressure_rates{},
         _キー割り当て{
@@ -188,7 +188,8 @@ namespace autopilot
         if (0 < size && size < buffer_size - 1) {
             int count = std::stoi(buffer);
             if (count >= 0) {
-                _制動拡張ノッチ数 = count;
+                _制動最大拡張ノッチ =
+                    自動制動自然数ノッチ{static_cast<unsigned>(count)};
             }
         }
 
@@ -198,11 +199,11 @@ namespace autopilot
             設定ファイル名);
         if (0 < size && size < buffer_size - 1) {
             double 割合 = std::wcstod(buffer, nullptr);
-            if (割合 == 0) {
-                _転動防止制動割合 = 0; // 負の 0 は正の 0 にする
+            if (割合 == 0.0) {
+                _転動防止制動割合 = 制動力割合{0.0}; // 負の 0 は正の 0 にする
             }
-            else if (0 <= 割合 && 割合 <= 1) {
-                _転動防止制動割合 = 割合;
+            else if (0.0 <= 割合 && 割合 <= 1.0) {
+                _転動防止制動割合 = 制動力割合{割合};
             }
         }
 

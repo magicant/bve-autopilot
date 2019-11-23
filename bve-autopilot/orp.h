@@ -18,6 +18,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include "制御指令.h"
 #include "減速パターン.h"
 #include "物理量.h"
 
@@ -47,15 +48,14 @@ namespace autopilot
         bool 制御中() const;
         bool 照査中() const;
 
-        // 力行は正の値、制動は負の値
-        int 出力ノッチ() const { return _出力ノッチ; }
+        自動制御指令 出力ノッチ() const { return _出力ノッチ; }
 
         mps 照査速度() const { return _照査速度; }
 
     private:
         信号インデックス _信号指示;
         減速パターン _照査パターン, _運転パターン;
-        int _出力ノッチ;
+        自動制御指令 _出力ノッチ;
         mps _照査速度;
     };
 

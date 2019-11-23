@@ -25,6 +25,8 @@
 #include <iterator>
 #include "共通状態.h"
 
+#pragma warning(disable:4819)
+
 namespace autopilot
 {
 
@@ -32,15 +34,18 @@ namespace autopilot
     制動特性::~制動特性() = default;
 
     void 制動特性::性能設定(
-        int 標準ノッチ数, int 拡張ノッチ数, mps2 基準最大減速度, s 反応時間,
-        const std::vector<double> &pressure_rates)
+        手動制動自然数ノッチ 標準最大ノッチ,
+        自動制動自然数ノッチ 拡張最大ノッチ,
+        mps2 基準最大減速度, s 反応時間,
+        const std::vector<制動力割合> &pressure_rates)
     {
-        _標準ノッチ数 = 標準ノッチ数;
+        _標準最大ノッチ = 標準最大ノッチ;
         _反応時間 = 反応時間;
         _制動力推定.基準最大減速度を設定(基準最大減速度);
 
-        auto 標準ノッチ列最大長 =
-            static_cast<pressure_rates::size_type>(標準ノッチ数) + 2;
+        auto 標準ノッチ数 =
+            static_cast<pressure_rates::size_type>(標準最大ノッチ.value);
+        auto 標準ノッチ列最大長 = 標準ノッチ数 + 2;
         _標準ノッチ列 = pressure_rates;
         _標準ノッチ列.穴埋めする(標準ノッチ数);
         if (_標準ノッチ列.size() > 標準ノッチ列最大長) {
@@ -49,10 +54,10 @@ namespace autopilot
         }
 
         auto 拡張ノッチ列最大長 =
-            static_cast<pressure_rates::size_type>(拡張ノッチ数) + 1;
+            static_cast<pressure_rates::size_type>(拡張最大ノッチ.value) + 1;
         _拡張ノッチ列.clear();
         if (pressure_rates.size() > 標準ノッチ列最大長) {
-            _拡張ノッチ列.push_back(0);
+            _拡張ノッチ列.emplace_back(0.0);
             std::copy(
                 pressure_rates.begin() + 標準ノッチ列最大長,
                 pressure_rates.end(),
@@ -68,87 +73,81 @@ namespace autopilot
         }
     }
 
-    int 制動特性::拡張ノッチ数() const
-    {
+    自動制動自然数ノッチ 制動特性::自動最大ノッチ() const {
         if (_拡張ノッチ列.empty()) {
-            return 0;
+            return 自動制動自然数ノッチ{標準最大ノッチ().value};
         }
-        return _拡張ノッチ列.size() - 1;
+        return 自動制動自然数ノッチ{_拡張ノッチ列.size() - 1};
     }
 
-    int 制動特性::自動ノッチ数() const {
-        int c = 拡張ノッチ数();
-        return c > 0 ? c : _標準ノッチ数;
-    }
-
-    double 制動特性::標準ノッチ(mps2 減速度) const
+    自動制動実数ノッチ 制動特性::自動ノッチ(制動力割合 割合) const
     {
-        double 割合 = 減速度 / 推定最大減速度();
-        return _標準ノッチ列.ノッチ(割合);
+        return 自動制動実数ノッチ{有効ノッチ列().ノッチ(割合)};
     }
 
-    double 制動特性::自動ノッチ(mps2 減速度) const
+    自動制動実数ノッチ 制動特性::自動ノッチ(mps2 減速度) const
     {
-        double 割合 = 減速度 / 推定最大減速度();
-        return 有効ノッチ列().ノッチ(割合);
+        制動力割合 割合{減速度 / 推定最大減速度()};
+        return 自動ノッチ(割合);
     }
 
-    double 制動特性::割合自動ノッチ(double 割合) const
+    mps2 制動特性::減速度(手動制動自然数ノッチ ノッチ) const
     {
-        return 有効ノッチ列().ノッチ(割合);
+        制動力割合 割合 = _標準ノッチ列.割合(ノッチ.value);
+        return 推定最大減速度() * 割合.value;
     }
 
-    mps2 制動特性::標準ノッチ減速度(double ノッチ) const
+    mps2 制動特性::減速度(自動制動実数ノッチ ノッチ) const
     {
-        double 割合 = _標準ノッチ列.割合(ノッチ);
-        return 推定最大減速度() * 割合;
+        制動力割合 割合 = 有効ノッチ列().割合(ノッチ.value);
+        return 推定最大減速度() * 割合.value;
     }
 
-    mps2 制動特性::自動ノッチ減速度(double ノッチ) const
+    制動指令 制動特性::指令(自動制動自然数ノッチ ノッチ) const
     {
-        double 割合 = 有効ノッチ列().割合(ノッチ);
-        return 推定最大減速度() * 割合;
-    }
-
-    int 制動特性::自動ノッチ番号(int 自動ノッチ) const
-    {
-        if (自動ノッチ == 0) {
-            return 0;
+        if (ノッチ.value == 0) {
+            return 制動指令{0};
         }
         if (_拡張ノッチ列.empty()) {
-            return 自動ノッチ;
+            return 手動制動自然数ノッチ{ノッチ.value};
         }
-        return 自動ノッチ + _標準ノッチ数 + 1;
+        return 制動指令{static_cast<int>(
+            ノッチ.value + _標準最大ノッチ.value + 1)};
     }
 
-    int 制動特性::自動ノッチインデクス(int ノッチ番号) const
+    自動制動自然数ノッチ 制動特性::自動ノッチ(制動指令 ノッチ) const
     {
-        if (ノッチ番号 > _標準ノッチ数 + 1) {
-            return ノッチ番号 - _標準ノッチ数 - 1;
+        auto ノッチ番号 = static_cast<unsigned>(ノッチ.value);
+        auto 標準最大 = static_cast<unsigned>(_標準最大ノッチ.value);
+        if (ノッチ番号 > 標準最大 + 1) {
+            return 自動制動自然数ノッチ{ノッチ番号 - (標準最大 + 1)};
         }
         if (_拡張ノッチ列.empty()) {
-            return ノッチ番号;
+            return 自動制動自然数ノッチ{ノッチ番号};
         }
 
-        double 割合 = _標準ノッチ列.割合(ノッチ番号);
+        制動力割合 割合 = _標準ノッチ列.割合(ノッチ番号);
         double インデクス = _拡張ノッチ列.ノッチ(割合);
-        return static_cast<int>(std::ceil(インデクス));
+        return 自動制動自然数ノッチ{
+            static_cast<unsigned>(std::ceil(インデクス))};
     }
 
-    double 制動特性::自動ノッチ丸め(double ノッチ) const
+    自動制動自然数ノッチ 制動特性::自動ノッチ丸め(
+        自動制動実数ノッチ ノッチ) const
     {
-        return 有効ノッチ列().丸め(ノッチ);
+        return 有効ノッチ列().丸め(ノッチ.value);
     }
 
     void 制動特性::経過(const 共通状態 &状態)
     {
-        double 割合 = this->割合(状態.前回出力().Brake);
+        制動力割合 割合 = this->割合(状態.前回制動指令());
         _制動力推定.経過(割合, 状態);
     }
 
-    double 制動特性::割合(int ノッチ番号) const
+    制動力割合 制動特性::割合(制動指令 ノッチ) const
     {
-        auto 標準ノッチ列最大長 = _標準ノッチ数 + 2;
+        auto ノッチ番号 = static_cast<unsigned>(ノッチ.value);
+        auto 標準ノッチ列最大長 = _標準最大ノッチ.value + 2;
         if (ノッチ番号 >= 標準ノッチ列最大長) {
             auto 拡張ノッチ番号 = ノッチ番号 - 標準ノッチ列最大長;
             return _拡張ノッチ列.割合(拡張ノッチ番号);
@@ -161,69 +160,77 @@ namespace autopilot
     void 制動特性::pressure_rates::穴埋めする(size_type 常用ノッチ数)
     {
         if (empty()) {
-            push_back(0);
+            emplace_back(0);
         }
         while (size() <= 常用ノッチ数) {
             auto 分割数 = 常用ノッチ数 - size() + 1;
-            auto 前の値 = back();
+            auto 前の値 = back().value;
             auto 次の値 = 前の値 + (1 - 前の値) / 分割数;
-            push_back(次の値);
+            emplace_back(次の値);
         }
     }
 
-    double 制動特性::pressure_rates::ノッチ(double 割合) const
+    double 制動特性::pressure_rates::ノッチ(制動力割合 割合) const
     {
         auto i = std::lower_bound(begin(), end(), 割合);
         if (i == begin()) {
-            return 0;
+            return 0.0;
         }
         if (i == end()) {
-            return 割合 * size();
+            return 割合.value * size();
         }
 
-        double 次ノッチ割合 = *i;
+        double 次ノッチ割合 = i->value;
         --i;
-        double 前ノッチ割合 = *i;
+        double 前ノッチ割合 = i->value;
         return std::distance(begin(), i) +
-            (割合 - 前ノッチ割合) / (次ノッチ割合 - 前ノッチ割合);
+            (割合.value - 前ノッチ割合) / (次ノッチ割合 - 前ノッチ割合);
     }
 
-    std::pair<double, double> 制動特性::pressure_rates::割合と丸め閾値(
+    std::pair<制動力割合, 制動力割合> 制動特性::pressure_rates::割合と丸め閾値(
         double ノッチ) const
     {
         assert(size() > 0);
 
-        if (ノッチ <= 0) {
-            return {0, 0};
+        if (ノッチ <= 0.0) {
+            return {制動力割合{0.0}, 制動力割合{0.0}};
         }
 
         auto s1 = size() - 1;
         if (ノッチ >= s1) {
-            return {ノッチ / s1, s1};
+            return {制動力割合{ノッチ / s1},
+                制動力割合{static_cast<double>(s1)}};
         }
 
         size_type i = static_cast<size_type>(ノッチ);
         assert(i < s1);
-        double 前ノッチ割合 = (*this)[i];
-        double 次ノッチ割合 = (*this)[i + 1];
+        double 前ノッチ割合 = (*this)[i].value;
+        double 次ノッチ割合 = (*this)[i + 1].value;
         double 割合 = 前ノッチ割合;
         if (前ノッチ割合 < 次ノッチ割合) {
             割合 += (ノッチ - i) * (次ノッチ割合 - 前ノッチ割合);
         }
         double 丸め閾値 = 次ノッチ割合 / (次ノッチ割合 - 前ノッチ割合 + 1);
-        return {割合, 丸め閾値};
+        return {制動力割合{割合}, 制動力割合{丸め閾値}};
     }
 
-    double 制動特性::pressure_rates::割合(double ノッチ) const
+    制動力割合 制動特性::pressure_rates::割合(double ノッチ) const
     {
         return 割合と丸め閾値(ノッチ).first;
     }
 
-    double 制動特性::pressure_rates::丸め(double ノッチ) const
+    自動制動自然数ノッチ 制動特性::pressure_rates::丸め(double ノッチ) const
     {
-        double 割合, 丸め閾値;
+        制動力割合 割合, 丸め閾値;
         std::tie(割合, 丸め閾値) = 割合と丸め閾値(ノッチ);
-        return 割合 <= 丸め閾値 ? std::floor(ノッチ) : std::ceil(ノッチ);
+        if (割合 <= 丸め閾値) {
+            ノッチ = std::floor(ノッチ);
+        }
+        else {
+            ノッチ = std::ceil(ノッチ);
+        }
+        ノッチ = std::max(ノッチ, 0.0);
+        return 自動制動自然数ノッチ{static_cast<unsigned>(ノッチ)};
     }
 
 }

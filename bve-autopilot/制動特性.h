@@ -23,6 +23,9 @@
 #include "加速度計.h"
 #include "物理量.h"
 
+#pragma warning(push)
+#pragma warning(disable:4819)
+
 namespace autopilot
 {
 
@@ -38,20 +41,16 @@ namespace autopilot
         ~制動特性();
 
         void 性能設定(
-            int 標準ノッチ数, int 拡張ノッチ数,
+            手動制動自然数ノッチ 標準最大ノッチ,
+            自動制動自然数ノッチ 拡張最大ノッチ,
             mps2 基準最大減速度, s 反応時間,
-            const std::vector<double> &pressure_rates);
+            const std::vector<制動力割合> &pressure_rates);
 
-        /// 標準の常用ブレーキのノッチ数です。
-        /// 緩めノッチと非常ブレーキノッチを含みません。
-        int 標準ノッチ数() const { return _標準ノッチ数; }
-        /// 非常ブレーキノッチの後のノッチ番号を使用して定義された
-        /// 拡張ノッチの数です。緩めノッチと非常ブレーキノッチを含みません。
-        int 拡張ノッチ数() const;
-        /// TASC/ATO が使用する想定のノッチ数です。
-        /// 標準ノッチ数または拡張ノッチ数のどちらかです。
-        /// 緩めノッチと非常ブレーキノッチを含みません。
-        int 自動ノッチ数() const;
+        /// 標準の常用ブレーキのノッチの最大値です。
+        手動制動自然数ノッチ 標準最大ノッチ() const { return _標準最大ノッチ; }
+        /// TASC/ATO が使用する想定のノッチの最大値です。
+        /// 拡張ノッチが設定されていない場合は標準最大ノッチに一致します。
+        自動制動自然数ノッチ 自動最大ノッチ() const;
         mps2 基準最大減速度() const {
             return _制動力推定.基準最大減速度();
         }
@@ -60,32 +59,27 @@ namespace autopilot
         }
         s 反応時間() const { return _反応時間; }
 
-        /// 所望の減速度に対応する標準ノッチを得ます。
-        /// 引数の大きさによっては常用最大を超えるノッチを返すことがあります。
-        double 標準ノッチ(mps2 減速度) const;
+        /// 割合に対応する自動ノッチを単純に返します。
+        自動制動実数ノッチ 自動ノッチ(制動力割合 割合) const;
         /// 所望の減速度に対応する自動ノッチを得ます。
         /// 引数の大きさによっては常用最大を超えるノッチを返すことがあります。
-        double 自動ノッチ(mps2 減速度) const;
-
-        /// 割合に対応する自動ノッチを単純に返します。
-        double 割合自動ノッチ(double 割合) const;
+        自動制動実数ノッチ 自動ノッチ(mps2 減速度) const;
 
         /// 標準ノッチに対して得られるであろう減速度を得ます。
-        mps2 標準ノッチ減速度(double ノッチ) const;
+        mps2 減速度(手動制動自然数ノッチ ノッチ) const;
         /// 自動ノッチに対して得られるであろう減速度を得ます。
-        mps2 自動ノッチ減速度(double ノッチ) const;
+        mps2 減速度(自動制動実数ノッチ ノッチ) const;
 
-        /// 自動ノッチに対応する、BVE 本体側に実際に出力するノッチ番号
-        /// (PressureRates 全体におけるノッチ位置) を得ます。
-        int 自動ノッチ番号(int 自動ノッチインデクス) const;
-        /// ノッチ番号に対応する自動ノッチを返します。
+        /// 自動ノッチに対応する制動指令を得ます。
+        制動指令 指令(自動制動自然数ノッチ ノッチ) const;
+        /// 制動指令に対応する自動ノッチを返します。
         /// 引数が自動ノッチでない場合、対応する自動ノッチに切り上げます。
-        int 自動ノッチインデクス(int ノッチ番号) const;
+        自動制動自然数ノッチ 自動ノッチ(制動指令 ノッチ) const;
 
         /// 自動ノッチを整数に丸めます。
         /// 弱いノッチはより弱く、強いノッチはより強くなる方向に
         /// バイアスをかけます。
-        double 自動ノッチ丸め(double ノッチ) const;
+        自動制動自然数ノッチ 自動ノッチ丸め(自動制動実数ノッチ ノッチ) const;
 
         void 経過(const 共通状態 &状態);
 
@@ -93,29 +87,32 @@ namespace autopilot
         /// 車両パラメーターファイルの PressureRates と同様に、ノッチごとの
         /// ブレーキ力の割合を示す数列です。
         /// 最初の要素は 0 である必要があります。
-        class pressure_rates : public std::vector<double> {
+        class pressure_rates : public std::vector<制動力割合> {
         public:
-            using std::vector<double>::vector;
+            using std::vector<制動力割合>::vector;
 
-            pressure_rates &operator=(const std::vector<double> &v) {
-                static_cast<std::vector<double> &>(*this) = v;
+            pressure_rates &operator=(const std::vector<制動力割合> &v) {
+                static_cast<std::vector<制動力割合> &>(*this) = v;
                 return *this;
             }
 
             void 穴埋めする(size_type 常用ノッチ数);
 
             /// 指定した割合に相当するノッチを返します。
-            double ノッチ(double 割合) const;
-            std::pair<double, double> 割合と丸め閾値(double ノッチ) const;
+            double ノッチ(制動力割合 割合) const;
+            /// 指定したノッチに相当する制動力割合と、ノッチを切り上げるか
+            /// 切り捨てるか判断する目安となる基準の割合を返します。
+            std::pair<制動力割合, 制動力割合> 割合と丸め閾値(double ノッチ)
+                const;
             /// 指定したノッチに相当する割合を返します。
-            double 割合(double ノッチ) const;
+            制動力割合 割合(double ノッチ) const;
             /// ノッチを整数に丸めます。
             /// 弱いノッチはより弱く、強いノッチはより強くなる方向に
             /// バイアスをかけます。
-            double 丸め(double ノッチ) const;
+            自動制動自然数ノッチ 丸め(double ノッチ) const;
         };
 
-        int _標準ノッチ数 = 0;
+        手動制動自然数ノッチ _標準最大ノッチ;
         s _反応時間 = {};
         制動力推定 _制動力推定;
 
@@ -125,7 +122,9 @@ namespace autopilot
             return _拡張ノッチ列.empty() ? _標準ノッチ列 : _拡張ノッチ列;
         }
 
-        double 割合(int ノッチ番号) const;
+        制動力割合 割合(制動指令 ノッチ) const;
     };
 
 }
+
+#pragma warning(pop)
