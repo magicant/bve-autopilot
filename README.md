@@ -88,3 +88,9 @@ Bve trainsim 5.7.6224.40815 で動作確認しています。BVE4 や OpenBVE �
 * プラグインとして車両データに組み込んで使うのは自由です。
 * あなたがこのプラグインを修正・改造したものを公表しようとする場合、バイナリー (dll ファイル) だけでなくソースコードも公開する必要があります。そして公開されたものもまた LGPL に従わなければなりません。
   * せっかく GitHub で開発しているのだから役に立ちそうな修正はプルリクしてください。
+
+## 解説
+
+[algorithm.md](algorithm.md) ファイルにアルゴリズムの解説を書きました。
+
+![bve-autopilot クラス図](https://docs.google.com/drawings/d/e/2PACX-1vS04CQzvJoFkLqhHuT_zZZW-YbpnRhUtPCcCVHPN-CMPTM_-LAcdUqEHE2YRKOrQcYnIqTFau8X7KWR/pub?w=960&h=720)
