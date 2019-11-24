@@ -38,6 +38,15 @@ namespace autopilot
 
     using キー番号 = int;
 
+    enum class 音声
+    {
+        tasc無効設定音,
+        ato無効設定音,
+        ato有効設定音,
+    };
+
+    using 音声出力先 = int;
+
     class 環境設定
     {
     public:
@@ -70,6 +79,10 @@ namespace autopilot
             return _パネル出力対象登録簿;
         }
 
+        const std::unordered_map<音声, 音声出力先> &音声割り当て() const {
+            return _音声割り当て;
+        }
+
     private:
         bool _tasc初期起動, _ato初期起動;
         m _車両長;
@@ -82,6 +95,7 @@ namespace autopilot
 
         std::unordered_map<キー操作, キー番号> _キー割り当て;
         std::unordered_map<int, パネル出力対象> _パネル出力対象登録簿;
+        std::unordered_map<音声, 音声出力先> _音声割り当て;
     };
 
 }

@@ -58,7 +58,8 @@ namespace autopilot
         _ato{},
         _tasc有効{true},
         _ato有効{true},
-        _通過済地上子{}
+        _通過済地上子{},
+        _音声状態{}
     {
         _tasc.目標停止位置を監視([&](m 位置) {
             _ato.tasc目標停止位置変化(位置);
@@ -91,6 +92,10 @@ namespace autopilot
         _tasc.リセット();
         _ato.リセット();
         _通過済地上子.clear();
+
+        for (const auto &i : _状態.設定().音声割り当て()) {
+            _音声状態[i.first].次に出力(ATS_SOUND_STOP);
+        }
     }
 
     void Main::逆転器操作(int ノッチ)
@@ -122,12 +127,15 @@ namespace autopilot
             {
                 if (_ato有効) {
                     _ato有効 = false;
+                    _音声状態[音声::ato無効設定音].次に出力(ATS_SOUND_PLAY);
                 }
                 else if (_tasc有効) {
                     _tasc有効 = false;
+                    _音声状態[音声::tasc無効設定音].次に出力(ATS_SOUND_PLAY);
                 }
                 else {
                     _ato有効 = _tasc有効 = true;
+                    _音声状態[音声::ato有効設定音].次に出力(ATS_SOUND_PLAY);
                 }
             }
         }
@@ -175,7 +183,7 @@ namespace autopilot
     }
 
     ATS_HANDLES Main::経過(
-        const ATS_VEHICLESTATE & 状態, int * 出力値, int *)
+        const ATS_VEHICLESTATE &状態, int *出力値, int *音声状態)
     {
         _状態.経過(状態);
         for (const ATS_BEACONDATA &地上子 : _通過済地上子) {
@@ -220,6 +228,9 @@ namespace autopilot
 
         for (auto パネル出力 : _状態.設定().パネル出力対象登録簿()) {
             出力値[パネル出力.first] = パネル出力.second.出力(*this);
+        }
+        for (const auto &i : _状態.設定().音声割り当て()) {
+            音声状態[i.second] = _音声状態[i.first].出力();
         }
 
         return ハンドル位置;

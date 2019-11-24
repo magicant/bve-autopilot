@@ -96,7 +96,8 @@ namespace autopilot
         _キー割り当て{
             {キー操作::モード切替, ATS_KEY_L},
             {キー操作::ato発進, ATS_KEY_L}, },
-        _パネル出力対象登録簿()
+        _パネル出力対象登録簿(),
+        _音声割り当て{}
     {
     }
 
@@ -251,6 +252,24 @@ namespace autopilot
             }
             catch (const std::out_of_range &) {
             }
+        }
+
+        // 音声出力対象
+        for (auto &i : std::initializer_list<std::pair<音声, LPCWSTR>>
+            { {音声::tasc無効設定音, L"tascdisabled"},
+              {音声::ato無効設定音, L"atodisabled"},
+              {音声::ato有効設定音, L"atoenabled"} })
+        {
+            size = GetPrivateProfileStringW(
+                L"sound", i.second, L"", buffer, buffer_size, 設定ファイル名);
+            if (size <= 0 || buffer_size - 1 <= size) {
+                continue;
+            }
+            int index = std::stoi(buffer);
+            if (index < 0 || 256 <= index) {
+                continue;
+            }
+            _音声割り当て[i.first] = index;
         }
     }
 

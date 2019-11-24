@@ -19,9 +19,11 @@
 
 #pragma once
 #include <vector>
-#include "共通状態.h"
+#include <unordered_map>
 #include "ato.h"
 #include "tasc.h"
+#include "共通状態.h"
+#include "音声出力.h"
 
 namespace autopilot
 {
@@ -74,6 +76,7 @@ namespace autopilot
         ato _ato;
         bool _tasc有効, _ato有効;
         std::vector<ATS_BEACONDATA> _通過済地上子;
+        std::unordered_map<音声, 音声出力> _音声状態;
 
         void 地上子通過執行(const ATS_BEACONDATA &地上子);
     };

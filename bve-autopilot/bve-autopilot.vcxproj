@@ -190,6 +190,7 @@
     <ClInclude Include="物理量.h" />
     <ClInclude Include="環境設定.h" />
     <ClInclude Include="走行モデル.h" />
+    <ClInclude Include="音声出力.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ato.cpp" />
