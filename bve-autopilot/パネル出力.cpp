@@ -115,7 +115,7 @@ namespace autopilot
                 return main.ato有効();
             })},
             {L"powerthrottle", パネル出力対象([](const Main &main) {
-                return static_cast<int>(main.力行抑止中());
+                return main.ato有効() && main.力行抑止中();
             })},
             {L"speedlimit", パネル出力対象([](const Main & main) {
                 kmph 制限速度 = main.現在制限速度();
