@@ -29,12 +29,22 @@
 
 namespace autopilot {
 
+    namespace
+    {
+
+        constexpr s 正午 = static_cast<s>(12 * 60 * 60);
+        constexpr s 一日 = static_cast<s>(24 * 60 * 60);
+
+    }
+
     void 共通状態::リセット()
     {
         // _設定.リセット(); // ファイルから読み込むのでリセットしない
         _互換モード = 互換モード型::無効;
         _状態 = ATS_VEHICLESTATE{};
         _目安減速度 = 0.8 * _設定.常用最大減速度();
+        _自動発進待ち時間 = s::quiet_NaN();
+        _自動発進時刻 = s::quiet_NaN();
         _加速度計.リセット();
         _勾配グラフ.消去();
     }
@@ -65,6 +75,14 @@ namespace autopilot {
                     0.95 * _設定.常用最大減速度());
             }
             break;
+        case 1003: // 自動発進待ち時間設定
+            if (地上子.Optional >= 0) {
+                _自動発進待ち時間 = static_cast<s>(地上子.Optional * 0.1);
+            }
+            else {
+                _自動発進待ち時間 = s::quiet_NaN();
+            }
+            break;
         case 1008: // 勾配設定
             勾配追加(地上子.Optional);
             break;
@@ -87,6 +105,14 @@ namespace autopilot {
     void 共通状態::戸閉(bool 戸閉)
     {
         _戸閉 = 戸閉;
+
+        if (戸閉) {
+            _自動発進時刻 = 現在時刻() + _自動発進待ち時間;
+            // _自動発進待ち時間 が NaN なら _自動発進時刻 も NaN
+        }
+        else {
+            _自動発進時刻 = s::quiet_NaN();
+        }
     }
 
     void 共通状態::逆転器操作(int ノッチ)
@@ -107,6 +133,21 @@ namespace autopilot {
     区間 共通状態::現在範囲() const
     {
         return 区間{ 現在位置() - 列車長(), 現在位置() };
+    }
+
+    bool 共通状態::自動発進可能な時刻である() const
+    {
+        if (!isfinite(_自動発進時刻)) {
+            return false;
+        }
+
+        s 現在 = 現在時刻();
+        if (現在 < 正午 && 一日 <= _自動発進時刻) {
+            // 日をまたぐと時刻が戻るので補正する
+            現在 += 一日;
+        }
+
+        return 現在 >= _自動発進時刻;
     }
 
     自動制動自然数ノッチ 共通状態::転動防止自動ノッチ() const
