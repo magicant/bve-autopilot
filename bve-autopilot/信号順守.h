@@ -94,6 +94,7 @@ namespace autopilot
             // リセット前後に std::numeric_limits<int>::max() が
             // 信号インデックスとして送られてくることがあるが無視する
         }
+        bool 発進可能(const 共通状態 &状態) const;
         mps 現在制限速度(const 共通状態 &状態) const;
         mps 現在常用パターン速度(const 共通状態 &状態) const;
 

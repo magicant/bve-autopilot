@@ -38,11 +38,13 @@ namespace autopilot
     public:
         using 信号インデックス = int;
 
+        enum class 発進方式 { 手動, 自動, };
+
         ato();
         ~ato();
 
         void リセット();
-        void 発進(const 共通状態 &状態);
+        void 発進(const 共通状態 &状態, 発進方式 方式);
         void 信号現示変化(信号インデックス 指示);
         void tasc目標停止位置変化(m 位置) {
             _信号.tasc目標停止位置変化(位置);
