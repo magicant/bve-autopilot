@@ -37,6 +37,8 @@ namespace autopilot
     public:
         using 信号インデックス = int;
 
+        enum class 発進方式 { 手動, 自動, };
+
         struct 閉塞型 {
             信号インデックス 信号指示 = -1;
             mps 信号速度 = mps::無限大();
@@ -79,7 +81,7 @@ namespace autopilot
         ~信号順守();
 
         void リセット();
-        void 発進();
+        void 発進(発進方式 方式);
         void 信号現示変化(信号インデックス 指示);
         void tasc目標停止位置変化(m 位置);
         void 地上子通過(const ATS_BEACONDATA &地上子, const 共通状態 &状態);
@@ -94,6 +96,7 @@ namespace autopilot
             // リセット前後に std::numeric_limits<int>::max() が
             // 信号インデックスとして送られてくることがあるが無視する
         }
+        bool 発進可能(const 共通状態 &状態) const;
         mps 現在制限速度(const 共通状態 &状態) const;
         mps 現在常用パターン速度(const 共通状態 &状態) const;
 

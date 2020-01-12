@@ -79,6 +79,7 @@ namespace autopilot {
         float 現在ブレーキシリンダー圧() const { return _状態.BcPressure; }
         mps2 目安減速度() const { return _目安減速度; }
         bool 戸閉() const { return _戸閉; }
+        bool 自動発進可能な時刻である() const;
         int 入力逆転器ノッチ() const { return _入力逆転器ノッチ; }
         /// 抑速ノッチでは値は負になる
         int 入力力行ノッチ() const { return _入力力行ノッチ; }
@@ -101,6 +102,8 @@ namespace autopilot {
         ATS_VEHICLESTATE _状態 = {};
         mps2 _目安減速度 = {};
         bool _戸閉 = false;
+        s _自動発進待ち時間 = {}; // 地上子から設定された毎回の待ち時間
+        s _自動発進時刻 = {}; // 現在の駅を発車する時刻
         int _入力逆転器ノッチ = 0, _入力力行ノッチ = 0;
         手動制動自然数ノッチ _入力制動ノッチ;
         加速度計 _加速度計;

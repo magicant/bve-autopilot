@@ -143,7 +143,7 @@ namespace autopilot
         // ATO 発進
         if (キー == _状態.設定().キー割り当て().at(キー操作::ato発進)) {
             if (_ato有効) {
-                _ato.発進(_状態);
+                _ato.発進(_状態, ato::発進方式::手動);
             }
         }
     }
@@ -191,6 +191,11 @@ namespace autopilot
         }
         _通過済地上子.clear();
         _通過済地上子.shrink_to_fit();
+
+        // ATO 自動発進
+        if (_ato有効 && _状態.自動発進可能な時刻である()) {
+            _ato.発進(_状態, ato::発進方式::自動);
+        }
 
         _tasc.経過(_状態);
         _ato.経過(_状態);
