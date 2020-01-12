@@ -37,8 +37,7 @@ namespace autopilot
     {
     public:
         using 信号インデックス = int;
-
-        enum class 発進方式 { 手動, 自動, };
+        using 発進方式 = 信号順守::発進方式;
 
         ato();
         ~ato();
