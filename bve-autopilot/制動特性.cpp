@@ -138,6 +138,14 @@ namespace autopilot
         return 有効ノッチ列().丸め(ノッチ.value);
     }
 
+    自動制動自然数ノッチ 制動特性::次に強いノッチ(
+        自動制動自然数ノッチ ノッチ) const
+    {
+        auto n = static_cast<pressure_rates::size_type>(ノッチ.value);
+        auto n2 = static_cast<unsigned>(有効ノッチ列().次に強いノッチ(n));
+        return 自動制動自然数ノッチ{n2};
+    }
+
     void 制動特性::経過(const 共通状態 &状態)
     {
         制動力割合 割合 = this->割合(状態.前回制動指令());
@@ -231,6 +239,16 @@ namespace autopilot
         }
         ノッチ = std::max(ノッチ, 0.0);
         return 自動制動自然数ノッチ{static_cast<unsigned>(ノッチ)};
+    }
+
+    制動特性::pressure_rates::size_type
+        制動特性::pressure_rates::次に強いノッチ(size_type ノッチ) const
+    {
+        制動力割合 割合 = (*this)[ノッチ];
+        while (ノッチ < size() && 割合 >= (*this)[ノッチ]) {
+            ノッチ++;
+        }
+        return ノッチ;
     }
 
 }
