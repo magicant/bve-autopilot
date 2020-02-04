@@ -40,7 +40,10 @@ namespace autopilot
         enum class 発進方式 { 手動, 自動, };
 
         struct 閉塞型 {
-            信号インデックス 信号指示 = -1;
+            static constexpr 信号インデックス 無指示 =
+                std::numeric_limits<信号インデックス>::min();
+
+            信号インデックス 信号指示 = 無指示;
             mps 信号速度 = mps::無限大();
             m 始点 = m::無限大();
             int 信号インデックス一覧 = 0; // 信号現示受信地上子の値
