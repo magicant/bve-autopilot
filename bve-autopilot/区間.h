@@ -36,7 +36,7 @@ namespace autopilot
             return 始点 <= 点 && 点 <= 終点;
         }
         constexpr bool 空である() const {
-            return 始点 >= 終点;
+            return 始点 > 終点;
         }
 
         constexpr bool 通過済(m 列車最後尾位置) const {
