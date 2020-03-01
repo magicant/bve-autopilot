@@ -24,6 +24,7 @@
 #include "信号順守.h"
 #include "制御指令.h"
 #include "制限グラフ.h"
+#include "区間.h"
 #include "急動作抑制.h"
 #include "早着防止.h"
 #include "物理量.h"
@@ -45,8 +46,8 @@ namespace autopilot
         void リセット();
         void 発進(const 共通状態 &状態, 発進方式 方式);
         void 信号現示変化(信号インデックス 指示);
-        void tasc目標停止位置変化(m 位置) {
-            _信号.tasc目標停止位置変化(位置);
+        void tasc目標停止位置変化(区間 位置のある範囲) {
+            _信号.tasc目標停止位置変化(位置のある範囲);
         }
         void 地上子通過(const ATS_BEACONDATA &地上子, const 共通状態 &状態);
         void 経過(const 共通状態 &状態);

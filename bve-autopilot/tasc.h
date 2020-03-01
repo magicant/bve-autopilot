@@ -22,6 +22,7 @@
 #include "live.h"
 #include "制御指令.h"
 #include "共通状態.h"
+#include "区間.h"
 #include "物理量.h"
 #include "走行モデル.h"
 
@@ -39,28 +40,27 @@ namespace autopilot {
         void 地上子通過(const ATS_BEACONDATA & 地上子, const 共通状態 & 状態);
         void 経過(const 共通状態 & 状態);
 
-        m 目標停止位置() const { return _名目の目標停止位置.get(); }
+        m 目標停止位置() const;
         bool 制御中() const;
 
         自動制御指令 出力ノッチ() const { return _出力ノッチ; }
 
-        void 目標停止位置を監視(live<m>::observer_type &&observer) {
-            _名目の目標停止位置.set_observer(std::move(observer));
+        void 目標停止位置を監視(live<区間>::observer_type &&observer) {
+            _目標停止位置のある範囲.set_observer(std::move(observer));
         }
 
     private:
-        live<m> _名目の目標停止位置;
+        live<区間> _目標停止位置のある範囲;
         m _調整した目標停止位置;
         m _直前目標停止位置受信位置;
+        m _直前目標停止位置受信残距離;
         m _最大許容誤差;
         mps2 _目標減速度;
         bool _緩解;
         自動制御指令 _出力ノッチ;
 
         void 目標停止位置を設定(m 残距離, const 共通状態 &状態);
-        // 直前のフレームとの現在位置変化に従い、目標停止位置が整数である
-        // 可能性があるなら整数に丸める
-        void 目標停止位置を補正(const 共通状態 &状態);
+        void 目標停止位置を更新(const 共通状態 &状態);
 
         void 最大許容誤差を設定(m 最大許容誤差);
 
