@@ -35,6 +35,9 @@ namespace autopilot
         constexpr bool 含む(m 点) const {
             return 始点 <= 点 && 点 <= 終点;
         }
+        constexpr bool 含む(区間 i) const {
+            return 始点 <= i.始点 && i.終点 <= 終点;
+        }
         constexpr bool 空である() const {
             return 始点 > 終点;
         }
