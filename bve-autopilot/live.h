@@ -30,9 +30,10 @@ namespace autopilot
     public:
         using observer_type = std::function<void(const T &)>;
 
-        explicit live(T &&value) : _value{std::move(value)} { }
+        constexpr explicit live(const T &value) :_value(value) { }
+        constexpr explicit live(T &&value) : _value{std::move(value)} { }
 
-        const T &get() const { return _value; }
+        constexpr const T &get() const { return _value; }
 
         template<typename U>
         void set(U &&new_value) {
