@@ -37,7 +37,8 @@ namespace autopilot {
         void リセット();
         void 制動操作(const 共通状態 &状態);
         void 戸閉();
-        void 地上子通過(const ATS_BEACONDATA & 地上子, const 共通状態 & 状態);
+        void 地上子通過(
+            const ATS_BEACONDATA &地上子, m 直前位置, const 共通状態 &状態);
         void 経過(const 共通状態 & 状態);
 
         m 目標停止位置() const;
@@ -59,7 +60,7 @@ namespace autopilot {
         bool _緩解;
         自動制御指令 _出力ノッチ;
 
-        void 目標停止位置を設定(m 残距離, const 共通状態 &状態);
+        void 目標停止位置を設定(m 残距離, m 直前位置, const 共通状態 &状態);
         void 目標停止位置を更新(const 共通状態 &状態);
 
         void 最大許容誤差を設定(m 最大許容誤差);

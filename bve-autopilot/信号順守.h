@@ -68,8 +68,7 @@ namespace autopilot
                 信号インデックス 指示,
                 const std::map<信号インデックス, mps> &速度表);
             void 状態更新(
-                const ATS_BEACONDATA &地上子,
-                const 共通状態 &状態,
+                const ATS_BEACONDATA &地上子, m 直前位置, const 共通状態 &状態,
                 const std::map<信号インデックス, mps> &速度表,
                 bool 信号インデックスを更新する);
             void 停止信号前照査設定(const ATS_BEACONDATA &地上子, m 現在位置);
@@ -88,7 +87,8 @@ namespace autopilot
         void 発進(発進方式 方式);
         void 信号現示変化(信号インデックス 指示);
         void tasc目標停止位置変化(区間 位置のある範囲);
-        void 地上子通過(const ATS_BEACONDATA &地上子, const 共通状態 &状態);
+        void 地上子通過(
+            const ATS_BEACONDATA &地上子, m 直前位置, const 共通状態 &状態);
 
         void 経過(const 共通状態 &状態);
 
@@ -118,8 +118,8 @@ namespace autopilot
 
         void 信号速度更新();
         閉塞型 *信号現示受信(
-            const ATS_BEACONDATA &地上子, const 共通状態 &状態,
-            bool 信号インデックスを更新する);
+            const ATS_BEACONDATA &地上子, m 直前位置,
+            const 共通状態 &状態, bool 信号インデックスを更新する);
         void 前方閉塞信号を推定();
         void 信号グラフ再計算();
     };

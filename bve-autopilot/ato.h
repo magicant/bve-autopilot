@@ -49,7 +49,8 @@ namespace autopilot
         void tasc目標停止位置変化(区間 位置のある範囲) {
             _信号.tasc目標停止位置変化(位置のある範囲);
         }
-        void 地上子通過(const ATS_BEACONDATA &地上子, const 共通状態 &状態);
+        void 地上子通過(
+            const ATS_BEACONDATA &地上子, m 直前位置, const 共通状態 &状態);
         void 経過(const 共通状態 &状態);
 
         mps 現在制限速度(const 共通状態 &状態) const;

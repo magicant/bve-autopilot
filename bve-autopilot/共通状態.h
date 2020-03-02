@@ -48,7 +48,7 @@ namespace autopilot {
             _設定.ファイル読込(設定ファイル名);
         }
         void 車両仕様設定(const ATS_VEHICLESPEC & 仕様);
-        void 地上子通過(const ATS_BEACONDATA & 地上子);
+        void 地上子通過(const ATS_BEACONDATA &地上子, m 直前位置);
         void 経過(const ATS_VEHICLESTATE & 状態);
         void 出力(const ATS_HANDLES & 出力);
         void 戸閉(bool 戸閉);
@@ -111,7 +111,7 @@ namespace autopilot {
         勾配グラフ _勾配グラフ;
         ATS_HANDLES _前回出力 = {};
 
-        void 勾配追加(int 地上子値);
+        void 勾配追加(int 地上子値, m 地上子位置);
     };
 
 }

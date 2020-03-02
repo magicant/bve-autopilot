@@ -60,15 +60,14 @@ namespace autopilot
             });
     }
 
-    void 早着防止::地上子通過(
-        const ATS_BEACONDATA &地上子, const 共通状態 &状態)
+    void 早着防止::地上子通過(const ATS_BEACONDATA &地上子, m 直前位置)
     {
         switch (地上子.Type) {
         case 1028:
             通過時刻設定(地上子);
             break;
         case 1029:
-            通過位置設定(地上子, 状態);
+            通過位置設定(地上子, 直前位置);
             break;
         }
     }
@@ -98,10 +97,9 @@ namespace autopilot
         _次の設定時刻 = static_cast<s>(地上子.Optional);
     }
 
-    void 早着防止::通過位置設定(
-        const ATS_BEACONDATA &地上子, const 共通状態 &状態)
+    void 早着防止::通過位置設定(const ATS_BEACONDATA &地上子, m 地上子位置)
     {
-        m 位置 = 状態.現在位置() + static_cast<m>(地上子.Optional / 1000);
+        m 位置 = 地上子位置 + static_cast<m>(地上子.Optional / 1000);
         mps 速度 = static_cast<kmph>(地上子.Optional % 1000);
         _予定表.emplace_front(位置, 速度, _次の設定時刻);
     }

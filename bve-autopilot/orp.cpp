@@ -90,8 +90,9 @@ namespace autopilot
         }
     }
 
-    void orp::地上子通過(const ATS_BEACONDATA &地上子,
-        const 共通状態 &状態, const 信号順守 &信号)
+    void orp::地上子通過(
+        const ATS_BEACONDATA &地上子, m 直前位置, const 共通状態 &状態,
+        const 信号順守 &信号)
     {
         if (状態.互換モード() != 互換モード型::メトロ総合) {
             リセット();
@@ -102,7 +103,7 @@ namespace autopilot
         case 12: { // ORP 動作開始 (メトロ総合プラグイン互換)
             mps 初速度 = 信号.現在制限速度(状態);
             m 残距離 = 地上子.Optional <= 48 ? 48.0_m : 79.0_m;
-            設定(初速度, 状態.現在位置(), 状態.現在位置() + 残距離);
+            設定(初速度, 直前位置, 直前位置 + 残距離);
             break;
         }
         case 31: // 信号現示受信 (メトロ総合プラグイン互換)
@@ -111,8 +112,7 @@ namespace autopilot
                 地上子.Distance > 0)
             {
                 mps 初速度 = 信号.現在制限速度(状態);
-                m 開始位置 =
-                    状態.現在位置() + static_cast<m>(地上子.Distance);
+                m 開始位置 = 直前位置 + static_cast<m>(地上子.Distance);
                 m orp距離 =
                     初速度 <= static_cast<mps>(30.0_kmph) ? 48.0_m : 79.0_m;
                 設定(初速度, 開始位置, 開始位置 + orp距離);

@@ -60,7 +60,7 @@ namespace autopilot {
             _設定.pressure_rates());
     }
 
-    void 共通状態::地上子通過(const ATS_BEACONDATA & 地上子)
+    void 共通状態::地上子通過(const ATS_BEACONDATA &地上子, m 直前位置)
     {
         switch (地上子.Type)
         {
@@ -84,7 +84,7 @@ namespace autopilot {
             }
             break;
         case 1008: // 勾配設定
-            勾配追加(地上子.Optional);
+            勾配追加(地上子.Optional, 直前位置);
             break;
         }
     }
@@ -171,7 +171,7 @@ namespace autopilot {
         return _勾配グラフ.勾配加速度(現在範囲());
     }
 
-    void 共通状態::勾配追加(int 地上子値)
+    void 共通状態::勾配追加(int 地上子値, m 地上子位置)
     {
         if (地上子値 < -std::numeric_limits<int>::max()) {
             return; // std::abs でのオーバーフローを防止
@@ -185,7 +185,7 @@ namespace autopilot {
         if (下り) {
             勾配 = -勾配;
         }
-        _勾配グラフ.勾配区間追加(現在位置() + 距離, 勾配);
+        _勾配グラフ.勾配区間追加(地上子位置 + 距離, 勾配);
     }
 
 }

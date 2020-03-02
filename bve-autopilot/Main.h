@@ -78,7 +78,7 @@ namespace autopilot
         std::vector<ATS_BEACONDATA> _通過済地上子;
         std::unordered_map<音声, 音声出力> _音声状態;
 
-        void 地上子通過執行(const ATS_BEACONDATA &地上子);
+        void 地上子通過執行(m 直前位置);
     };
 
 }

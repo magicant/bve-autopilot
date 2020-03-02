@@ -76,7 +76,8 @@ namespace autopilot {
         リセット();
     }
 
-    void tasc::地上子通過(const ATS_BEACONDATA & 地上子, const 共通状態 & 状態)
+    void tasc::地上子通過(
+        const ATS_BEACONDATA &地上子, m 直前位置, const 共通状態 &状態)
     {
         switch (地上子.Type) {
         case 1031: // TASC 停止位置許容誤差設定
@@ -91,23 +92,23 @@ namespace autopilot {
         {
         case 17: // TASC 目標停止位置設定 (メトロ総合プラグイン互換)
             if (状態.互換モード() == 互換モード型::メトロ総合) {
-                目標停止位置を設定(11.0_m, 状態);
+                目標停止位置を設定(11.0_m, 直前位置, 状態);
             }
             break;
         case 30: // TASC 目標停止位置設定
             if (状態.互換モード() == 互換モード型::汎用ats) {
                 目標停止位置を設定(
-                    static_cast<m>(地上子.Optional / 1000), 状態);
+                    static_cast<m>(地上子.Optional / 1000), 直前位置, 状態);
             }
             break;
         case 32: // TASC 目標停止位置設定 (メトロ総合プラグイン互換)
             if (状態.互換モード() == 互換モード型::メトロ総合) {
-                目標停止位置を設定(500.0_m, 状態);
+                目標停止位置を設定(500.0_m, 直前位置, 状態);
             }
             break;
         case 1030: // TASC 目標停止位置設定
             目標停止位置を設定(
-                static_cast<m>(地上子.Optional / 1000), 状態);
+                static_cast<m>(地上子.Optional / 1000), 直前位置, 状態);
             break;
         }
     }
@@ -182,9 +183,9 @@ namespace autopilot {
         return isfinite(_目標停止位置のある範囲.get().始点);
     }
 
-    void tasc::目標停止位置を設定(m 残距離, const 共通状態 &状態)
+    void tasc::目標停止位置を設定(m 残距離, m 直前位置, const 共通状態 &状態)
     {
-        _直前目標停止位置受信位置 = 状態.現在位置();
+        _直前目標停止位置受信位置 = 直前位置;
         _直前目標停止位置受信残距離 = 残距離;
     }
 

@@ -149,12 +149,11 @@ namespace autopilot
     }
 
     void 信号順守::閉塞型::状態更新(
-        const ATS_BEACONDATA &地上子,
-        const 共通状態 &状態,
+        const ATS_BEACONDATA &地上子, m 直前位置, const 共通状態 &状態,
         const std::map<信号インデックス, mps> &速度表,
         bool 信号インデックスを更新する)
     {
-        始点 = 状態.現在位置() + static_cast<m>(地上子.Distance);
+        始点 = 直前位置 + static_cast<m>(地上子.Distance);
         if (信号インデックスを更新する && 地上子.Optional > 0) {
             信号インデックス一覧 = 地上子.Optional;
         }
@@ -324,23 +323,23 @@ namespace autopilot
     }
 
     void 信号順守::地上子通過(
-        const ATS_BEACONDATA &地上子, const 共通状態 &状態)
+        const ATS_BEACONDATA &地上子, m 直前位置, const 共通状態 &状態)
     {
         switch (地上子.Type)
         {
         case 3: // 信号現示受信 (各種 ATS-P プラグイン互換)
             if (状態.互換モード() == 互換モード型::swp2) {
-                信号現示受信(地上子, 状態, false);
+                信号現示受信(地上子, 直前位置, 状態, false);
             }
             break;
         case 31: // 信号現示受信 (メトロ総合プラグイン互換)
             if (状態.互換モード() == 互換モード型::メトロ総合) {
-                信号現示受信(地上子, 状態, false);
+                信号現示受信(地上子, 直前位置, 状態, false);
             }
             break;
         case 1016: // 停止信号前速度設定
-            if (閉塞型 *閉塞 = 信号現示受信(地上子, 状態, false)) {
-                閉塞->停止信号前照査設定(地上子, 状態.現在位置());
+            if (閉塞型 *閉塞 = 信号現示受信(地上子, 直前位置, 状態, false)) {
+                閉塞->停止信号前照査設定(地上子, 直前位置);
                 信号グラフ再計算();
             }
             break;
@@ -350,7 +349,7 @@ namespace autopilot
             信号グラフ再計算();
             break;
         case 1012: // 信号現示受信
-            信号現示受信(地上子, 状態, true);
+            信号現示受信(地上子, 直前位置, 状態, true);
             break;
         }
     }
@@ -408,22 +407,23 @@ namespace autopilot
     }
 
     信号順守::閉塞型 *信号順守::信号現示受信(
-        const ATS_BEACONDATA &地上子, const 共通状態 &状態,
-        bool 信号インデックスを更新する)
+        const ATS_BEACONDATA &地上子, m 直前位置,
+        const 共通状態 &状態, bool 信号インデックスを更新する)
     {
         if (地上子.Distance == 0 && 状態.現在速度() != 0.0_mps) {
             // マップファイルのバージョンが古いとおかしなデータが来ることがある
             return nullptr;
         }
 
-        m 位置 = 状態.現在位置() + static_cast<m>(地上子.Distance);
+        m 位置 = 直前位置 + static_cast<m>(地上子.Distance);
         auto i = _前方閉塞一覧.lower_bound(位置 - 許容誤差);
         閉塞型 &閉塞 =
             i != _前方閉塞一覧.end() &&
             i->second.始点 < 位置 + 許容誤差 ?
             i->second :
             _前方閉塞一覧[位置];
-        閉塞.状態更新(地上子, 状態, _信号速度表, 信号インデックスを更新する);
+        閉塞.状態更新(
+            地上子, 直前位置, 状態, _信号速度表, 信号インデックスを更新する);
         信号グラフ再計算();
         return &閉塞;
     }

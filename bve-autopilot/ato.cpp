@@ -39,12 +39,12 @@ namespace autopilot
         }
 
         void 制限区間追加(
-            制限グラフ &グラフ, int 地上子値, const 共通状態 &状態,
+            制限グラフ &グラフ, int 地上子値, m 地上子位置,
             mps 速度マージン = 0.0_mps)
         {
             m 距離 = static_cast<m>(地上子値 / 1000);
             mps 速度 = static_cast<kmph>(地上子値 % 1000);
-            m 始点 = 状態.現在位置() + 距離;
+            m 始点 = 地上子位置 + 距離;
 
             if (速度 == 0.0_mps) {
                 速度 = mps::無限大();
@@ -99,15 +99,16 @@ namespace autopilot
         _orp.信号現示変化(指示);
     }
 
-    void ato::地上子通過(const ATS_BEACONDATA &地上子, const 共通状態 &状態)
+    void ato::地上子通過(
+        const ATS_BEACONDATA &地上子, m 直前位置, const 共通状態 &状態)
     {
         switch (地上子.Type)
         {
         case 1006: // 制限速度設定
-            制限区間追加(_制限速度1006, 地上子.Optional, 状態);
+            制限区間追加(_制限速度1006, 地上子.Optional, 直前位置);
             break;
         case 1007: // 制限速度設定
-            制限区間追加(_制限速度1007, 地上子.Optional, 状態);
+            制限区間追加(_制限速度1007, 地上子.Optional, 直前位置);
             break;
         }
 
@@ -115,19 +116,19 @@ namespace autopilot
             switch (地上子.Type) {
             case 6: // 制限速度設定
                 制限区間追加(
-                    _制限速度6, 地上子.Optional, 状態, 10.0_kmph);
+                    _制限速度6, 地上子.Optional, 直前位置, 10.0_kmph);
                 break;
             case 8: // 制限速度設定
                 制限区間追加(
-                    _制限速度8, 地上子.Optional, 状態, 10.0_kmph);
+                    _制限速度8, 地上子.Optional, 直前位置, 10.0_kmph);
                 break;
             case 9: // 制限速度設定
                 制限区間追加(
-                    _制限速度9, 地上子.Optional, 状態, 10.0_kmph);
+                    _制限速度9, 地上子.Optional, 直前位置, 10.0_kmph);
                 break;
             case 10: // 制限速度設定
                 制限区間追加(
-                    _制限速度10, 地上子.Optional, 状態, 10.0_kmph);
+                    _制限速度10, 地上子.Optional, 直前位置, 10.0_kmph);
                 break;
             case 16: // 制限速度解除
                 制限区間終了(_制限速度6, 状態.現在位置());
@@ -144,9 +145,9 @@ namespace autopilot
             }
         }
 
-        _信号.地上子通過(地上子, 状態);
-        _orp.地上子通過(地上子, 状態, _信号);
-        _早着防止.地上子通過(地上子, 状態);
+        _信号.地上子通過(地上子, 直前位置, 状態);
+        _orp.地上子通過(地上子, 直前位置, 状態, _信号);
+        _早着防止.地上子通過(地上子, 直前位置);
     }
 
     void ato::経過(const 共通状態 &状態)
