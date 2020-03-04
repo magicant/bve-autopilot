@@ -46,13 +46,13 @@ namespace autopilot
 
             信号インデックス 信号指示 = 無指示;
             mps 信号速度 = mps::無限大();
-            m 始点 = m::無限大();
+            区間 始点のある範囲 = 区間{m::無限大(), m::無限大()};
             int 信号インデックス一覧 = 0; // 信号現示受信地上子の値
             bool 停止解放 = false;
             // この閉塞の信号速度が 0 の時にだけ有効な制限速度の一覧
             std::map<m, mps> 停止信号前照査一覧;
 
-            bool 通過済(m 位置) const { return 始点 < 位置; }
+            bool 通過済(m 位置) const { return 始点のある範囲.通過済(位置); }
             int 先行列車位置() const;
 
             void 制限グラフに制限区間を追加(
@@ -68,7 +68,7 @@ namespace autopilot
                 信号インデックス 指示,
                 const std::map<信号インデックス, mps> &速度表);
             void 状態更新(
-                const ATS_BEACONDATA &地上子, m 直前位置, const 共通状態 &状態,
+                const ATS_BEACONDATA &地上子,
                 const std::map<信号インデックス, mps> &速度表,
                 bool 信号インデックスを更新する);
             void 停止信号前照査設定(const ATS_BEACONDATA &地上子, m 現在位置);
@@ -107,6 +107,7 @@ namespace autopilot
     private:
         std::map<信号インデックス, mps> _信号速度表;
         閉塞型 _現在閉塞;
+        // key は閉塞の始点のある範囲内のどこか
         std::map<m, 閉塞型> _前方閉塞一覧;
 
         // どうせ tasc目標停止位置変化 がすぐ呼ばれるので初期値は何でも良い

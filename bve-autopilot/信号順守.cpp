@@ -20,7 +20,10 @@
 #include "stdafx.h"
 #include "信号順守.h"
 #include <algorithm>
+#include <cassert>
 #include <cmath>
+#include <iterator>
+#include <utility>
 #include "共通状態.h"
 
 #pragma warning(disable:4819)
@@ -30,8 +33,6 @@ namespace autopilot
 
     namespace
     {
-
-        constexpr m 許容誤差 = 4.0_m;
 
         void 信号速度設定(
             std::map<信号順守::信号インデックス, mps> &速度表, int 地上子値)
@@ -56,6 +57,85 @@ namespace autopilot
             自動制動自然数ノッチ 制動ノッチ{
                 static_cast<unsigned>(std::ceil(制動ノッチ実数.value))};
             return std::min(制動ノッチ, 状態.制動().自動最大ノッチ());
+        }
+
+        struct 範囲比較
+        {
+            constexpr bool operator()(const 区間 &a, const 区間 &b)
+            {
+                return a.終点 < b.始点;
+            }
+            constexpr bool operator()(
+                const 区間 &a, const std::pair<const m, 信号順守::閉塞型> &b)
+            {
+                return (*this)(a, b.second.始点のある範囲);
+            }
+            constexpr bool operator()(
+                const std::pair<const m, 信号順守::閉塞型> &a, const 区間 &b)
+            {
+                return (*this)(a.second.始点のある範囲, b);
+            }
+            constexpr bool operator()(
+                const std::pair<const m, 信号順守::閉塞型> &a,
+                const std::pair<const m, 信号順守::閉塞型> &b)
+            {
+                return (*this)(
+                    a.second.始点のある範囲, b.second.始点のある範囲);
+            }
+        };
+
+        m key(区間 範囲)
+        {
+            // 大抵の路線データでは閉塞の始点は整数なので
+            // 範囲に整数が一つだけあればそれを優先する
+            m 始点整数 = ceil(範囲.始点), 終点整数 = floor(範囲.終点);
+            if (始点整数 == 終点整数) {
+                return 始点整数;
+            }
+            return (範囲.始点 + 範囲.終点) / 2.0;
+        }
+
+        信号順守::閉塞型 &対応する閉塞(
+            区間 始点のある範囲, std::map<m, 信号順守::閉塞型> &閉塞一覧)
+        {
+            // 始点のある範囲が重なる閉塞を全て求める
+            auto ii = std::equal_range(
+                閉塞一覧.begin(), 閉塞一覧.end(), 始点のある範囲, 範囲比較());
+
+            switch (std::distance(ii.first, ii.second)) {
+            case 0:
+            { // 重なる範囲がなければ新しく作る
+                auto i = 閉塞一覧.try_emplace(ii.first, key(始点のある範囲));
+                i->second.始点のある範囲 = 始点のある範囲;
+                return i->second;
+            }
+            case 1:
+            { // 重なる範囲が一つだけならそれと統合する
+                auto 新しい範囲 =
+                    重なり(始点のある範囲, ii.first->second.始点のある範囲);
+                if (新しい範囲.空である()) {
+                    // ここには来ないはずだけど念のため
+                    新しい範囲 = 始点のある範囲;
+                }
+                ii.first->second.始点のある範囲 = 新しい範囲;
+                if (新しい範囲.含む(ii.first->first)) {
+                    return ii.first->second;
+                }
+                else {
+                    // key が正しくないので map に入れ直す
+                    auto i = 閉塞一覧.try_emplace(
+                        ii.first, key(新しい範囲),
+                        std::move(ii.first->second));
+                    assert(i != ii.first);
+                    閉塞一覧.erase(ii.first);
+                    return i->second;
+                }
+            }
+            default:
+            { // 複数の候補があるときはとりあえず最初の閉塞を選んでおく
+                return ii.first->second;
+            }
+            }
         }
 
     }
@@ -88,7 +168,7 @@ namespace autopilot
     void 信号順守::閉塞型::制限グラフに追加(
         制限グラフ &追加先グラフ, m tasc目標停止位置, bool is_atc) const
     {
-        m 減速目標地点 = 始点;
+        m 減速目標地点 = 始点のある範囲.始点;
 
         if (信号速度 == mps::無限大()) {
             return;
@@ -127,7 +207,8 @@ namespace autopilot
             }
         }
 
-        制限グラフに制限区間を追加(追加先グラフ, 減速目標地点, 始点, 信号速度);
+        制限グラフに制限区間を追加(
+            追加先グラフ, 減速目標地点, 始点のある範囲.始点, 信号速度);
     }
 
     void 信号順守::閉塞型::信号速度更新(
@@ -149,11 +230,10 @@ namespace autopilot
     }
 
     void 信号順守::閉塞型::状態更新(
-        const ATS_BEACONDATA &地上子, m 直前位置, const 共通状態 &状態,
+        const ATS_BEACONDATA &地上子,
         const std::map<信号インデックス, mps> &速度表,
         bool 信号インデックスを更新する)
     {
-        始点 = 直前位置 + static_cast<m>(地上子.Distance);
         if (信号インデックスを更新する && 地上子.Optional > 0) {
             信号インデックス一覧 = 地上子.Optional;
         }
@@ -173,7 +253,7 @@ namespace autopilot
         // 現在閉塞の信号指示は常に信号現示変化で受け取った値を使用する。
         // よって信号速度もここでは更新しない。
 
-        始点 = 統合元.始点;
+        始点のある範囲 = 統合元.始点のある範囲;
         信号インデックス一覧 = 統合元.信号インデックス一覧;
         停止解放 = 統合元.停止解放;
         停止信号前照査一覧 = 統合元.停止信号前照査一覧;
@@ -304,7 +384,8 @@ namespace autopilot
     void 信号順守::信号現示変化(信号インデックス 指示)
     {
         _現在閉塞.信号指示設定(指示, _信号速度表);
-        _現在閉塞.始点 = -m::無限大();
+        _現在閉塞.始点のある範囲.始点 = -m::無限大();
+        _現在閉塞.始点のある範囲.終点 = -m::無限大();
         if (is_atc()) {
             // 前方閉塞の現示も上がっている可能性が高いが
             // 推測は無理なのできれいさっぱり忘れる
@@ -359,7 +440,7 @@ namespace autopilot
         // 通過済みの閉塞を現在閉塞に統合して消す
         while (!_前方閉塞一覧.empty()) {
             閉塞型 &次閉塞 = _前方閉塞一覧.begin()->second;
-            if (!次閉塞.通過済(状態.現在位置() - 許容誤差)) {
+            if (!次閉塞.通過済(状態.現在位置())) {
                 break;
             }
             _現在閉塞.統合(次閉塞);
@@ -415,15 +496,25 @@ namespace autopilot
             return nullptr;
         }
 
-        m 位置 = 直前位置 + static_cast<m>(地上子.Distance);
-        auto i = _前方閉塞一覧.lower_bound(位置 - 許容誤差);
+        if (直前位置 == 0.0_m) {
+            // リセット直後は現在位置を信用する
+            直前位置 = 状態.現在位置();
+        }
+
+        m 残距離 = static_cast<m>(地上子.Distance);
+        区間 受信した閉塞始点のある範囲{
+            直前位置 + 残距離, 状態.現在位置() + 残距離};
+        if (受信した閉塞始点のある範囲.空である()) {
+            return nullptr; // 後退中は無視
+        }
+
+        // 誤差があるかもしれないのでちょっと広げておく
+        受信した閉塞始点のある範囲.始点 -= 0.0001_m;
+        受信した閉塞始点のある範囲.終点 += 0.0001_m;
+
         閉塞型 &閉塞 =
-            i != _前方閉塞一覧.end() &&
-            i->second.始点 < 位置 + 許容誤差 ?
-            i->second :
-            _前方閉塞一覧[位置];
-        閉塞.状態更新(
-            地上子, 直前位置, 状態, _信号速度表, 信号インデックスを更新する);
+            対応する閉塞(受信した閉塞始点のある範囲, _前方閉塞一覧);
+        閉塞.状態更新(地上子, _信号速度表, 信号インデックスを更新する);
         信号グラフ再計算();
         return &閉塞;
     }
