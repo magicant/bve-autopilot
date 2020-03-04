@@ -212,6 +212,7 @@
     <ClCompile Include="制限グラフ.cpp" />
     <ClCompile Include="加速度計.cpp" />
     <ClCompile Include="勾配グラフ.cpp" />
+    <ClCompile Include="区間.cpp" />
     <ClCompile Include="急動作抑制.cpp" />
     <ClCompile Include="早着防止.cpp" />
     <ClCompile Include="減速パターン.cpp" />

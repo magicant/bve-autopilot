@@ -20,8 +20,10 @@
 #include "stdafx.h"
 #include "tasc.h"
 #include <algorithm>
+#include <cassert>
 #include <cmath>
 #include <limits>
+#include "区間.h"
 #include "減速パターン.h"
 #include "物理量.h"
 #include "走行モデル.h"
@@ -180,9 +182,9 @@ namespace autopilot {
 
     void tasc::目標停止位置を設定(m 残距離, m 直前位置, const 共通状態 &状態)
     {
-        // 誤差があるかもしれないのでちょっと広げておく
-        区間 受信した目標停止位置のある範囲{
-            直前位置 + 残距離 - 0.0001_m, 状態.現在位置() + 残距離 + 0.0001_m};
+        区間 受信した目標停止位置のある範囲 =
+            安全マージン付き区間(直前位置, 状態.現在位置(), 残距離);
+        assert(!受信した目標停止位置のある範囲.空である());
 
         // これまでに分かっている範囲と組み合わせる
         区間 絞り込んだ範囲 = 重なり(

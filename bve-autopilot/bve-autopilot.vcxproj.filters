@@ -152,6 +152,9 @@
     <ClCompile Include="勾配グラフ.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="区間.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="bve-autopilot.def">
