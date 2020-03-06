@@ -47,18 +47,18 @@ namespace autopilot {
         自動制御指令 出力ノッチ() const { return _出力ノッチ; }
 
         void 目標停止位置を監視(live<区間>::observer_type &&observer) {
-            _目標停止位置のある範囲.set_observer(std::move(observer));
+            _次駅停止位置のある範囲.set_observer(std::move(observer));
         }
 
     private:
-        live<区間> _目標停止位置のある範囲;
-        m _調整した目標停止位置;
+        live<区間> _次駅停止位置のある範囲;
+        m _調整した次駅停止位置;
         m _最大許容誤差;
         mps2 _目標減速度;
         bool _緩解;
         自動制御指令 _出力ノッチ;
 
-        void 目標停止位置を設定(m 残距離, m 直前位置, const 共通状態 &状態);
+        void 次駅停止位置を設定(m 残距離, m 直前位置, const 共通状態 &状態);
         void 最大許容誤差を設定(m 最大許容誤差);
 
         mps2 出力減速度(m 停止位置, mps2 勾配影響, const 共通状態 &状態) const;
