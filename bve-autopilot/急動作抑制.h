@@ -36,14 +36,14 @@ namespace autopilot
         自動制御指令 出力ノッチ() const { return _出力ノッチ; }
 
     private:
-        mps2 _出力減速度 = 0.0_mps2;
+        mps2 _最小出力減速度 = 0.0_mps2, _最大出力減速度 = 0.0_mps2;
         自動制御指令 _出力ノッチ;
 
         s _最終出力減速度計算時刻 = -s::無限大();
         s _最終力行時刻 = -s::無限大();
         s _最終制動時刻 = -s::無限大();
 
-        mps2 新出力減速度(
+        std::pair<mps2, mps2> 新出力減速度(
             自動制御指令 入力ノッチ, const 共通状態 &状態, bool is_atc) const;
         自動制御指令 新出力ノッチ(
             自動制御指令 入力ノッチ, const 共通状態 &状態) const;
