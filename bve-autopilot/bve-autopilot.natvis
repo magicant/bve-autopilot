@@ -3,7 +3,21 @@
   <Type Name="autopilot::live&lt;*&gt;">
     <DisplayString>{_value}</DisplayString>
   </Type>
+  <Type Name="autopilot::制動力&lt;*&gt;">
+    <DisplayString>{value}</DisplayString>
+  </Type>
+  <Type Name="autopilot::制動指令">
+    <DisplayString>{value}</DisplayString>
+  </Type>
   <Type Name="autopilot::物理量&lt;*&gt;">
+    <DisplayString>{value}</DisplayString>
+  </Type>
+  <Type Name="autopilot::自動制御指令">
+    <DisplayString Condition="_value &gt; 0">{{力行 {_value}}}</DisplayString>
+    <DisplayString Condition="_value &lt; 0">{{制動 {-_value}}}</DisplayString>
+    <DisplayString>{_value}</DisplayString>
+  </Type>
+  <Type Name="autopilot::自然数ノッチ&lt;*&gt;">
     <DisplayString>{value}</DisplayString>
   </Type>
 </AutoVisualizer>
