@@ -124,11 +124,9 @@ namespace autopilot
                 }
                 else {
                     // key が正しくないので map に入れ直す
-                    auto i = 閉塞一覧.try_emplace(
-                        ii.first, key(新しい範囲),
-                        std::move(ii.first->second));
-                    assert(i != ii.first);
-                    閉塞一覧.erase(ii.first);
+                    auto n = 閉塞一覧.extract(ii.first);
+                    n.key() = key(新しい範囲);
+                    auto i = 閉塞一覧.insert(ii.second, std::move(n));
                     return i->second;
                 }
             }
