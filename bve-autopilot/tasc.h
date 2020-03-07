@@ -18,6 +18,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include <set>
 #include <utility>
 #include "live.h"
 #include "制御指令.h"
@@ -36,7 +37,7 @@ namespace autopilot {
 
         void リセット();
         void 制動操作(const 共通状態 &状態);
-        void 戸閉();
+        void 戸閉(const 共通状態 &状態);
         void 地上子通過(
             const ATS_BEACONDATA &地上子, m 直前位置, const 共通状態 &状態);
         void 経過(const 共通状態 & 状態);
@@ -51,6 +52,7 @@ namespace autopilot {
         }
 
     private:
+        std::set<m> _停止位置一覧;
         live<区間> _次駅停止位置のある範囲;
         m _調整した次駅停止位置;
         m _最大許容誤差;
@@ -58,6 +60,7 @@ namespace autopilot {
         bool _緩解;
         自動制御指令 _出力ノッチ;
 
+        void 停止位置を追加(m 停止位置, const 共通状態 &状態);
         void 次駅停止位置を設定(m 残距離, m 直前位置, const 共通状態 &状態);
         void 最大許容誤差を設定(m 最大許容誤差);
 

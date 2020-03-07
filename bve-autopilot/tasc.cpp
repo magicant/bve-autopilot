@@ -33,8 +33,6 @@ namespace autopilot {
     namespace
     {
 
-        constexpr 区間 未設定時の次駅停止位置範囲 =
-            区間{m::無限大(), m::無限大()};
         constexpr m デフォルト最大許容誤差 = 0.5_m;
         constexpr 自動制御指令 緩解指令 =
             力行ノッチ{std::numeric_limits<unsigned>::max()};
@@ -42,7 +40,8 @@ namespace autopilot {
     }
 
     tasc::tasc() :
-        _次駅停止位置のある範囲(未設定時の次駅停止位置範囲),
+        _停止位置一覧(),
+        _次駅停止位置のある範囲(区間{m::無限大(), m::無限大()}),
         _調整した次駅停止位置(m::無限大()),
         _最大許容誤差(デフォルト最大許容誤差),
         _目標減速度(2.5_kmphps),
@@ -53,7 +52,8 @@ namespace autopilot {
 
     void tasc::リセット()
     {
-        _次駅停止位置のある範囲.set(未設定時の次駅停止位置範囲);
+        _停止位置一覧.clear();
+        _次駅停止位置のある範囲.set(区間{m::無限大(), m::無限大()});
         _調整した次駅停止位置 = m::無限大();
         _最大許容誤差 = デフォルト最大許容誤差;
         _緩解 = false;
@@ -70,15 +70,29 @@ namespace autopilot {
         }
     }
 
-    void tasc::戸閉()
+    void tasc::戸閉(const 共通状態 &状態)
     {
-        リセット();
+        auto 現在位置 = 状態.現在位置();
+        auto 現在駅停止位置 = _次駅停止位置のある範囲.get().終点;
+        if (isfinite(現在駅停止位置)) {
+            現在位置 = std::max(現在位置, 現在駅停止位置);
+        }
+        auto i = _停止位置一覧.upper_bound(現在位置);
+        m 次の停止位置 = (i != _停止位置一覧.end()) ? *i : m::無限大();
+        _次駅停止位置のある範囲.set(区間{次の停止位置, 次の停止位置});
+
+        _調整した次駅停止位置 = m::無限大();
+        _最大許容誤差 = デフォルト最大許容誤差;
+        _緩解 = false;
     }
 
     void tasc::地上子通過(
         const ATS_BEACONDATA &地上子, m 直前位置, const 共通状態 &状態)
     {
         switch (地上子.Type) {
+        case 255: // TASC 目標停止位置設定
+            停止位置を追加(static_cast<m>(地上子.Optional), 状態);
+            break;
         case 1031: // TASC 停止位置許容誤差設定
             最大許容誤差を設定(static_cast<cm>(地上子.Optional));
             break;
@@ -178,6 +192,18 @@ namespace autopilot {
     bool tasc::制御中() const
     {
         return isfinite(_次駅停止位置のある範囲.get().始点);
+    }
+
+    void tasc::停止位置を追加(m 停止位置, const 共通状態 &状態)
+    {
+        if (停止位置 < 状態.現在位置()) {
+            return;
+        }
+
+        _停止位置一覧.insert(停止位置);
+        if (状態.戸閉() && 停止位置 < _次駅停止位置のある範囲.get().始点) {
+            _次駅停止位置のある範囲.set(区間{停止位置, 停止位置});
+        }
     }
 
     void tasc::次駅停止位置を設定(m 残距離, m 直前位置, const 共通状態 &状態)

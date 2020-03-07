@@ -155,7 +155,7 @@ namespace autopilot
     void Main::戸閉()
     {
         _状態.戸閉(true);
-        _tasc.戸閉();
+        _tasc.戸閉(_状態);
     }
 
     void Main::戸開()
