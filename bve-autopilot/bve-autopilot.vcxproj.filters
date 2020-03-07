@@ -166,4 +166,7 @@
       <Filter>リソース ファイル</Filter>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="bve-autopilot.natvis" />
+  </ItemGroup>
 </Project>
