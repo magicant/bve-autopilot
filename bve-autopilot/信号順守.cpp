@@ -93,7 +93,7 @@ namespace autopilot
             if (始点整数 == 終点整数) {
                 return 始点整数;
             }
-            return (範囲.始点 + 範囲.終点) / 2.0;
+            return 範囲.中点();
         }
 
         信号順守::閉塞型 &対応する閉塞(
