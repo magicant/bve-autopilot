@@ -97,12 +97,27 @@ namespace autopilot
 
     void 勾配グラフ::通過(m 位置)
     {
-        auto i = _区間リスト.upper_bound(位置);
-        if (i == _区間リスト.begin()) {
+        if (_区間リスト.empty()) {
             return;
         }
-        --i;
-        _区間リスト.erase(_区間リスト.begin(), i);
+
+        // 通過済みの区間を消す
+        auto i = _区間リスト.begin();
+        while (true) {
+            auto j = std::next(i);
+            if (j == _区間リスト.end() || j->first > 位置) {
+                break;
+            }
+            i = j;
+        }
+        i = _区間リスト.erase(_区間リスト.begin(), i);
+        assert(!_区間リスト.empty());
+        assert(i == _区間リスト.begin());
+
+        // 傾きが 0 の区間は未通過でも消す
+        if (i->second.勾配 == 0.0) {
+            _区間リスト.erase(i);
+        }
     }
 
     mps2 勾配グラフ::勾配加速度(区間 対象範囲) const
