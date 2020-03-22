@@ -57,12 +57,7 @@ namespace autopilot
 
     void 勾配グラフ::勾配区間追加(m 始点, double 勾配)
     {
-        // 新しい制限区間に上書きされる区間を消す
-        auto i = _区間リスト.lower_bound(始点);
-        _区間リスト.erase(i, _区間リスト.end());
-
-        // 区間を追加
-        _区間リスト.try_emplace(_区間リスト.end(), 始点, 勾配);
+        _区間リスト.insert_or_assign(始点, 勾配区間{勾配});
     }
 
     void 勾配グラフ::通過(m 位置)
