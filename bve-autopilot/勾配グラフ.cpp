@@ -20,8 +20,10 @@
 #include "stdafx.h"
 #include "勾配グラフ.h"
 #include <algorithm>
+#include <cassert>
 #include <cmath>
 #include <iterator>
+#include <utility>
 #include "区間.h"
 
 #pragma warning(disable:4819)
@@ -57,7 +59,40 @@ namespace autopilot
 
     void 勾配グラフ::勾配区間追加(m 始点, double 勾配)
     {
-        _区間リスト.insert_or_assign(始点, 勾配区間{勾配});
+        auto i = _区間リスト.lower_bound(始点);
+
+        if (i != _区間リスト.end()) {
+            if (勾配 == i->second.勾配) {
+                // 既に同じ勾配の区間があるなら区間を追加しない
+                auto n = _区間リスト.extract(i++);
+                assert(始点 <= n.key());
+                n.key() = 始点;
+                _区間リスト.insert(i, std::move(n));
+                return;
+            }
+
+            if (始点 == i->first) {
+                // 既に同じ位置に区間があるなら上書きする
+                i->second = 勾配区間{勾配};
+                return;
+            }
+        }
+
+        if (i != _区間リスト.begin()) {
+            auto j = std::prev(i);
+            assert(j->first < 始点);
+            if (勾配 == j->second.勾配) {
+                // 既に同じ勾配の区間があるなら区間を追加しない
+                return;
+            }
+        }
+        else if (勾配 == 0.0) {
+            // 勾配区間のない位置で勾配 0 の区間を作るのは無意味
+            return;
+        }
+
+        auto j = _区間リスト.try_emplace(i, 始点, 勾配);
+        assert(std::next(j) == i);
     }
 
     void 勾配グラフ::通過(m 位置)
