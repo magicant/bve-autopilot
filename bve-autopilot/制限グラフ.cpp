@@ -20,8 +20,11 @@
 #include "stdafx.h"
 #include "制限グラフ.h"
 #include <algorithm>
+#include <cassert>
+#include <iterator>
 #include <limits>
 #include <numeric>
+#include <utility>
 #include "共通状態.h"
 #include "区間.h"
 #include "減速パターン.h"
@@ -37,6 +40,8 @@ namespace autopilot
         m 減速目標地点;
         mps 速度;
 
+        void 減速目標地点を再設定(m 新しい減速目標地点);
+
         減速パターン 目標パターン(mps2 初期減速度) const;
     };
 
@@ -50,9 +55,44 @@ namespace autopilot
 
     void 制限グラフ::制限区間追加(m 減速目標地点, m 始点, mps 速度)
     {
-        制限区間 &区間 = _区間リスト[始点];
-        区間.減速目標地点 = 減速目標地点;
-        区間.速度 = 速度;
+        auto i = _区間リスト.lower_bound(始点);
+
+        if (i != _区間リスト.end()) {
+            if (速度 == i->second.速度) {
+                // 既に同じ制限速度の区間があるなら区間を追加しない
+                auto n = _区間リスト.extract(i++);
+                assert(始点 <= n.key());
+                n.key() = 始点;
+                n.mapped().減速目標地点を再設定(減速目標地点);
+                _区間リスト.insert(i, std::move(n));
+                return;
+            }
+
+            if (始点 == i->first) {
+                // 既に同じ位置に区間があるなら上書きする
+                i->second.減速目標地点 = 減速目標地点;
+                i->second.速度 = 速度;
+                return;
+            }
+        }
+
+        if (i != _区間リスト.begin()) {
+            auto j = std::prev(i);
+            assert(j->first < 始点);
+            if (速度 == j->second.速度) {
+                // 既に同じ制限速度の区間があるなら区間を追加しない
+                j->second.減速目標地点を再設定(減速目標地点);
+                return;
+            }
+        }
+        else if (速度 == mps::無限大()) {
+            // 制限区間のない位置で制限速度を解除するのは無意味
+            return;
+        }
+
+        auto j =
+            _区間リスト.try_emplace(i, 始点, 制限区間{減速目標地点, 速度});
+        assert(std::next(j) == i);
     }
 
     void 制限グラフ::通過(m 位置)
@@ -111,6 +151,11 @@ namespace autopilot
         }
 
         return ノッチ;
+    }
+
+    void 制限グラフ::制限区間::減速目標地点を再設定(m 新しい減速目標地点)
+    {
+        減速目標地点 = std::min(減速目標地点, 新しい減速目標地点);
     }
 
     減速パターン 制限グラフ::制限区間::目標パターン(mps2 初期減速度) const
