@@ -20,7 +20,11 @@
 #include "stdafx.h"
 #include "制限グラフ.h"
 #include <algorithm>
+#include <cassert>
+#include <iterator>
 #include <limits>
+#include <numeric>
+#include <utility>
 #include "共通状態.h"
 #include "区間.h"
 #include "減速パターン.h"
@@ -31,17 +35,14 @@
 namespace autopilot
 {
 
-    struct 制限グラフ::制限区間 : 区間
+    struct 制限グラフ::制限区間
     {
         m 減速目標地点;
         mps 速度;
 
-        制限区間(m 減速目標地点, m 始点, m 終点, mps 速度) :
-            区間{始点, 終点}, 減速目標地点{減速目標地点}, 速度{速度} { }
-        ~制限区間() = default;
+        void 減速目標地点を再設定(m 新しい減速目標地点);
 
         減速パターン 目標パターン(mps2 初期減速度) const;
-        減速パターン 限界パターン(mps2 減速度) const;
     };
 
     制限グラフ::制限グラフ() = default;
@@ -54,37 +55,92 @@ namespace autopilot
 
     void 制限グラフ::制限区間追加(m 減速目標地点, m 始点, mps 速度)
     {
-        // 新しい制限区間に上書きされる区間を消す
-        _区間リスト.remove_if([始点](const 制限区間 & 区間) {
-            return 区間.始点 >= 始点;
-        });
+        // データを追加するだけなら
+        // _区間リスト.insert_or_assign(始点, 制限区間{減速目標地点, 速度});
+        // だけでもよいのだが、無駄に多くのデータを追加しないように
+        // 以下の長々としたコードで最適化する。
 
-        // 新しい制限区間に重なる既存の区間を縮める
-        for (制限区間 & 区間 : _区間リスト) {
-            区間.終点 = std::min(区間.終点, 始点);
+        auto i = _区間リスト.lower_bound(始点);
+
+        if (i != _区間リスト.end()) {
+            if (速度 == i->second.速度) {
+                // 既に同じ制限速度の区間があるなら区間を追加しない
+                auto n = _区間リスト.extract(i++);
+                assert(始点 <= n.key());
+                n.key() = 始点;
+                n.mapped().減速目標地点を再設定(減速目標地点);
+                _区間リスト.insert(i, std::move(n));
+                return;
+            }
+
+            if (始点 == i->first) {
+                // 既に同じ位置に区間があるなら上書きする
+                i->second.減速目標地点 = 減速目標地点;
+                i->second.速度 = 速度;
+                return;
+            }
         }
 
-        m 終点 = m::無限大();
-        _区間リスト.emplace_front(減速目標地点, 始点, 終点, 速度);
+        if (i != _区間リスト.begin()) {
+            auto j = std::prev(i);
+            assert(j->first < 始点);
+            if (速度 == j->second.速度) {
+                // 既に同じ制限速度の区間があるなら区間を追加しない
+                j->second.減速目標地点を再設定(減速目標地点);
+                return;
+            }
+        }
+        else if (速度 == mps::無限大()) {
+            // 制限区間のない位置で制限速度を解除するのは無意味
+            return;
+        }
+
+        auto j =
+            _区間リスト.try_emplace(i, 始点, 制限区間{減速目標地点, 速度});
+        assert(std::next(j) == i);
     }
 
     void 制限グラフ::通過(m 位置)
     {
+        if (_区間リスト.empty()) {
+            return;
+        }
+
         // 通過済みの区間を消す
-        _区間リスト.remove_if([位置](const 制限区間 & 区間) {
-            return 区間.通過済(位置);
-        });
+        auto i = _区間リスト.begin();
+        while (true) {
+            auto j = std::next(i);
+            if (j == _区間リスト.end() || j->first > 位置) {
+                break;
+            }
+            i = j;
+        }
+        i = _区間リスト.erase(_区間リスト.begin(), i);
+        assert(!_区間リスト.empty());
+        assert(i == _区間リスト.begin());
+
+        // 速度が無制限の区間は未通過でも消す
+        if (i->second.速度 == mps::無限大()) {
+            _区間リスト.erase(i);
+        }
     }
 
     mps 制限グラフ::制限速度(区間 対象区間) const
     {
-        auto 制限速度 = mps::無限大();
-        for (const 制限区間 &区間 : _区間リスト) {
-            if (重なる(区間, 対象区間)) {
-                制限速度 = std::min(制限速度, 区間.速度);
-            }
+        if (対象区間.空である()) {
+            return mps::無限大();
         }
-        return 制限速度;
+
+        auto i = _区間リスト.upper_bound(対象区間.始点);
+        if (i != _区間リスト.begin()) {
+            --i;
+        }
+        auto j = _区間リスト.upper_bound(対象区間.終点);
+
+        return std::accumulate(i, j, mps::無限大(),
+            [](mps 制限速度, const std::pair<const m, 制限区間> &p) {
+                return std::min(制限速度, p.second.速度);
+            });
     }
 
     mps 制限グラフ::現在常用パターン速度(const 共通状態 &状態) const
@@ -92,10 +148,10 @@ namespace autopilot
         auto 速度 = mps::無限大();
         mps2 標準減速度 = 状態.制動().基準最大減速度();
 
-        for (const 制限区間 &区間 : _区間リスト) {
-            mps2 勾配影響 = std::max(状態.進路勾配加速度(区間.始点), 0.0_mps2);
+        for (const auto &[位置, 区間] : _区間リスト) {
+            mps2 勾配影響 = std::max(状態.進路勾配加速度(位置), 0.0_mps2);
             mps2 目標減速度 = 標準減速度 - 勾配影響;
-            減速パターン パターン = 区間.限界パターン(目標減速度);
+            減速パターン パターン{位置, 区間.速度, 目標減速度};
             速度 = std::min(速度, パターン.期待速度(状態.現在位置()));
         }
         return 速度;
@@ -105,8 +161,8 @@ namespace autopilot
     {
         自動制御指令 ノッチ = 力行ノッチ{std::numeric_limits<unsigned>::max()};
 
-        for (制限区間 区間 : _区間リスト) {
-            mps2 勾配影響 = std::max(状態.進路勾配加速度(区間.始点), 0.0_mps2);
+        for (const auto &[位置, 区間] : _区間リスト) {
+            mps2 勾配影響 = std::max(状態.進路勾配加速度(位置), 0.0_mps2);
             mps2 目標減速度 = 状態.目安減速度() - 勾配影響;
             減速パターン パターン = 区間.目標パターン(目標減速度);
             自動制御指令 パターンノッチ = パターン.出力ノッチ(状態);
@@ -116,6 +172,11 @@ namespace autopilot
         return ノッチ;
     }
 
+    void 制限グラフ::制限区間::減速目標地点を再設定(m 新しい減速目標地点)
+    {
+        減速目標地点 = std::min(減速目標地点, 新しい減速目標地点);
+    }
+
     減速パターン 制限グラフ::制限区間::目標パターン(mps2 初期減速度) const
     {
         constexpr mps 速度マージン = 0.5_kmph;
@@ -123,11 +184,6 @@ namespace autopilot
         mps2 最終減速度 = 目標速度 == 0.0_mps ?
             減速パターン::停止最終減速度 : 減速パターン::標準最終減速度;
         return 減速パターン{減速目標地点, 目標速度, 初期減速度, 最終減速度};
-    }
-
-    減速パターン 制限グラフ::制限区間::限界パターン(mps2 減速度) const
-    {
-        return 減速パターン{始点, 速度, 減速度};
     }
 
 }
