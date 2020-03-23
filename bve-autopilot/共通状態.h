@@ -111,7 +111,7 @@ namespace autopilot {
         勾配グラフ _勾配グラフ;
         ATS_HANDLES _前回出力 = {};
 
-        void 勾配追加(int 地上子値, m 地上子位置);
+        void 勾配追加(int 地上子値, m 直前位置);
     };
 
 }

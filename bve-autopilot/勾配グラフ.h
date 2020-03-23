@@ -18,7 +18,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
-#include <forward_list>
+#include <map>
 #include "区間.h"
 #include "物理量.h"
 
@@ -46,7 +46,8 @@ namespace autopilot
     private:
         struct 勾配区間;
 
-        std::forward_list<勾配区間> _区間リスト;
+        // 区間の始点からその区間のデータへの写像
+        std::map<m, 勾配区間> _区間リスト;
     };
 
 }

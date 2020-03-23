@@ -31,6 +31,9 @@ namespace autopilot
         constexpr m 長さ() const {
             return 終点 - 始点;
         }
+        constexpr m 中点() const {
+            return (始点 + 終点) / 2.0;
+        }
 
         constexpr bool 含む(m 点) const {
             return 始点 <= 点 && 点 <= 終点;

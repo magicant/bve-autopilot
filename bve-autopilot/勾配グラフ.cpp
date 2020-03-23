@@ -20,7 +20,10 @@
 #include "stdafx.h"
 #include "勾配グラフ.h"
 #include <algorithm>
+#include <cassert>
 #include <cmath>
+#include <iterator>
+#include <utility>
 #include "区間.h"
 
 #pragma warning(disable:4819)
@@ -35,15 +38,13 @@ namespace autopilot
 
     }
 
-    struct 勾配グラフ::勾配区間 : 区間
+    struct 勾配グラフ::勾配区間
     {
         double 勾配;
         mps2 影響加速度;
 
-        勾配区間(m 始点, m 終点, double 勾配) :
-            区間{ 始点, 終点 },
-            勾配{ 勾配 },
-            影響加速度{ -0.75 * 重力加速度 * 勾配 } { }
+        勾配区間(double 勾配) :
+            勾配{勾配}, 影響加速度{-0.75 * 重力加速度 * 勾配} { }
         // 本当は tan を sin に変換すべきだがほとんど違わないので無視する
 
     };
@@ -58,26 +59,70 @@ namespace autopilot
 
     void 勾配グラフ::勾配区間追加(m 始点, double 勾配)
     {
-        // 新しい制限区間に上書きされる区間を消す
-        _区間リスト.remove_if([始点](const 勾配区間 & 区間) {
-            return 区間.始点 >= 始点;
-            });
+        // データを追加するだけなら
+        // _区間リスト.insert_or_assign(始点, 勾配区間{勾配});
+        // だけでもよいのだが、無駄に多くのデータを追加しないように
+        // 以下の長々としたコードで最適化する。
 
-        // 新しい制限区間に重なる既存の区間を縮める
-        for (勾配区間 &区間 : _区間リスト) {
-            区間.終点 = std::min(区間.終点, 始点);
+        auto i = _区間リスト.lower_bound(始点);
+
+        if (i != _区間リスト.end()) {
+            if (勾配 == i->second.勾配) {
+                // 既に同じ勾配の区間があるなら区間を追加しない
+                auto n = _区間リスト.extract(i++);
+                assert(始点 <= n.key());
+                n.key() = 始点;
+                _区間リスト.insert(i, std::move(n));
+                return;
+            }
+
+            if (始点 == i->first) {
+                // 既に同じ位置に区間があるなら上書きする
+                i->second = 勾配区間{勾配};
+                return;
+            }
         }
 
-        m 終点 = m::無限大();
-        _区間リスト.emplace_front(始点, 終点, 勾配);
+        if (i != _区間リスト.begin()) {
+            auto j = std::prev(i);
+            assert(j->first < 始点);
+            if (勾配 == j->second.勾配) {
+                // 既に同じ勾配の区間があるなら区間を追加しない
+                return;
+            }
+        }
+        else if (勾配 == 0.0) {
+            // 勾配区間のない位置で勾配 0 の区間を作るのは無意味
+            return;
+        }
+
+        auto j = _区間リスト.try_emplace(i, 始点, 勾配);
+        assert(std::next(j) == i);
     }
 
     void 勾配グラフ::通過(m 位置)
     {
+        if (_区間リスト.empty()) {
+            return;
+        }
+
         // 通過済みの区間を消す
-        _区間リスト.remove_if([位置](const 勾配区間 & 区間) {
-            return 区間.通過済(位置);
-        });
+        auto i = _区間リスト.begin();
+        while (true) {
+            auto j = std::next(i);
+            if (j == _区間リスト.end() || j->first > 位置) {
+                break;
+            }
+            i = j;
+        }
+        i = _区間リスト.erase(_区間リスト.begin(), i);
+        assert(!_区間リスト.empty());
+        assert(i == _区間リスト.begin());
+
+        // 傾きが 0 の区間は未通過でも消す
+        if (i->second.勾配 == 0.0) {
+            _区間リスト.erase(i);
+        }
     }
 
     mps2 勾配グラフ::勾配加速度(区間 対象範囲) const
@@ -88,8 +133,12 @@ namespace autopilot
         }
 
         mps2 加速度 = 0.0_mps2;
-        for (const 勾配区間 &区間 : _区間リスト) {
-            auto 影響区間 = 重なり(区間, 対象範囲);
+        auto 終点 = m::無限大();
+        for (auto i = _区間リスト.rbegin();
+            i != _区間リスト.rend();
+            終点 = i++->first)
+        {
+            auto 影響区間 = 重なり({i->first, 終点}, 対象範囲);
             m 影響長さ = 影響区間.長さ();
             if (!(影響長さ > 0.0_m)) {
                 continue;
@@ -99,7 +148,7 @@ namespace autopilot
             if (std::isnan(影響割合)) {
                 影響割合 = 1;
             }
-            加速度 += 区間.影響加速度 * 影響割合;
+            加速度 += i->second.影響加速度 * 影響割合;
         }
         return 加速度;
     }
