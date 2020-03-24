@@ -66,75 +66,47 @@ namespace autopilot
             {
                 return a.終点 < b.始点;
             }
-            constexpr bool operator()(
-                const 区間 &a, const std::pair<const m, 信号順守::閉塞型> &b)
+            constexpr bool operator()(const 区間 &a, const 信号順守::閉塞型 &b)
             {
-                return (*this)(a, b.second.始点のある範囲);
+                return (*this)(a, b.始点のある範囲);
             }
-            constexpr bool operator()(
-                const std::pair<const m, 信号順守::閉塞型> &a, const 区間 &b)
+            constexpr bool operator()(const 信号順守::閉塞型 &a, const 区間 &b)
             {
-                return (*this)(a.second.始点のある範囲, b);
-            }
-            constexpr bool operator()(
-                const std::pair<const m, 信号順守::閉塞型> &a,
-                const std::pair<const m, 信号順守::閉塞型> &b)
-            {
-                return (*this)(
-                    a.second.始点のある範囲, b.second.始点のある範囲);
+                return (*this)(a.始点のある範囲, b);
             }
         };
 
-        m key(区間 範囲)
-        {
-            // 大抵の路線データでは閉塞の始点は整数なので
-            // 範囲に整数が一つだけあればそれを優先する
-            m 始点整数 = ceil(範囲.始点), 終点整数 = floor(範囲.終点);
-            if (始点整数 == 終点整数) {
-                return 始点整数;
-            }
-            return 範囲.中点();
-        }
-
         信号順守::閉塞型 &対応する閉塞(
-            区間 始点のある範囲, std::map<m, 信号順守::閉塞型> &閉塞一覧)
+            区間 始点のある範囲, std::deque<信号順守::閉塞型> &閉塞一覧)
         {
             // 始点のある範囲が重なる閉塞を全て求める
-            auto ii = std::equal_range(
+            auto [i, j] = std::equal_range(
                 閉塞一覧.begin(), 閉塞一覧.end(), 始点のある範囲, 範囲比較());
 
-            switch (std::distance(ii.first, ii.second)) {
+            switch (std::distance(i, j)) {
             case 0:
             { // 重なる範囲がなければ新しく作る
-                auto i = 閉塞一覧.try_emplace(ii.first, key(始点のある範囲));
-                i->second.始点のある範囲 = 始点のある範囲;
-                return i->second;
+                i = 閉塞一覧.emplace(i);
+                i->始点のある範囲 = 始点のある範囲;
+                break;
             }
             case 1:
             { // 重なる範囲が一つだけならそれと統合する
-                auto 新しい範囲 =
-                    重なり(始点のある範囲, ii.first->second.始点のある範囲);
+                auto 新しい範囲 = 重なり(始点のある範囲, i->始点のある範囲);
                 if (新しい範囲.空である()) {
                     // ここには来ないはずだけど念のため
                     新しい範囲 = 始点のある範囲;
                 }
-                ii.first->second.始点のある範囲 = 新しい範囲;
-                if (新しい範囲.含む(ii.first->first)) {
-                    return ii.first->second;
-                }
-                else {
-                    // key が正しくないので map に入れ直す
-                    auto n = 閉塞一覧.extract(ii.first);
-                    n.key() = key(新しい範囲);
-                    auto i = 閉塞一覧.insert(ii.second, std::move(n));
-                    return i->second;
-                }
+                i->始点のある範囲 = 新しい範囲;
+                break;
             }
             default:
             { // 複数の候補があるときはとりあえず最初の閉塞を選んでおく
-                return ii.first->second;
+                break;
             }
             }
+
+            return *i;
         }
 
     }
@@ -374,7 +346,7 @@ namespace autopilot
         // あるので少し制限を緩めて進む。
         _現在閉塞.停止解放 = true;
         if (!_前方閉塞一覧.empty()) {
-            閉塞型 &次閉塞 = _前方閉塞一覧.begin()->second;
+            閉塞型 &次閉塞 = _前方閉塞一覧.front();
             次閉塞.停止解放 = true;
         }
         信号グラフ再計算();
@@ -438,12 +410,12 @@ namespace autopilot
     {
         // 通過済みの閉塞を現在閉塞に統合して消す
         while (!_前方閉塞一覧.empty()) {
-            閉塞型 &次閉塞 = _前方閉塞一覧.begin()->second;
+            閉塞型 &次閉塞 = _前方閉塞一覧.front();
             if (!次閉塞.通過済(状態.現在位置())) {
                 break;
             }
             _現在閉塞.統合(次閉塞);
-            _前方閉塞一覧.erase(_前方閉塞一覧.begin());
+            _前方閉塞一覧.pop_front();
             前方閉塞信号を推定();
             信号グラフ再計算();
         }
@@ -480,8 +452,7 @@ namespace autopilot
     void 信号順守::信号速度更新()
     {
         _現在閉塞.信号速度更新(_信号速度表);
-        for (auto &b : _前方閉塞一覧) {
-            閉塞型 &閉塞 = b.second;
+        for (閉塞型 &閉塞 : _前方閉塞一覧) {
             閉塞.信号速度更新(_信号速度表);
         }
     }
@@ -519,8 +490,7 @@ namespace autopilot
             return;
         }
 
-        for (auto &b : _前方閉塞一覧) {
-            閉塞型 &閉塞 = b.second;
+        for (閉塞型 &閉塞 : _前方閉塞一覧) {
             if (--位置 < 0) {
                 return;
             }
@@ -534,8 +504,7 @@ namespace autopilot
 
         bool atc = is_atc();
         _現在閉塞.制限グラフに追加(_信号グラフ, _tasc目標停止位置, atc);
-        for (const auto &b : _前方閉塞一覧) {
-            const 閉塞型 &閉塞 = b.second;
+        for (const 閉塞型 &閉塞 : _前方閉塞一覧) {
             閉塞.制限グラフに追加(_信号グラフ, _tasc目標停止位置, atc);
         }
     }

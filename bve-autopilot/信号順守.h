@@ -18,6 +18,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include <deque>
 #include <limits>
 #include <map>
 #include "制御指令.h"
@@ -107,8 +108,7 @@ namespace autopilot
     private:
         std::map<信号インデックス, mps> _信号速度表;
         閉塞型 _現在閉塞;
-        // key は閉塞の始点のある範囲内のどこか
-        std::map<m, 閉塞型> _前方閉塞一覧;
+        std::deque<閉塞型> _前方閉塞一覧;
 
         // どうせ tasc目標停止位置変化 がすぐ呼ばれるので初期値は何でも良い
         m _tasc目標停止位置 = {};
