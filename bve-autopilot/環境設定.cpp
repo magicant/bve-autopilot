@@ -22,6 +22,7 @@
 #include <cmath>
 #include <cstddef>
 #include <cwchar>
+#include <cwctype>
 #include <initializer_list>
 #include <stdexcept>
 #include <string>
@@ -37,6 +38,12 @@ namespace autopilot
     namespace
     {
 
+        キー組合せ デフォルトキー組合せ() {
+            キー組合せ 組合せ;
+            組合せ[ATS_KEY_L] = true;
+            return 組合せ;
+        }
+
         std::vector<制動力割合> 実数列(LPCWSTR s) {
             std::vector<制動力割合> values;
             while (*s != L'\0') {
@@ -50,6 +57,41 @@ namespace autopilot
                 s = s2;
             }
             return values;
+        }
+
+        // 無効なキーは std::out_of_range を投げる
+        キー組合せ キー組合せを解析(std::wstring s) {
+            キー組合せ 組合せ;
+
+            while (std::iswdigit(s[0])) {
+                std::size_t i;
+                int キー = std::stoi(s, &i);
+                if (キー < ATS_KEY_S || ATS_KEY_L < キー) {
+                    throw std::out_of_range("invalid key");
+                }
+                組合せ.set(キー);
+
+                // 空白を飛ばす
+                while (std::iswblank(s[i])) {
+                    ++i;
+                }
+
+                // & を飛ばす
+                if (s[i] != L'&') {
+                    break;
+                }
+                ++i;
+
+                // もう一度 空白を飛ばす
+                while (std::iswblank(s[i])) {
+                    ++i;
+                }
+
+                // 飛ばした部分まで消す
+                s.erase(0, i);
+            }
+
+            return 組合せ;
         }
 
         std::vector<std::pair<std::wstring, std::wstring>>
@@ -94,8 +136,8 @@ namespace autopilot
         _転動防止制動割合(0.5),
         _pressure_rates{},
         _キー割り当て{
-            {キー操作::モード切替, ATS_KEY_L},
-            {キー操作::ato発進, ATS_KEY_L}, },
+            {キー操作::モード切替, デフォルトキー組合せ()},
+            {キー操作::ato発進, デフォルトキー組合せ()}, },
         _パネル出力対象登録簿(),
         _音声割り当て{}
     {
@@ -225,11 +267,7 @@ namespace autopilot
                 L"key", i.second, L"", buffer, buffer_size, 設定ファイル名);
             if (0 < size && size < buffer_size - 1) {
                 try {
-                    int key = std::stoi(buffer);
-                    if (key < ATS_KEY_S || ATS_KEY_L < key) {
-                        key = -1;
-                    }
-                    _キー割り当て[i.first] = key;
+                    _キー割り当て[i.first] = キー組合せを解析(buffer);
                 }
                 catch (const std::invalid_argument &) {
                 }
