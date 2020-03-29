@@ -18,6 +18,8 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include <bitset>
+#include <cstddef>
 #include <unordered_map>
 #include <vector>
 #include "制御指令.h"
@@ -36,7 +38,8 @@ namespace autopilot
         ato発進,
     };
 
-    using キー番号 = int;
+    constexpr std::size_t キー種類数 = 16;
+    using キー組合せ = std::bitset<キー種類数>;
 
     enum class 音声
     {
@@ -70,7 +73,7 @@ namespace autopilot
             return _pressure_rates;
         }
 
-        const std::unordered_map<キー操作, キー番号> &キー割り当て() const {
+        const std::unordered_map<キー操作, キー組合せ> &キー割り当て() const {
             return _キー割り当て;
         }
 
@@ -93,7 +96,7 @@ namespace autopilot
         制動力割合 _転動防止制動割合;
         std::vector<制動力割合> _pressure_rates;
 
-        std::unordered_map<キー操作, キー番号> _キー割り当て;
+        std::unordered_map<キー操作, キー組合せ> _キー割り当て;
         std::unordered_map<int, パネル出力対象> _パネル出力対象登録簿;
         std::unordered_map<音声, 音声出力先> _音声割り当て;
     };

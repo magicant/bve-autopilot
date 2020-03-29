@@ -55,6 +55,12 @@ namespace autopilot {
         void 逆転器操作(int ノッチ);
         void 力行操作(int ノッチ);
         void 制動操作(int ノッチ);
+        void キー押し(int キー) {
+            _押しているキー[キー] = true;
+        }
+        void キー放し(int キー) {
+            _押しているキー[キー] = false;
+        }
 
         const 環境設定 & 設定() const { return _設定; }
         互換モード型 互換モード() const { return _互換モード; }
@@ -94,6 +100,7 @@ namespace autopilot {
         /// 抑速ノッチでは値は負になる
         int 前回力行ノッチ() const { return _前回出力.Power; }
         制動指令 前回制動指令() const { return 制動指令{_前回出力.Brake}; }
+        キー組合せ 押しているキー() const { return _押しているキー; }
 
     private:
         環境設定 _設定;
@@ -106,6 +113,7 @@ namespace autopilot {
         s _自動発進時刻 = {}; // 現在の駅を発車する時刻
         int _入力逆転器ノッチ = 0, _入力力行ノッチ = 0;
         手動制動自然数ノッチ _入力制動ノッチ;
+        キー組合せ _押しているキー;
         加速度計 _加速度計;
         制動特性 _制動特性;
         勾配グラフ _勾配グラフ;
