@@ -22,6 +22,7 @@
 #include <cmath>
 #include <cstddef>
 #include <cwchar>
+#include <cwctype>
 #include <initializer_list>
 #include <stdexcept>
 #include <string>
@@ -56,6 +57,41 @@ namespace autopilot
                 s = s2;
             }
             return values;
+        }
+
+        // 無効なキーは std::out_of_range を投げる
+        キー組合せ キー組合せを解析(std::wstring s) {
+            キー組合せ 組合せ;
+
+            while (std::iswdigit(s[0])) {
+                std::size_t i;
+                int キー = std::stoi(s, &i);
+                if (キー < ATS_KEY_S || ATS_KEY_L < キー) {
+                    throw std::out_of_range("invalid key");
+                }
+                組合せ.set(キー);
+
+                // 空白を飛ばす
+                while (std::iswblank(s[i])) {
+                    ++i;
+                }
+
+                // & を飛ばす
+                if (s[i] != L'&') {
+                    break;
+                }
+                ++i;
+
+                // もう一度 空白を飛ばす
+                while (std::iswblank(s[i])) {
+                    ++i;
+                }
+
+                // 飛ばした部分まで消す
+                s.erase(0, i);
+            }
+
+            return 組合せ;
         }
 
         std::vector<std::pair<std::wstring, std::wstring>>
@@ -231,15 +267,7 @@ namespace autopilot
                 L"key", i.second, L"", buffer, buffer_size, 設定ファイル名);
             if (0 < size && size < buffer_size - 1) {
                 try {
-                    int key = std::stoi(buffer);
-                    if (key < ATS_KEY_S || ATS_KEY_L < key) {
-                        throw std::out_of_range("invalid key");
-                    }
-
-                    キー組合せ 組合せ;
-                    組合せ.set(key);
-                    // TODO 複数のキーの組合せ
-                    _キー割り当て[i.first] = 組合せ;
+                    _キー割り当て[i.first] = キー組合せを解析(buffer);
                 }
                 catch (const std::invalid_argument &) {
                 }
