@@ -13,153 +13,175 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="ヘッダー ファイル\共通ファイル">
+      <UniqueIdentifier>{17766d48-1847-44f6-afed-82118c58a14f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\制御系">
+      <UniqueIdentifier>{f7063b7b-59ad-42bc-b7c8-6c51929a914e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\コア">
+      <UniqueIdentifier>{0a6b7316-2ffc-4eaf-a7af-ab6283cb9e9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\コア\基本">
+      <UniqueIdentifier>{585f0987-6c05-4427-bb1f-0cea4cf5386d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\ビルド設定">
+      <UniqueIdentifier>{16bf8218-e421-44d8-b580-7af703bf7e2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ビルド設定">
+      <UniqueIdentifier>{af7f9ecd-dcc8-46c9-ba19-308b114c85c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\コア">
+      <UniqueIdentifier>{e4cbea75-ec07-4a7f-9356-4cd055a44dbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\コア\基本">
+      <UniqueIdentifier>{a074c0e2-ce9c-4807-bb0e-6824e2f2564a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\制御系">
+      <UniqueIdentifier>{b72f39a3-2e98-4ac4-82bf-fa9fc86a4266}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h">
+      <Filter>ヘッダー ファイル\ビルド設定</Filter>
+    </ClInclude>
     <ClInclude Include="stdafx.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\ビルド設定</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="atsplugin.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="加速度計.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\ビルド設定</Filter>
     </ClInclude>
     <ClInclude Include="Main.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="走行モデル.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="tasc.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="共通状態.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="減速パターン.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="環境設定.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="ato.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="区間.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="制限グラフ.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="制動特性.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\制御系</Filter>
     </ClInclude>
     <ClInclude Include="パネル出力.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="信号順守.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="急動作抑制.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="orp.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="live.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="制動力推定.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="早着防止.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="物理量.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="勾配グラフ.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="制御指令.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\制御系</Filter>
     </ClInclude>
     <ClInclude Include="音声出力.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\制御系</Filter>
+    </ClInclude>
+    <ClInclude Include="live.h">
+      <Filter>ヘッダー ファイル\共通ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="ato.h">
+      <Filter>ヘッダー ファイル\コア</Filter>
+    </ClInclude>
+    <ClInclude Include="orp.h">
+      <Filter>ヘッダー ファイル\コア</Filter>
+    </ClInclude>
+    <ClInclude Include="tasc.h">
+      <Filter>ヘッダー ファイル\コア</Filter>
+    </ClInclude>
+    <ClInclude Include="急動作抑制.h">
+      <Filter>ヘッダー ファイル\コア</Filter>
+    </ClInclude>
+    <ClInclude Include="減速パターン.h">
+      <Filter>ヘッダー ファイル\コア</Filter>
+    </ClInclude>
+    <ClInclude Include="勾配グラフ.h">
+      <Filter>ヘッダー ファイル\コア</Filter>
+    </ClInclude>
+    <ClInclude Include="信号順守.h">
+      <Filter>ヘッダー ファイル\コア</Filter>
+    </ClInclude>
+    <ClInclude Include="制限グラフ.h">
+      <Filter>ヘッダー ファイル\コア</Filter>
+    </ClInclude>
+    <ClInclude Include="制動特性.h">
+      <Filter>ヘッダー ファイル\コア</Filter>
+    </ClInclude>
+    <ClInclude Include="制動力推定.h">
+      <Filter>ヘッダー ファイル\コア</Filter>
+    </ClInclude>
+    <ClInclude Include="早着防止.h">
+      <Filter>ヘッダー ファイル\コア</Filter>
+    </ClInclude>
+    <ClInclude Include="走行モデル.h">
+      <Filter>ヘッダー ファイル\コア</Filter>
+    </ClInclude>
+    <ClInclude Include="環境設定.h">
+      <Filter>ヘッダー ファイル\制御系</Filter>
+    </ClInclude>
+    <ClInclude Include="加速度計.h">
+      <Filter>ヘッダー ファイル\コア\基本</Filter>
+    </ClInclude>
+    <ClInclude Include="区間.h">
+      <Filter>ヘッダー ファイル\コア\基本</Filter>
+    </ClInclude>
+    <ClInclude Include="制御指令.h">
+      <Filter>ヘッダー ファイル\コア\基本</Filter>
+    </ClInclude>
+    <ClInclude Include="物理量.h">
+      <Filter>ヘッダー ファイル\コア\基本</Filter>
+    </ClInclude>
+    <ClInclude Include="共通状態.h">
+      <Filter>ヘッダー ファイル\コア\基本</Filter>
+    </ClInclude>
+    <ClInclude Include="atsplugin.h">
+      <Filter>ヘッダー ファイル\制御系</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="bve-autopilot.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\ビルド設定</Filter>
     </ClCompile>
     <ClCompile Include="加速度計.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="走行モデル.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="tasc.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="共通状態.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="減速パターン.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="環境設定.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="ato.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="制限グラフ.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="パネル出力.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="信号順守.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="急動作抑制.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="orp.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="制動特性.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="制動力推定.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="早着防止.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="勾配グラフ.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\コア\基本</Filter>
     </ClCompile>
     <ClCompile Include="区間.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\コア\基本</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="bve-autopilot.def">
-      <Filter>ソース ファイル</Filter>
-    </None>
+    <ClCompile Include="パネル出力.cpp">
+      <Filter>ソース ファイル\制御系</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>ソース ファイル\制御系</Filter>
+    </ClCompile>
+    <ClCompile Include="環境設定.cpp">
+      <Filter>ソース ファイル\制御系</Filter>
+    </ClCompile>
+    <ClCompile Include="bve-autopilot.cpp">
+      <Filter>ソース ファイル\制御系</Filter>
+    </ClCompile>
+    <ClCompile Include="共通状態.cpp">
+      <Filter>ソース ファイル\コア\基本</Filter>
+    </ClCompile>
+    <ClCompile Include="走行モデル.cpp">
+      <Filter>ソース ファイル\コア</Filter>
+    </ClCompile>
+    <ClCompile Include="ato.cpp">
+      <Filter>ソース ファイル\コア</Filter>
+    </ClCompile>
+    <ClCompile Include="orp.cpp">
+      <Filter>ソース ファイル\コア</Filter>
+    </ClCompile>
+    <ClCompile Include="tasc.cpp">
+      <Filter>ソース ファイル\コア</Filter>
+    </ClCompile>
+    <ClCompile Include="急動作抑制.cpp">
+      <Filter>ソース ファイル\コア</Filter>
+    </ClCompile>
+    <ClCompile Include="減速パターン.cpp">
+      <Filter>ソース ファイル\コア</Filter>
+    </ClCompile>
+    <ClCompile Include="勾配グラフ.cpp">
+      <Filter>ソース ファイル\コア</Filter>
+    </ClCompile>
+    <ClCompile Include="信号順守.cpp">
+      <Filter>ソース ファイル\コア</Filter>
+    </ClCompile>
+    <ClCompile Include="制限グラフ.cpp">
+      <Filter>ソース ファイル\コア</Filter>
+    </ClCompile>
+    <ClCompile Include="制動特性.cpp">
+      <Filter>ソース ファイル\コア</Filter>
+    </ClCompile>
+    <ClCompile Include="制動力推定.cpp">
+      <Filter>ソース ファイル\コア</Filter>
+    </ClCompile>
+    <ClCompile Include="早着防止.cpp">
+      <Filter>ソース ファイル\コア</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="bve-autopilot.rc">
@@ -168,5 +190,10 @@
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="bve-autopilot.natvis" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bve-autopilot.def">
+      <Filter>ソース ファイル\ビルド設定</Filter>
+    </None>
   </ItemGroup>
 </Project>
