@@ -110,7 +110,7 @@ namespace autopilot {
             break;
         case 1030: // TASC 目標停止位置設定
             次駅停止位置を設定(
-                static_cast<m>(地上子.Optional / 1000), 直前位置, 状態);
+                static_cast<m>(地上子.Optional / 1000.0), 直前位置, 状態);
             break;
         }
     }
