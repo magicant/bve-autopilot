@@ -18,6 +18,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include <utility>
 
 namespace autopilot
 {
@@ -30,9 +31,7 @@ namespace autopilot
         }
 
         int 出力() {
-            int 次の出力 = _次の出力;
-            _次の出力 = ATS_SOUND_CONTINUE;
-            return 次の出力;
+            return std::exchange(_次の出力, ATS_SOUND_CONTINUE);
         }
 
     private:
