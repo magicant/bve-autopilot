@@ -296,7 +296,8 @@ namespace autopilot
         for (auto &i : std::initializer_list<std::pair<音声, LPCWSTR>>
             { {音声::tasc無効設定音, L"tascdisabled"},
               {音声::ato無効設定音, L"atodisabled"},
-              {音声::ato有効設定音, L"atoenabled"} })
+              {音声::ato有効設定音, L"atoenabled"},
+              {音声::ato発進音, L"atostart"} })
         {
             size = GetPrivateProfileStringW(
                 L"sound", i.second, L"", buffer, buffer_size, 設定ファイル名);

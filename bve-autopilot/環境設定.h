@@ -46,6 +46,7 @@ namespace autopilot
         tasc無効設定音,
         ato無効設定音,
         ato有効設定音,
+        ato発進音,
     };
 
     using 音声出力先 = int;

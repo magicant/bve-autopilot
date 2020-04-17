@@ -165,6 +165,7 @@ namespace autopilot
         if (キー組合せ完成(旧キー, 新キー, 目標キー)) {
             if (_ato有効) {
                 _ato.発進(_状態, ato::発進方式::手動);
+                _音声状態[音声::ato発進音].次に出力(ATS_SOUND_PLAY);
             }
         }
     }
