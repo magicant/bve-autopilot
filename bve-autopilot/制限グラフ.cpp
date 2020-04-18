@@ -143,10 +143,9 @@ namespace autopilot
             });
     }
 
-    mps 制限グラフ::現在常用パターン速度(bool 事前減速, const 共通状態 &状態)
-        const
+    mps 制限グラフ::現在常用パターン速度(const 共通状態 &状態) const
     {
-        if (!事前減速) {
+        if (!_事前減速) {
             return 制限速度(状態.現在範囲());
         }
 
@@ -162,14 +161,13 @@ namespace autopilot
         return 速度;
     }
 
-    自動制御指令 制限グラフ::出力ノッチ(bool 事前減速, const 共通状態 &状態)
-        const
+    自動制御指令 制限グラフ::出力ノッチ(const 共通状態 &状態) const
     {
         自動制御指令 ノッチ = 力行ノッチ{std::numeric_limits<unsigned>::max()};
 
         for (const auto &[位置, 区間] : _区間リスト) {
             mps2 目標減速度;
-            if (事前減速) {
+            if (_事前減速) {
                 mps2 勾配影響 = std::max(状態.進路勾配加速度(位置), 0.0_mps2);
                 目標減速度 = 状態.目安減速度() - 勾配影響;
             }

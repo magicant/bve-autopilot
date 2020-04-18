@@ -46,6 +46,9 @@ namespace autopilot
         void リセット();
         void 発進(const 共通状態 &状態, 発進方式 方式);
         void 信号現示変化(信号インデックス 指示);
+        void atc事前減速を設定(bool 事前減速) noexcept {
+            _信号.atc事前減速を設定(事前減速);
+        }
         void tasc目標停止位置変化(区間 位置のある範囲) {
             _信号.tasc目標停止位置変化(位置のある範囲);
         }

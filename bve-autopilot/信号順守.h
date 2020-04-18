@@ -88,6 +88,9 @@ namespace autopilot
         void 発進(発進方式 方式);
         void 信号現示変化(信号インデックス 指示);
         void tasc目標停止位置変化(区間 位置のある範囲);
+        void atc事前減速を設定(bool 事前減速) noexcept {
+            _atc事前減速 = 事前減速;
+        }
         void 地上子通過(
             const ATS_BEACONDATA &地上子, m 直前位置, const 共通状態 &状態);
 
@@ -112,6 +115,8 @@ namespace autopilot
 
         // どうせ tasc目標停止位置変化 がすぐ呼ばれるので初期値は何でも良い
         m _tasc目標停止位置 = {};
+
+        bool _atc事前減速 = true;
 
         // 経過メソッドが呼ばれる度に毎回制限グラフを計算するのはメモリに
         // 優しくないので予め計算しておく

@@ -37,6 +37,11 @@ namespace autopilot
         制限グラフ();
         ~制限グラフ();
 
+        bool 事前減速() const noexcept { return _事前減速; }
+        void 事前減速を設定(bool 事前減速) noexcept {
+            _事前減速 = 事前減速;
+        }
+
         void 消去();
         void 制限区間追加(m 減速目標地点, m 始点, mps 速度);
         void 通過(m 位置);
@@ -46,15 +51,17 @@ namespace autopilot
             return 制限速度(区間{ 位置, 位置 });
         }
 
-        mps 現在常用パターン速度(bool 事前減速, const 共通状態 &状態) const;
+        mps 現在常用パターン速度(const 共通状態 &状態) const;
 
-        自動制御指令 出力ノッチ(bool 事前減速, const 共通状態 &状態) const;
+        自動制御指令 出力ノッチ(const 共通状態 &状態) const;
 
     private:
         struct 制限区間;
 
         // 区間の始点からその区間のデータへの写像
         std::map<m, 制限区間> _区間リスト;
+
+        bool _事前減速 = true;
     };
 
 }
