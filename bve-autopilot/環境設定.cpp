@@ -135,6 +135,7 @@ namespace autopilot
         _制動最大拡張ノッチ{0},
         _転動防止制動割合(0.5),
         _pressure_rates{},
+        _atc事前減速(true),
         _キー割り当て{
             {キー操作::モード切替, デフォルトキー組合せ()},
             {キー操作::ato発進, デフォルトキー組合せ()}, },
@@ -256,6 +257,14 @@ namespace autopilot
             設定ファイル名);
         if (0 < size && size < buffer_size - 1) {
             _pressure_rates = 実数列(buffer);
+        }
+
+        // ATC 事前減速
+        size = GetPrivateProfileStringW(
+            L"ato", L"atcprebrake", L"", buffer, buffer_size,
+            設定ファイル名);
+        if (0 < size && size < buffer_size - 1) {
+            _atc事前減速 = (buffer != L"false"sv);
         }
 
         // キー割り当て
