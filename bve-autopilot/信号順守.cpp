@@ -424,7 +424,9 @@ namespace autopilot
 
     自動制御指令 信号順守::出力ノッチ(const 共通状態 &状態) const
     {
-        if (is_atc() && _現在閉塞.信号速度 == 0.0_mps) {
+        if (is_atc() && !_現在閉塞.停止解放 &&
+            _現在閉塞.信号速度 == 0.0_mps)
+        {
             return atc停止出力ノッチ(状態);
         }
         return std::min(
