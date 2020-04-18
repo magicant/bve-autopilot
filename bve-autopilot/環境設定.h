@@ -73,6 +73,7 @@ namespace autopilot
         const std::vector<制動力割合> &pressure_rates() const {
             return _pressure_rates;
         }
+        bool atc事前減速() const { return _atc事前減速; }
 
         const std::unordered_map<キー操作, キー組合せ> &キー割り当て() const {
             return _キー割り当て;
@@ -96,6 +97,7 @@ namespace autopilot
         自動制動自然数ノッチ _制動最大拡張ノッチ;
         制動力割合 _転動防止制動割合;
         std::vector<制動力割合> _pressure_rates;
+        bool _atc事前減速;
 
         std::unordered_map<キー操作, キー組合せ> _キー割り当て;
         std::unordered_map<int, パネル出力対象> _パネル出力対象登録簿;

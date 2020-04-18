@@ -46,9 +46,9 @@ namespace autopilot
             return 制限速度(区間{ 位置, 位置 });
         }
 
-        mps 現在常用パターン速度(const 共通状態 &状態) const;
+        mps 現在常用パターン速度(bool 事前減速, const 共通状態 &状態) const;
 
-        自動制御指令 出力ノッチ(const 共通状態 &状態) const;
+        自動制御指令 出力ノッチ(bool 事前減速, const 共通状態 &状態) const;
 
     private:
         struct 制限区間;

@@ -423,10 +423,13 @@ namespace autopilot
 
     自動制御指令 信号順守::出力ノッチ(const 共通状態 &状態) const
     {
-        if (is_atc() && _現在閉塞.信号速度 == 0.0_mps) {
+        bool atc = is_atc();
+        if (atc && _現在閉塞.信号速度 == 0.0_mps) {
             return atc停止出力ノッチ(状態);
         }
-        return _信号グラフ.出力ノッチ(状態);
+
+        bool 事前減速 = !atc || 状態.設定().atc事前減速();
+        return _信号グラフ.出力ノッチ(事前減速, 状態);
     }
 
     bool 信号順守::発進可能(const 共通状態 &状態) const
@@ -446,7 +449,8 @@ namespace autopilot
 
     mps 信号順守::現在常用パターン速度(const 共通状態 &状態) const
     {
-        return _信号グラフ.現在常用パターン速度(状態);
+        bool 事前減速 = !is_atc() || 状態.設定().atc事前減速();
+        return _信号グラフ.現在常用パターン速度(事前減速, 状態);
     }
 
     void 信号順守::信号速度更新()
