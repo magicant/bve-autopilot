@@ -33,7 +33,6 @@ namespace autopilot
     namespace
     {
 
-        constexpr orp::信号インデックス orp信号インデックス = 35;
         constexpr 自動制御指令 緩解指令 =
             力行ノッチ{std::numeric_limits<unsigned>::max()};
         constexpr mps 照査速度下限 = 7.5_kmph;
@@ -43,7 +42,6 @@ namespace autopilot
     }
 
     orp::orp() :
-        _信号指示{-1},
         _照査パターン{m::無限大(), 照査速度下限, 0.0_mps2, true},
         _運転パターン{m::無限大(), 最終目標速度, 0.0_mps2, true},
         _出力ノッチ{緩解指令},
@@ -84,8 +82,6 @@ namespace autopilot
 
     void orp::信号現示変化(信号インデックス 指示)
     {
-        _信号指示 = 指示;
-
         if (指示 != orp信号インデックス) {
             リセット();
         }
@@ -133,14 +129,4 @@ namespace autopilot
         _照査速度 = _照査パターン.期待速度(状態.現在位置());
     }
 
-    bool orp::制御中() const
-    {
-        return _運転パターン.目標位置 < m::無限大();
-    }
-
-    bool orp::照査中() const
-    {
-        return _信号指示 == orp信号インデックス && 制御中();
-    }
-
-}
+ }
