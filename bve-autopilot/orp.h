@@ -40,11 +40,8 @@ namespace autopilot
 
         void リセット();
         void 設定(mps 初期照査速度, m 初期位置, m 限界位置);
-
-        void 信号現示変化(信号インデックス 指示);
-        void 地上子通過(
-            const ATS_BEACONDATA &地上子, m 直前位置, const 共通状態 &状態,
-            const 信号順守 &信号);
+        void 設定(int 地上子値, m 初期位置);
+        void 設定(mps 直前閉塞速度, m 初期位置);
 
         void 経過(const 共通状態 &状態);
 
