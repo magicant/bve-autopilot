@@ -21,6 +21,7 @@
 #include <deque>
 #include <limits>
 #include <map>
+#include "orp.h"
 #include "制御指令.h"
 #include "制限グラフ.h"
 #include "区間.h"
@@ -37,7 +38,7 @@ namespace autopilot
     class 信号順守
     {
     public:
-        using 信号インデックス = int;
+        using 信号インデックス = orp::信号インデックス;
 
         enum class 発進方式 { 手動, 自動, };
 
@@ -52,6 +53,8 @@ namespace autopilot
             bool 停止解放 = false;
             // この閉塞の信号速度が 0 の時にだけ有効な制限速度の一覧
             std::map<m, mps> 停止信号前照査一覧;
+            // この閉塞の中で動作する ORP 減速パターン
+            orp orp;
 
             bool 通過済(m 位置) const { return 始点のある範囲.通過済(位置); }
             int 先行列車位置() const;
@@ -73,6 +76,7 @@ namespace autopilot
                 const std::map<信号インデックス, mps> &速度表,
                 bool 信号インデックスを更新する);
             void 停止信号前照査設定(const ATS_BEACONDATA &地上子, m 現在位置);
+            void orp状態更新(mps 直前閉塞速度);
             void 統合(const 閉塞型 &統合元);
             void 先行列車位置から信号指示を推定(
                 int 閉塞数, const std::map<信号インデックス, mps> &速度表);
