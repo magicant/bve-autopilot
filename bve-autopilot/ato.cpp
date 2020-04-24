@@ -213,7 +213,7 @@ namespace autopilot
             _信号.現在制限速度(状態),
             });
 
-        if (false /*TODO _orp.照査中() && _orp.照査速度() <= 速度*/) {
+        if (_信号.orp照査速度(状態) <= 速度) {
             return mps::無限大();
         }
         return 速度;
@@ -221,7 +221,7 @@ namespace autopilot
 
     mps ato::現在常用パターン速度(const 共通状態 &状態) const
     {
-        mps 速度 = std::min({
+        return std::min({
             _制限速度1006.現在常用パターン速度(状態),
             _制限速度1007.現在常用パターン速度(状態),
             _制限速度6.現在常用パターン速度(状態),
@@ -230,22 +230,11 @@ namespace autopilot
             _制限速度10.現在常用パターン速度(状態),
             _信号.現在常用パターン速度(状態),
             });
-
-        /*TODO
-        if (_orp.照査中()) {
-            速度 = std::min(速度, _orp.照査速度());
-        }
-        */
-        return 速度;
     }
 
-    mps ato::現在orp照査速度() const
+    mps ato::現在orp照査速度(const 共通状態 &状態) const
     {
-        //TODO if (!_orp.照査中()) {
-            return mps::無限大();
-        //}
-
-        //return _orp.照査速度();
+        return _信号.orp照査速度(状態);
     }
 
 }

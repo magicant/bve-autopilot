@@ -492,6 +492,20 @@ namespace autopilot
         return 制限速度 > 0.0_mps;
     }
 
+    bool 信号順守::orp照査中(const 共通状態 &状態) const
+    {
+        return 状態.互換モード() == 互換モード型::メトロ総合 &&
+            _現在閉塞.orp.制御中();
+    }
+
+    mps 信号順守::orp照査速度(const 共通状態 &状態) const
+    {
+        if (!orp照査中(状態)) {
+            return mps::無限大();
+        }
+        return _現在閉塞.orp.照査速度();
+    }
+
     mps 信号順守::現在制限速度(const 共通状態 &状態) const
     {
         区間 範囲 = 状態.現在範囲();
@@ -501,9 +515,11 @@ namespace autopilot
 
     mps 信号順守::現在常用パターン速度(const 共通状態 &状態) const
     {
-        return std::min(
+        return std::min({
             _信号グラフ.現在常用パターン速度(状態),
-            _照査グラフ.現在常用パターン速度(状態));
+            _照査グラフ.現在常用パターン速度(状態),
+            orp照査速度(状態),
+            });
     }
 
     void 信号順守::信号速度更新()

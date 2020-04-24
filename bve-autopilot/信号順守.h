@@ -109,6 +109,8 @@ namespace autopilot
             // 信号インデックスとして送られてくることがあるが無視する
         }
         bool 発進可能(const 共通状態 &状態) const;
+        bool orp照査中(const 共通状態 &状態) const;
+        mps orp照査速度(const 共通状態 &状態) const;
         mps 現在制限速度(const 共通状態 &状態) const;
         mps 現在常用パターン速度(const 共通状態 &状態) const;
 
