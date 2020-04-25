@@ -20,7 +20,6 @@
 #pragma once
 #include <limits>
 #include <map>
-#include "orp.h"
 #include "信号順守.h"
 #include "制御指令.h"
 #include "制限グラフ.h"
@@ -45,7 +44,9 @@ namespace autopilot
 
         void リセット();
         void 発進(const 共通状態 &状態, 発進方式 方式);
-        void 信号現示変化(信号インデックス 指示);
+        void 信号現示変化(信号インデックス 指示) {
+            _信号.信号現示変化(指示);
+        }
         void atc事前減速を設定(bool 事前減速) noexcept {
             _信号.atc事前減速を設定(事前減速);
         }
@@ -58,7 +59,7 @@ namespace autopilot
 
         mps 現在制限速度(const 共通状態 &状態) const;
         mps 現在常用パターン速度(const 共通状態 &状態) const;
-        mps 現在orp照査速度() const;
+        mps 現在orp照査速度(const 共通状態 &状態) const;
         bool 力行抑止中() const {
             return _早着防止.出力ノッチ() <= 力行ノッチ{1};
         }
@@ -71,7 +72,6 @@ namespace autopilot
         制限グラフ _制限速度1006, _制限速度1007,
             _制限速度6, _制限速度8, _制限速度9, _制限速度10;
         信号順守 _信号;
-        orp _orp;
         早着防止 _早着防止;
         制御状態 _制御状態 = 制御状態::走行;
         自動制御指令 _出力ノッチ;

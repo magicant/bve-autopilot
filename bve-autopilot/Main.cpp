@@ -98,7 +98,7 @@ namespace autopilot
 
     mps Main::現在orp照査速度() const
     {
-        return _ato.現在orp照査速度();
+        return _ato.現在orp照査速度(_状態);
     }
 
     void Main::リセット(int)

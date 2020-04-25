@@ -33,7 +33,6 @@ namespace autopilot
     namespace
     {
 
-        constexpr orp::信号インデックス orp信号インデックス = 35;
         constexpr 自動制御指令 緩解指令 =
             力行ノッチ{std::numeric_limits<unsigned>::max()};
         constexpr mps 照査速度下限 = 7.5_kmph;
@@ -43,7 +42,6 @@ namespace autopilot
     }
 
     orp::orp() :
-        _信号指示{-1},
         _照査パターン{m::無限大(), 照査速度下限, 0.0_mps2, true},
         _運転パターン{m::無限大(), 最終目標速度, 0.0_mps2, true},
         _出力ノッチ{緩解指令},
@@ -82,44 +80,18 @@ namespace autopilot
         assert(_運転パターン.素早い速度超過回復);
     }
 
-    void orp::信号現示変化(信号インデックス 指示)
+    void orp::設定(int 地上子値, m 初期位置)
     {
-        _信号指示 = 指示;
-
-        if (指示 != orp信号インデックス) {
-            リセット();
-        }
+        mps 初速度 = 地上子値 <= 48 ? 25.0_kmph : 35.0_kmph;
+        m 残距離 = 地上子値 <= 48 ? 48.0_m : 79.0_m;
+        設定(初速度, 初期位置, 初期位置 + 残距離);
     }
 
-    void orp::地上子通過(
-        const ATS_BEACONDATA &地上子, m 直前位置, const 共通状態 &状態,
-        const 信号順守 &信号)
+    void orp::設定(mps 直前閉塞速度, m 初期位置)
     {
-        if (状態.互換モード() != 互換モード型::メトロ総合) {
-            リセット();
-            return;
-        }
-
-        switch (地上子.Type) {
-        case 12: { // ORP 動作開始 (メトロ総合プラグイン互換)
-            mps 初速度 = 信号.現在制限速度(状態);
-            m 残距離 = 地上子.Optional <= 48 ? 48.0_m : 79.0_m;
-            設定(初速度, 直前位置, 直前位置 + 残距離);
-            break;
-        }
-        case 31: // 信号現示受信 (メトロ総合プラグイン互換)
-        case 1012: // 信号現示受信
-            if (地上子.Signal == orp信号インデックス &&
-                地上子.Distance > 0)
-            {
-                mps 初速度 = 信号.現在制限速度(状態);
-                m 開始位置 = 直前位置 + static_cast<m>(地上子.Distance);
-                m orp距離 =
-                    初速度 <= static_cast<mps>(30.0_kmph) ? 48.0_m : 79.0_m;
-                設定(初速度, 開始位置, 開始位置 + orp距離);
-            }
-            break;
-        }
+        int 予想地上子値 =
+            直前閉塞速度 < static_cast<mps>(34.9_kmph) ? 48 : 79;
+        設定(予想地上子値, 初期位置);
     }
 
     void orp::経過(const 共通状態 &状態)
@@ -133,14 +105,4 @@ namespace autopilot
         _照査速度 = _照査パターン.期待速度(状態.現在位置());
     }
 
-    bool orp::制御中() const
-    {
-        return _運転パターン.目標位置 < m::無限大();
-    }
-
-    bool orp::照査中() const
-    {
-        return _信号指示 == orp信号インデックス && 制御中();
-    }
-
-}
+ }
