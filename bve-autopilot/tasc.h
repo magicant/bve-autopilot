@@ -45,7 +45,7 @@ namespace autopilot {
         m 目標停止位置() const;
         bool 制御中() const;
 
-        自動制御指令 出力ノッチ() const { return _出力ノッチ; }
+        自動制御指令 出力ノッチ() const noexcept { return _出力ノッチ; }
 
         void 目標停止位置を監視(live<区間>::observer_type &&observer) {
             _次駅停止位置のある範囲.set_observer(std::move(observer));
