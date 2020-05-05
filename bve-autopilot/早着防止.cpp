@@ -36,7 +36,7 @@ namespace autopilot
         constexpr s 正午 = static_cast<s>(12 * 60 * 60);
         constexpr s 一日 = static_cast<s>(24 * 60 * 60);
 
-        s 予定時刻(const 走行モデル &予定, const 共通状態 &状態) {
+        s 予定時刻(const 走行モデル &予定, const 共通状態 &状態) noexcept {
             s 時刻 = 予定.時刻();
             // 日をまたぐと時刻が戻るので補正する
             if (時刻 < 正午 && 正午 <= 状態.現在時刻()) {
@@ -47,9 +47,11 @@ namespace autopilot
 
     }
 
-    void 早着防止::リセット()
+    void 早着防止::リセット() noexcept
     {
-        *this = 早着防止{};
+        _次の設定時刻 = {};
+        _予定表.clear();
+        _出力ノッチ = {};
     }
 
     void 早着防止::発進(const 共通状態 &状態)
@@ -93,7 +95,7 @@ namespace autopilot
         }
     }
 
-    void 早着防止::通過時刻設定(const ATS_BEACONDATA &地上子)
+    void 早着防止::通過時刻設定(const ATS_BEACONDATA &地上子) noexcept
     {
         _次の設定時刻 = static_cast<s>(地上子.Optional);
     }
