@@ -86,21 +86,6 @@ namespace autopilot
         _tasc.目標停止位置を監視(nullptr);
     }
 
-    mps Main::現在制限速度() const
-    {
-        return _ato.現在制限速度(_状態);
-    }
-
-    mps Main::現在常用パターン速度() const
-    {
-        return _ato.現在常用パターン速度(_状態);
-    }
-
-    mps Main::現在orp照査速度() const
-    {
-        return _ato.現在orp照査速度(_状態);
-    }
-
     void Main::リセット(int)
     {
         _状態.リセット();
@@ -118,26 +103,6 @@ namespace autopilot
         _tasc有効 = _状態.設定().tasc初期起動();
         _ato有効 = _状態.設定().ato初期起動();
         _ato.atc事前減速を設定(_状態.設定().atc事前減速());
-    }
-
-    void Main::逆転器操作(int ノッチ)
-    {
-        _状態.逆転器操作(ノッチ);
-    }
-
-    void Main::力行操作(int ノッチ)
-    {
-        _状態.力行操作(ノッチ);
-    }
-
-    void Main::制動操作(int ノッチ)
-    {
-        _状態.制動操作(ノッチ);
-        _tasc.制動操作(_状態);
-    }
-
-    void Main::警笛操作(int)
-    {
     }
 
     void Main::キー押し(int キー)
@@ -177,28 +142,7 @@ namespace autopilot
         }
     }
 
-    void Main::キー放し(int キー)
-    {
-        _状態.キー放し(キー);
-    }
-
-    void Main::戸閉()
-    {
-        _状態.戸閉(true);
-        _tasc.戸閉(_状態);
-    }
-
-    void Main::戸開()
-    {
-        _状態.戸閉(false);
-    }
-
-    void Main::信号現示変化(int 信号指示)
-    {
-        _ato.信号現示変化(信号指示);
-    }
-
-    void Main::地上子通過(const ATS_BEACONDATA & 地上子)
+    void Main::地上子通過(const ATS_BEACONDATA &地上子)
     {
         // 地上子がどの位置に置かれているかは精確には分からず、前後の「経過」
         // の時の現在位置から推定する必要がある。
