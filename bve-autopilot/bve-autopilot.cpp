@@ -41,7 +41,7 @@ namespace {
             if (0 < s && s < name.size()) {
                 name.resize(s);
                 name.shrink_to_fit();
-                return name;
+                return std::move(name);
             }
             name.resize(name.size() * 2);
         }
