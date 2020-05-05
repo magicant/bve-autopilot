@@ -28,33 +28,33 @@ namespace autopilot
     {
         m 始点, 終点;
 
-        constexpr m 長さ() const {
+        constexpr m 長さ() const noexcept {
             return 終点 - 始点;
         }
-        constexpr m 中点() const {
+        constexpr m 中点() const noexcept {
             return (始点 + 終点) / 2.0;
         }
 
-        constexpr bool 含む(m 点) const {
+        constexpr bool 含む(m 点) const noexcept {
             return 始点 <= 点 && 点 <= 終点;
         }
-        constexpr bool 含む(区間 i) const {
+        constexpr bool 含む(区間 i) const noexcept {
             return 始点 <= i.始点 && i.終点 <= 終点;
         }
-        constexpr bool 空である() const {
+        constexpr bool 空である() const noexcept {
             return 始点 > 終点;
         }
 
-        constexpr bool 通過済(m 列車最後尾位置) const {
+        constexpr bool 通過済(m 列車最後尾位置) const noexcept {
             return 終点 < 列車最後尾位置;
         }
 
     };
 
-    constexpr bool 重なる(const 区間 & 区間1, const 区間 & 区間2) {
+    constexpr bool 重なる(const 区間 & 区間1, const 区間 & 区間2) noexcept {
         return 区間1.始点 <= 区間2.終点 && 区間2.始点 <= 区間1.終点;
     }
-    constexpr 区間 重なり(const 区間 &区間1, const 区間 &区間2) {
+    constexpr 区間 重なり(const 区間 &区間1, const 区間 &区間2) noexcept {
         return { std::max(区間1.始点, 区間2.始点),
             std::min(区間1.終点, 区間2.終点) };
     }
