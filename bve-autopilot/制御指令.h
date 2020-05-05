@@ -30,48 +30,48 @@ namespace autopilot
     struct 自然数ノッチ
     {
         unsigned value;
-        constexpr 自然数ノッチ() : value{} {}
-        constexpr explicit 自然数ノッチ(unsigned v) : value(v) {}
+        constexpr 自然数ノッチ() noexcept : value{} {}
+        constexpr explicit 自然数ノッチ(unsigned v) noexcept : value(v) {}
     };
 
     template<typename Self>
     constexpr bool operator==(
-        const 自然数ノッチ<Self> &a, const 自然数ノッチ<Self> &b)
+        const 自然数ノッチ<Self> &a, const 自然数ノッチ<Self> &b) noexcept
     {
         return a.value == b.value;
     }
 
     template<typename Self>
     constexpr bool operator!=(
-        const 自然数ノッチ<Self> &a, const 自然数ノッチ<Self> &b)
+        const 自然数ノッチ<Self> &a, const 自然数ノッチ<Self> &b) noexcept
     {
         return a.value != b.value;
     }
 
     template<typename Self>
     constexpr bool operator<(
-        const 自然数ノッチ<Self> &a, const 自然数ノッチ<Self> &b)
+        const 自然数ノッチ<Self> &a, const 自然数ノッチ<Self> &b) noexcept
     {
         return a.value < b.value;
     }
 
     template<typename Self>
     constexpr bool operator<=(
-        const 自然数ノッチ<Self> &a, const 自然数ノッチ<Self> &b)
+        const 自然数ノッチ<Self> &a, const 自然数ノッチ<Self> &b) noexcept
     {
         return a.value <= b.value;
     }
 
     template<typename Self>
     constexpr bool operator>(
-        const 自然数ノッチ<Self> &a, const 自然数ノッチ<Self> &b)
+        const 自然数ノッチ<Self> &a, const 自然数ノッチ<Self> &b) noexcept
     {
         return a.value > b.value;
     }
 
     template<typename Self>
     constexpr bool operator>=(
-        const 自然数ノッチ<Self> &a, const 自然数ノッチ<Self> &b)
+        const 自然数ノッチ<Self> &a, const 自然数ノッチ<Self> &b) noexcept
     {
         return a.value >= b.value;
     }
@@ -93,16 +93,16 @@ namespace autopilot
     /// BVE 本体側と実際にやり取りする制動指令の値
     struct 制動指令 {
         int value;
-        constexpr explicit 制動指令(int v = 0) : value{v} {}
-        constexpr 制動指令(手動制動自然数ノッチ v) :
+        constexpr explicit 制動指令(int v = 0) noexcept : value{v} {}
+        constexpr 制動指令(手動制動自然数ノッチ v) noexcept :
             value{static_cast<int>(v.value)} {}
     };
 
-    constexpr bool operator==(const 制動指令 &a, const 制動指令 &b) {
+    constexpr bool operator==(const 制動指令 &a, const 制動指令 &b) noexcept {
         return a.value == b.value;
     }
 
-    constexpr bool operator!=(const 制動指令 &a, const 制動指令 &b) {
+    constexpr bool operator!=(const 制動指令 &a, const 制動指令 &b) noexcept {
         return a.value != b.value;
     }
 
@@ -114,42 +114,42 @@ namespace autopilot
 
     class 自動制御指令 {
     public:
-        constexpr 自動制御指令() : _value{} {}
-        constexpr 自動制御指令(const 自動制動自然数ノッチ &ノッチ) :
+        constexpr 自動制御指令() noexcept : _value{} {}
+        constexpr 自動制御指令(const 自動制動自然数ノッチ &ノッチ) noexcept :
             _value{-to_int(ノッチ.value)} {}
-        constexpr 自動制御指令(const 力行ノッチ &ノッチ) :
+        constexpr 自動制御指令(const 力行ノッチ &ノッチ) noexcept :
             _value(to_int(ノッチ.value)) {}
 
-        constexpr 自動制動自然数ノッチ 制動成分() const {
+        constexpr 自動制動自然数ノッチ 制動成分() const noexcept {
             return static_cast<自動制動自然数ノッチ>(
                 _value <= 0 ? static_cast<unsigned>(-_value) : 0);
         }
-        constexpr 力行ノッチ 力行成分() const {
+        constexpr 力行ノッチ 力行成分() const noexcept {
             return static_cast<力行ノッチ>(
                 _value >= 0 ? static_cast<unsigned>(_value) : 0);
         }
 
-        constexpr bool operator==(const 自動制御指令 &v) const {
+        constexpr bool operator==(const 自動制御指令 &v) const noexcept {
             return _value == v._value;
         }
-        constexpr bool operator!=(const 自動制御指令 &v) const {
+        constexpr bool operator!=(const 自動制御指令 &v) const noexcept {
             return _value != v._value;
         }
-        constexpr bool operator<(const 自動制御指令 &v) const {
+        constexpr bool operator<(const 自動制御指令 &v) const noexcept {
             return _value < v._value;
         }
-        constexpr bool operator<=(const 自動制御指令 &v) const {
+        constexpr bool operator<=(const 自動制御指令 &v) const noexcept {
             return _value <= v._value;
         }
-        constexpr bool operator>(const 自動制御指令 &v) const {
+        constexpr bool operator>(const 自動制御指令 &v) const noexcept {
             return _value > v._value;
         }
-        constexpr bool operator>=(const 自動制御指令 &v) const {
+        constexpr bool operator>=(const 自動制御指令 &v) const noexcept {
             return _value >= v._value;
         }
 
     private:
-        constexpr static int to_int(const unsigned &v) {
+        constexpr static int to_int(const unsigned &v) noexcept {
             return static_cast<int>(std::min(
                 v, static_cast<unsigned>(std::numeric_limits<int>::max())));
         }
@@ -163,42 +163,48 @@ namespace autopilot
     struct 制動力
     {
         double value;
-        constexpr 制動力() : value{} {}
-        constexpr explicit 制動力(double v) : value(v) {}
+        constexpr 制動力() noexcept : value{} {}
+        constexpr explicit 制動力(double v) noexcept : value(v) {}
     };
 
     template<typename Self>
     constexpr bool operator==(const 制動力<Self> &a, const 制動力<Self> &b)
+        noexcept
     {
         return a.value == b.value;
     }
 
     template<typename Self>
     constexpr bool operator!=(const 制動力<Self> &a, const 制動力<Self> &b)
+        noexcept
     {
         return a.value != b.value;
     }
 
     template<typename Self>
     constexpr bool operator<(const 制動力<Self> &a, const 制動力<Self> &b)
+        noexcept
     {
         return a.value < b.value;
     }
 
     template<typename Self>
     constexpr bool operator<=(const 制動力<Self> &a, const 制動力<Self> &b)
+        noexcept
     {
         return a.value <= b.value;
     }
 
     template<typename Self>
     constexpr bool operator>(const 制動力<Self> &a, const 制動力<Self> &b)
+        noexcept
     {
         return a.value > b.value;
     }
 
     template<typename Self>
     constexpr bool operator>=(const 制動力<Self> &a, const 制動力<Self> &b)
+        noexcept
     {
         return a.value >= b.value;
     }
@@ -209,7 +215,7 @@ namespace autopilot
     struct 自動制動実数ノッチ : 制動力<自動制動実数ノッチ>
     {
         using 制動力::制動力;
-        constexpr 自動制動実数ノッチ(const 自動制動自然数ノッチ &v) :
+        constexpr 自動制動実数ノッチ(const 自動制動自然数ノッチ &v) noexcept :
             制動力{v.value} {}
     };
 
