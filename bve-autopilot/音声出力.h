@@ -26,11 +26,11 @@ namespace autopilot
     class 音声出力
     {
     public:
-        void 次に出力(int 次の出力) {
+        constexpr void 次に出力(int 次の出力) noexcept {
             _次の出力 = 次の出力;
         }
 
-        int 出力() {
+        /*constexpr*/ int 出力() noexcept {
             return std::exchange(_次の出力, ATS_SOUND_CONTINUE);
         }
 
