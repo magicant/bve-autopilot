@@ -27,7 +27,7 @@ namespace autopilot
     namespace
     {
 
-        bool 圧力差が小さい(float 圧力1, float 圧力2) {
+        constexpr bool 圧力差が小さい(float 圧力1, float 圧力2) noexcept {
             if (圧力1 == 圧力2) {
                 return true;
             }
