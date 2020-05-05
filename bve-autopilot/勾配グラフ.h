@@ -34,7 +34,7 @@ namespace autopilot
         勾配グラフ();
         ~勾配グラフ();
 
-        void 消去();
+        void 消去() noexcept;
         void 勾配区間追加(m 始点, double 勾配);
         void 通過(m 位置);
 
