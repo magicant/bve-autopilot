@@ -42,7 +42,7 @@ namespace autopilot
             _事前減速 = 事前減速;
         }
 
-        void 消去();
+        void 消去() noexcept;
         void 制限区間追加(m 減速目標地点, m 始点, mps 速度);
         void 通過(m 位置);
 
