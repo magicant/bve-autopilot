@@ -77,7 +77,7 @@ namespace autopilot
                 bool 信号インデックスを更新する);
             void 停止信号前照査設定(const ATS_BEACONDATA &地上子, m 現在位置);
             void orp状態更新(mps 直前閉塞速度);
-            void 統合(const 閉塞型 &統合元);
+            void 統合(閉塞型 &&統合元);
             void 先行列車位置から信号指示を推定(
                 int 閉塞数, const std::map<信号インデックス, mps> &速度表);
         };
