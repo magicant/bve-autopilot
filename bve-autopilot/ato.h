@@ -36,7 +36,7 @@ namespace autopilot
     class ato
     {
     public:
-        using 信号インデックス = int;
+        using 信号インデックス = 信号順守::信号インデックス;
         using 発進方式 = 信号順守::発進方式;
 
         ato();
