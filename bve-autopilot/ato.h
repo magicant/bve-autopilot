@@ -59,12 +59,14 @@ namespace autopilot
 
         mps 現在制限速度(const 共通状態 &状態) const;
         mps 現在常用パターン速度(const 共通状態 &状態) const;
-        mps 現在orp照査速度(const 共通状態 &状態) const;
-        bool 力行抑止中() const {
+        mps 現在orp照査速度(const 共通状態 &状態) const noexcept {
+            return _信号.orp照査速度(状態);
+        }
+        bool 力行抑止中() const noexcept {
             return _早着防止.出力ノッチ() <= 力行ノッチ{1};
         }
 
-        自動制御指令 出力ノッチ() const { return _出力ノッチ; }
+        自動制御指令 出力ノッチ() const noexcept { return _出力ノッチ; }
 
     private:
         enum class 制御状態 { 停止, 発進, 走行, };
