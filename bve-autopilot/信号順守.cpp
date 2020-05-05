@@ -221,7 +221,7 @@ namespace autopilot
         停止信号前照査一覧[位置] = 速度;
     }
 
-    void 信号順守::閉塞型::orp状態更新(mps 直前閉塞速度)
+    void 信号順守::閉塞型::orp状態更新(mps 直前閉塞速度) noexcept
     {
         if (信号指示 == orp::orp信号インデックス) {
             orp.設定(直前閉塞速度, 始点のある範囲.始点);
@@ -231,7 +231,7 @@ namespace autopilot
         }
     }
 
-    void 信号順守::閉塞型::統合(閉塞型 &&統合元)
+    void 信号順守::閉塞型::統合(閉塞型 &&統合元) noexcept
     {
         // 現在閉塞の信号指示は常に信号現示変化で受け取った値を使用する。
         // よって信号速度もここでは更新しない。
@@ -497,13 +497,13 @@ namespace autopilot
         return 制限速度 > 0.0_mps;
     }
 
-    bool 信号順守::orp照査中(const 共通状態 &状態) const
+    bool 信号順守::orp照査中(const 共通状態 &状態) const noexcept
     {
         return 状態.互換モード() == 互換モード型::メトロ総合 &&
             _現在閉塞.orp.制御中();
     }
 
-    mps 信号順守::orp照査速度(const 共通状態 &状態) const
+    mps 信号順守::orp照査速度(const 共通状態 &状態) const noexcept
     {
         if (!orp照査中(状態)) {
             return mps::無限大();
