@@ -32,11 +32,6 @@ namespace autopilot
         constexpr s 閾 = 2.0_s;
     }
 
-    void 急動作抑制::リセット()
-    {
-        *this = 急動作抑制{};
-    }
-
     void 急動作抑制::経過(
         自動制御指令 入力ノッチ, const 共通状態 &状態, bool is_atc)
     {

@@ -30,10 +30,12 @@ namespace autopilot
     class 急動作抑制
     {
     public:
-        void リセット();
+        constexpr void リセット() noexcept { *this = 急動作抑制{}; }
         void 経過(自動制御指令 入力ノッチ, const 共通状態 &状態, bool is_atc);
 
-        自動制御指令 出力ノッチ() const { return _出力ノッチ; }
+        constexpr 自動制御指令 出力ノッチ() const noexcept {
+            return _出力ノッチ;
+        }
 
     private:
         mps2 _最小出力減速度 = 0.0_mps2, _最大出力減速度 = 0.0_mps2;
