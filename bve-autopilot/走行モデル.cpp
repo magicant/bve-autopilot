@@ -26,6 +26,7 @@
 namespace autopilot {
 
     mps2 走行モデル::指定時間走行(s 時間, mps2 初加速度, mps3 加加速度)
+        noexcept
     {
         _位置 +=
             時間 * (_速度 + 時間 * (初加速度 + 時間 * 加加速度 / 3.0) / 2.0);
@@ -35,6 +36,7 @@ namespace autopilot {
     }
 
     mps2 走行モデル::指定時刻まで走行(s 時刻, mps2 初加速度, mps3 加加速度)
+        noexcept
     {
         mps2 終加速度 = 指定時間走行(時刻 - _時刻, 初加速度, 加加速度);
         _時刻 = 時刻; // 誤差をなくすため直接再代入する
@@ -42,6 +44,7 @@ namespace autopilot {
     }
 
     void 走行モデル::指定距離走行(m 距離, mps2 加速度, bool 後退)
+        // sqrt を使うので noexcept ではない
     {
         if (距離 == 0.0_m) {
             return;
@@ -70,7 +73,7 @@ namespace autopilot {
         _位置 = 位置; // 誤差をなくすため直接再代入する
     }
 
-    void 走行モデル::指定速度まで走行(mps 速度, mps2 加速度)
+    void 走行モデル::指定速度まで走行(mps 速度, mps2 加速度) noexcept
     {
         if (速度 == _速度) {
             return;
@@ -98,7 +101,7 @@ namespace autopilot {
     }
 
     void 走行モデル::等加加速度で指定加速度まで走行(
-        mps2 初加速度, mps2 終加速度, mps3 加加速度)
+        mps2 初加速度, mps2 終加速度, mps3 加加速度) noexcept
     {
         s 時間 = (終加速度 - 初加速度) / 加加速度;
         指定時間走行(時間, 初加速度, 加加速度);
@@ -120,11 +123,6 @@ namespace autopilot {
         指定時刻まで走行(速度モデル.時刻(), 初加速度, 加加速度);
         _速度 = 速度; // 誤差をなくすため直接再代入する
         return static_cast<mps2>(速度モデル.速度().value);
-    }
-
-    mps2 走行モデル::距離と速度による加速度(m 距離, mps 初速度, mps 終速度)
-    {
-        return (終速度 * 終速度 - 初速度 * 初速度) / 距離 / 2.0;
     }
 
     void 短く力行(

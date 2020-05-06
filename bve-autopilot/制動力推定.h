@@ -29,11 +29,15 @@ namespace autopilot
     class 制動力推定
     {
     public:
-        mps2 基準最大減速度() const { return _基準最大減速度; }
-        void 基準最大減速度を設定(mps2 減速度) {
+        constexpr mps2 基準最大減速度() const noexcept {
+            return _基準最大減速度;
+        }
+        constexpr void 基準最大減速度を設定(mps2 減速度) noexcept {
             _基準最大減速度 = _推定最大減速度 = 減速度;
         }
-        mps2 推定最大減速度() const { return _推定最大減速度; }
+        constexpr mps2 推定最大減速度() const noexcept {
+            return _推定最大減速度;
+        }
 
         void 経過(制動力割合 前回出力割合, const 共通状態 &状態);
 

@@ -47,19 +47,21 @@ namespace autopilot
             const std::vector<制動力割合> &pressure_rates);
 
         /// 標準の常用ブレーキのノッチの最大値です。
-        手動制動自然数ノッチ 標準最大ノッチ() const { return _標準最大ノッチ; }
+        手動制動自然数ノッチ 標準最大ノッチ() const noexcept {
+            return _標準最大ノッチ;
+        }
         /// TASC/ATO が使用する想定のノッチの最大値です。
         /// 拡張ノッチが設定されていない場合は標準最大ノッチに一致します。
-        自動制動自然数ノッチ 自動最大ノッチ() const;
-        mps2 基準最大減速度() const {
+        自動制動自然数ノッチ 自動最大ノッチ() const noexcept;
+        mps2 基準最大減速度() const noexcept {
             return _制動力推定.基準最大減速度();
         }
-        mps2 推定最大減速度() const {
+        mps2 推定最大減速度() const noexcept {
             return _制動力推定.推定最大減速度();
         }
-        s 反応時間() const { return _反応時間; }
+        s 反応時間() const noexcept { return _反応時間; }
 
-        bool 非常ブレーキである(手動制動自然数ノッチ ノッチ) const {
+        bool 非常ブレーキである(手動制動自然数ノッチ ノッチ) const noexcept {
             return ノッチ.value == _標準最大ノッチ.value + 1;
         }
 

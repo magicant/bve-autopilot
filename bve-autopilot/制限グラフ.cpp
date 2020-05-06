@@ -48,7 +48,7 @@ namespace autopilot
     制限グラフ::制限グラフ() = default;
     制限グラフ::~制限グラフ() = default;
 
-    void 制限グラフ::消去()
+    void 制限グラフ::消去() noexcept
     {
         _区間リスト.clear();
     }

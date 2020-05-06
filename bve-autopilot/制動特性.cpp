@@ -73,7 +73,7 @@ namespace autopilot
         }
     }
 
-    自動制動自然数ノッチ 制動特性::自動最大ノッチ() const {
+    自動制動自然数ノッチ 制動特性::自動最大ノッチ() const noexcept {
         if (_拡張ノッチ列.empty()) {
             return 自動制動自然数ノッチ{標準最大ノッチ().value};
         }

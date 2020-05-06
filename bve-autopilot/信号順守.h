@@ -56,7 +56,9 @@ namespace autopilot
             // この閉塞の中で動作する ORP 減速パターン
             orp orp;
 
-            bool 通過済(m 位置) const { return 始点のある範囲.通過済(位置); }
+            bool 通過済(m 位置) const noexcept {
+                return 始点のある範囲.通過済(位置);
+            }
             int 先行列車位置() const;
 
             void 制限グラフに制限区間を追加(
@@ -76,8 +78,8 @@ namespace autopilot
                 const std::map<信号インデックス, mps> &速度表,
                 bool 信号インデックスを更新する);
             void 停止信号前照査設定(const ATS_BEACONDATA &地上子, m 現在位置);
-            void orp状態更新(mps 直前閉塞速度);
-            void 統合(閉塞型 &&統合元);
+            void orp状態更新(mps 直前閉塞速度) noexcept;
+            void 統合(閉塞型 &&統合元) noexcept;
             void 先行列車位置から信号指示を推定(
                 int 閉塞数, const std::map<信号インデックス, mps> &速度表);
         };
@@ -109,8 +111,8 @@ namespace autopilot
             // 信号インデックスとして送られてくることがあるが無視する
         }
         bool 発進可能(const 共通状態 &状態) const;
-        bool orp照査中(const 共通状態 &状態) const;
-        mps orp照査速度(const 共通状態 &状態) const;
+        bool orp照査中(const 共通状態 &状態) const noexcept;
+        mps orp照査速度(const 共通状態 &状態) const noexcept;
         mps 現在制限速度(const 共通状態 &状態) const;
         mps 現在常用パターン速度(const 共通状態 &状態) const;
 

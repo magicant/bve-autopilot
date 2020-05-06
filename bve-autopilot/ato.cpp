@@ -31,7 +31,7 @@ namespace autopilot
     namespace
     {
 
-        bool 発進可能(const 共通状態 &状態)
+        bool 発進可能(const 共通状態 &状態) noexcept
         {
             return 状態.入力逆転器ノッチ() > 0 &&
                 状態.入力制動ノッチ() == 手動制動自然数ノッチ{0} &&
@@ -40,7 +40,7 @@ namespace autopilot
 
         /// 「停車場へ移動」でワープする間に通過する地上子の位置は信頼
         /// できないので、制限区間は 0 メートル地点から始まると仮定する
-        constexpr bool 信頼できる(区間 範囲) {
+        constexpr bool 信頼できる(区間 範囲) noexcept {
             return 範囲.始点 != 0.0_m || 範囲.終点 == 0.0_m;
         }
 
@@ -237,11 +237,6 @@ namespace autopilot
             _制限速度10.現在常用パターン速度(状態),
             _信号.現在常用パターン速度(状態),
             });
-    }
-
-    mps ato::現在orp照査速度(const 共通状態 &状態) const
-    {
-        return _信号.orp照査速度(状態);
     }
 
 }

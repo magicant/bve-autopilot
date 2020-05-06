@@ -146,10 +146,12 @@ namespace autopilot
 
     環境設定::~環境設定() = default;
 
+    /*
     void 環境設定::リセット()
     {
         *this = 環境設定();
     }
+    */
 
     void 環境設定::ファイル読込(LPCWSTR 設定ファイル名)
     {

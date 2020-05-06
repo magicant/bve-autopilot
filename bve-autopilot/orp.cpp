@@ -22,7 +22,6 @@
 #include <cassert>
 #include <cmath>
 #include <limits>
-#include "信号順守.h"
 #include "共通状態.h"
 #include "物理量.h"
 #include "走行モデル.h"
@@ -41,7 +40,7 @@ namespace autopilot
 
     }
 
-    orp::orp() :
+    orp::orp() noexcept :
         _照査パターン{m::無限大(), 照査速度下限, 0.0_mps2, true},
         _運転パターン{m::無限大(), 最終目標速度, 0.0_mps2, true},
         _出力ノッチ{緩解指令},
@@ -49,13 +48,13 @@ namespace autopilot
     {
     }
 
-    void orp::リセット()
+    void orp::リセット() noexcept
     {
         _照査パターン.目標位置 = _運転パターン.目標位置 = m::無限大();
         _出力ノッチ = 緩解指令;
     }
 
-    void orp::設定(mps 初期照査速度, m 初期位置, m 限界位置)
+    void orp::設定(mps 初期照査速度, m 初期位置, m 限界位置) noexcept
     {
         mps2 照査減速度 = -走行モデル::距離と速度による加速度(
             限界位置 - 初期位置, 初期照査速度, 0.0_mps);
@@ -80,14 +79,14 @@ namespace autopilot
         assert(_運転パターン.素早い速度超過回復);
     }
 
-    void orp::設定(int 地上子値, m 初期位置)
+    void orp::設定(int 地上子値, m 初期位置) noexcept
     {
         mps 初速度 = 地上子値 <= 48 ? 25.0_kmph : 35.0_kmph;
         m 残距離 = 地上子値 <= 48 ? 48.0_m : 79.0_m;
         設定(初速度, 初期位置, 初期位置 + 残距離);
     }
 
-    void orp::設定(mps 直前閉塞速度, m 初期位置)
+    void orp::設定(mps 直前閉塞速度, m 初期位置) noexcept
     {
         int 予想地上子値 =
             直前閉塞速度 < static_cast<mps>(34.9_kmph) ? 48 : 79;

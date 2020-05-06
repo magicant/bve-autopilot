@@ -37,7 +37,7 @@ namespace autopilot
         public:
             static constexpr int 無効値 = 11;
 
-            tasc残距離桁(int 桁) : _桁{桁} { }
+            constexpr tasc残距離桁(int 桁) noexcept : _桁{桁} { }
             ~tasc残距離桁() = default;
 
             int operator()(const Main &main) const;

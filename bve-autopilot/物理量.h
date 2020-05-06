@@ -31,39 +31,41 @@ namespace autopilot
 
         value_type value;
 
-        static constexpr Self 無限大() {
+        static constexpr Self 無限大() noexcept {
+            static_assert(std::numeric_limits<value_type>::has_infinity);
             return static_cast<Self>(
                 std::numeric_limits<value_type>::infinity());
         }
-        static constexpr Self quiet_NaN() {
+        static constexpr Self quiet_NaN() noexcept {
+            static_assert(std::numeric_limits<value_type>::has_quiet_NaN);
             return static_cast<Self>(
                 std::numeric_limits<value_type>::quiet_NaN());
         }
 
-        constexpr 物理量() : value{} {}
-        constexpr explicit 物理量(const value_type &v) : value{v} {}
+        constexpr 物理量() noexcept : value{} {}
+        constexpr explicit 物理量(const value_type &v) noexcept : value{v} {}
     };
 
     template<typename Value, typename Self>
-    constexpr Self operator+(const 物理量<Value, Self> &v) {
+    constexpr Self operator+(const 物理量<Value, Self> &v) noexcept {
         return static_cast<Self>(+v.value);
     }
 
     template<typename Value, typename Self>
-    constexpr Self operator-(const 物理量<Value, Self> &v) {
+    constexpr Self operator-(const 物理量<Value, Self> &v) noexcept {
         return static_cast<Self>(-v.value);
     }
 
     template<typename Value, typename Self>
     constexpr Self operator+(
-        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
+        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b) noexcept
     {
         return static_cast<Self>(a.value + b.value);
     }
 
     template<typename Value, typename Self>
     constexpr 物理量<Value, Self> &operator+=(
-        物理量<Value, Self> &a, const 物理量<Value, Self> &b)
+        物理量<Value, Self> &a, const 物理量<Value, Self> &b) noexcept
     {
         a.value += b.value;
         return a;
@@ -71,45 +73,51 @@ namespace autopilot
 
     template<typename Value, typename Self>
     constexpr Self operator-(
-        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
+        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b) noexcept
     {
         return static_cast<Self>(a.value - b.value);
     }
 
     template<typename Value, typename Self>
     constexpr 物理量<Value, Self> &operator-=(
-        物理量<Value, Self> &a, const 物理量<Value, Self> &b)
+        物理量<Value, Self> &a, const 物理量<Value, Self> &b) noexcept
     {
         a.value -= b.value;
         return a;
     }
 
     template<typename Value, typename Self>
-    constexpr Self operator*(const 物理量<Value, Self> &a, const Value &b) {
+    constexpr Self operator*(const 物理量<Value, Self> &a, const Value &b)
+        noexcept
+    {
         return static_cast<Self>(a.value * b);
     }
 
     template<typename Value, typename Self>
     constexpr 物理量<Value, Self> &operator*=(
-        物理量<Value, Self> &a, const Value &b)
+        物理量<Value, Self> &a, const Value &b) noexcept
     {
         a.value *= b;
         return a;
     }
 
     template<typename Value, typename Self>
-    constexpr Self operator*(const Value &a, const 物理量<Value, Self> &b) {
+    constexpr Self operator*(const Value &a, const 物理量<Value, Self> &b)
+        noexcept
+    {
         return static_cast<Self>(a * b.value);
     }
 
     template<typename Value, typename Self>
-    constexpr Self operator/(const 物理量<Value, Self> &a, const Value &b) {
+    constexpr Self operator/(const 物理量<Value, Self> &a, const Value &b)
+        noexcept
+    {
         return static_cast<Self>(a.value / b);
     }
 
     template<typename Value, typename Self>
     constexpr 物理量<Value, Self> &operator/=(
-        物理量<Value, Self> &a, const Value &b)
+        物理量<Value, Self> &a, const Value &b) noexcept
     {
         a.value /= b;
         return a;
@@ -117,19 +125,21 @@ namespace autopilot
 
     template<typename Value, typename Self>
     constexpr Value operator/(
-        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
+        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b) noexcept
     {
         return a.value / b.value;
     }
 
     template<typename Value, typename Self>
-    constexpr Self operator%(const 物理量<Value, Self> &a, const Value &b) {
+    constexpr Self operator%(const 物理量<Value, Self> &a, const Value &b)
+        noexcept
+    {
         return static_cast<Self>(a.value % b);
     }
 
     template<typename Value, typename Self>
     constexpr 物理量<Value, Self> &operator%=(
-        物理量<Value, Self> &a, const Value &b)
+        物理量<Value, Self> &a, const Value &b) noexcept
     {
         a.value %= b;
         return a;
@@ -137,42 +147,42 @@ namespace autopilot
 
     template<typename Value, typename Self>
     constexpr bool operator==(
-        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
+        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b) noexcept
     {
         return a.value == b.value;
     }
 
     template<typename Value, typename Self>
     constexpr bool operator!=(
-        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
+        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b) noexcept
     {
         return a.value != b.value;
     }
 
     template<typename Value, typename Self>
     constexpr bool operator<(
-        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
+        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b) noexcept
     {
         return a.value < b.value;
     }
 
     template<typename Value, typename Self>
     constexpr bool operator<=(
-        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
+        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b) noexcept
     {
         return a.value <= b.value;
     }
 
     template<typename Value, typename Self>
     constexpr bool operator>(
-        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
+        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b) noexcept
     {
         return a.value > b.value;
     }
 
     template<typename Value, typename Self>
     constexpr bool operator>=(
-        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b)
+        const 物理量<Value, Self> &a, const 物理量<Value, Self> &b) noexcept
     {
         return a.value >= b.value;
     }
@@ -221,23 +231,23 @@ namespace autopilot
     struct s : 物理量<double, s>
     {
         using 物理量::物理量;
-        constexpr s(const ms &v);
+        constexpr s(const ms &v) noexcept;
     };
 
     // ミリ秒
     struct ms : 物理量<double, ms>
     {
         using 物理量::物理量;
-        constexpr ms(const s &v);
+        constexpr ms(const s &v) noexcept;
     };
 
-    constexpr s::s(const ms &v) : 物理量(v.value / 1000.0) {}
-    constexpr ms::ms(const s &v) : 物理量(v.value * 1000.0) {}
+    constexpr s::s(const ms &v) noexcept : 物理量(v.value / 1000.0) {}
+    constexpr ms::ms(const s &v) noexcept : 物理量(v.value * 1000.0) {}
 
-    constexpr s operator"" _s(long double v) {
+    constexpr s operator"" _s(long double v) noexcept {
         return static_cast<s>(static_cast<double>(v));
     }
-    constexpr ms operator"" _ms(long double v) {
+    constexpr ms operator"" _ms(long double v) noexcept {
         return static_cast<ms>(static_cast<double>(v));
     }
 
@@ -250,23 +260,23 @@ namespace autopilot
     struct m : 物理量<double, m>
     {
         using 物理量::物理量;
-        constexpr m(const cm &v);
+        constexpr m(const cm &v) noexcept;
     };
 
     /// センチメートル
     struct cm : 物理量<double, cm>
     {
         using 物理量::物理量;
-        constexpr cm(const m &v);
+        constexpr cm(const m &v) noexcept;
     };
 
-    constexpr m::m(const cm &v) : 物理量(v.value / 100.0) {}
-    constexpr cm::cm(const m &v) : 物理量(v.value * 100.0) {}
+    constexpr m::m(const cm &v) noexcept : 物理量(v.value / 100.0) {}
+    constexpr cm::cm(const m &v) noexcept : 物理量(v.value * 100.0) {}
 
-    constexpr m operator"" _m(long double v) {
+    constexpr m operator"" _m(long double v) noexcept {
         return static_cast<m>(static_cast<double>(v));
     }
-    constexpr cm operator"" _cm(long double v) {
+    constexpr cm operator"" _cm(long double v) noexcept {
         return static_cast<cm>(static_cast<double>(v));
     }
 
@@ -279,36 +289,36 @@ namespace autopilot
     struct mps : 物理量<double, mps>
     {
         using 物理量::物理量;
-        constexpr mps(const kmph &v);
+        constexpr mps(const kmph &v) noexcept;
     };
 
     /// キロメートル毎時
     struct kmph : 物理量<double, kmph>
     {
         using 物理量::物理量;
-        constexpr kmph(const mps &v);
+        constexpr kmph(const mps &v) noexcept;
     };
 
-    constexpr mps::mps(const kmph &v) : 物理量(v.value / 3.6) {}
-    constexpr kmph::kmph(const mps &v) : 物理量(v.value * 3.6) {}
+    constexpr mps::mps(const kmph &v) noexcept : 物理量(v.value / 3.6) {}
+    constexpr kmph::kmph(const mps &v) noexcept : 物理量(v.value * 3.6) {}
 
-    constexpr mps operator"" _mps(long double v) {
+    constexpr mps operator"" _mps(long double v) noexcept {
         return static_cast<mps>(static_cast<double>(v));
     }
-    constexpr kmph operator"" _kmph(long double v) {
+    constexpr kmph operator"" _kmph(long double v) noexcept {
         return static_cast<kmph>(static_cast<double>(v));
     }
 
-    constexpr mps operator/(const m &a, const s &b) {
+    constexpr mps operator/(const m &a, const s &b) noexcept {
         return static_cast<mps>(a.value / b.value);
     }
-    constexpr m operator*(const mps &a, const s &b) {
+    constexpr m operator*(const mps &a, const s &b) noexcept {
         return static_cast<m>(a.value * b.value);
     }
-    constexpr m operator*(const s &a, const mps &b) {
+    constexpr m operator*(const s &a, const mps &b) noexcept {
         return static_cast<m>(a.value * b.value);
     }
-    constexpr s operator/(const m &a, const mps &b) {
+    constexpr s operator/(const m &a, const mps &b) noexcept {
         return static_cast<s>(a.value / b.value);
     }
 
@@ -321,36 +331,36 @@ namespace autopilot
     struct mps2 : 物理量<double, mps2>
     {
         using 物理量::物理量;
-        constexpr mps2(const kmphps &v);
+        constexpr mps2(const kmphps &v) noexcept;
     };
 
     /// キロメートル毎時毎秒
     struct kmphps : 物理量<double, kmphps>
     {
         using 物理量::物理量;
-        constexpr kmphps(const mps2 &v);
+        constexpr kmphps(const mps2 &v) noexcept;
     };
 
-    constexpr mps2::mps2(const kmphps &v) : 物理量(v.value / 3.6) {}
-    constexpr kmphps::kmphps(const mps2 &v) : 物理量(v.value * 3.6) {}
+    constexpr mps2::mps2(const kmphps &v) noexcept : 物理量(v.value / 3.6) {}
+    constexpr kmphps::kmphps(const mps2 &v) noexcept : 物理量(v.value * 3.6) {}
 
-    constexpr mps2 operator"" _mps2(long double v) {
+    constexpr mps2 operator"" _mps2(long double v) noexcept {
         return static_cast<mps2>(static_cast<double>(v));
     }
-    constexpr kmphps operator"" _kmphps(long double v) {
+    constexpr kmphps operator"" _kmphps(long double v) noexcept {
         return static_cast<kmphps>(static_cast<double>(v));
     }
 
-    constexpr mps2 operator/(const mps &a, const s &b) {
+    constexpr mps2 operator/(const mps &a, const s &b) noexcept {
         return static_cast<mps2>(a.value / b.value);
     }
-    constexpr mps operator*(const mps2 &a, const s &b) {
+    constexpr mps operator*(const mps2 &a, const s &b) noexcept {
         return static_cast<mps>(a.value * b.value);
     }
-    constexpr mps operator*(const s &a, const mps2 &b) {
+    constexpr mps operator*(const s &a, const mps2 &b) noexcept {
         return static_cast<mps>(a.value * b.value);
     }
-    constexpr s operator/(const mps &a, const mps2 &b) {
+    constexpr s operator/(const mps &a, const mps2 &b) noexcept {
         return static_cast<s>(a.value / b.value);
     }
 
@@ -363,36 +373,38 @@ namespace autopilot
     struct mps3 : 物理量<double, mps3>
     {
         using 物理量::物理量;
-        constexpr mps3(const kmphps2 &v);
+        constexpr mps3(const kmphps2 &v) noexcept;
     };
 
     /// キロメートル毎時毎秒毎秒
     struct kmphps2 : 物理量<double, kmphps2>
     {
         using 物理量::物理量;
-        constexpr kmphps2(const mps3 &v);
+        constexpr kmphps2(const mps3 &v) noexcept;
     };
 
-    constexpr mps3::mps3(const kmphps2 &v) : 物理量(v.value / 3.6) {}
-    constexpr kmphps2::kmphps2(const mps3 &v) : 物理量(v.value * 3.6) {}
+    constexpr mps3::mps3(const kmphps2 &v) noexcept :
+        物理量(v.value / 3.6) {}
+    constexpr kmphps2::kmphps2(const mps3 &v) noexcept :
+        物理量(v.value * 3.6) {}
 
-    constexpr mps3 operator"" _mps3(long double v) {
+    constexpr mps3 operator"" _mps3(long double v) noexcept {
         return static_cast<mps3>(static_cast<double>(v));
     }
-    constexpr kmphps2 operator"" _kmphps2(long double v) {
+    constexpr kmphps2 operator"" _kmphps2(long double v) noexcept {
         return static_cast<kmphps2>(static_cast<double>(v));
     }
 
-    constexpr mps3 operator/(const mps2 &a, const s &b) {
+    constexpr mps3 operator/(const mps2 &a, const s &b) noexcept {
         return static_cast<mps3>(a.value / b.value);
     }
-    constexpr mps2 operator*(const mps3 &a, const s &b) {
+    constexpr mps2 operator*(const mps3 &a, const s &b) noexcept {
         return static_cast<mps2>(a.value * b.value);
     }
-    constexpr mps2 operator*(const s &a, const mps3 &b) {
+    constexpr mps2 operator*(const s &a, const mps3 &b) noexcept {
         return static_cast<mps2>(a.value * b.value);
     }
-    constexpr s operator/(const mps2 &a, const mps3 &b) {
+    constexpr s operator/(const mps2 &a, const mps3 &b) noexcept {
         return static_cast<s>(a.value / b.value);
     }
 
@@ -404,20 +416,20 @@ namespace autopilot
         using 物理量::物理量;
     };
 
-    constexpr m2ps2 operator"" _m2ps2(long double v) {
+    constexpr m2ps2 operator"" _m2ps2(long double v) noexcept {
         return static_cast<m2ps2>(static_cast<double>(v));
     }
 
-    constexpr m2ps2 operator*(const mps &a, const mps &b) {
+    constexpr m2ps2 operator*(const mps &a, const mps &b) noexcept {
         return static_cast<m2ps2>(a.value * b.value);
     }
-    constexpr m2ps2 operator*(const m &a, const mps2 &b) {
+    constexpr m2ps2 operator*(const m &a, const mps2 &b) noexcept {
         return static_cast<m2ps2>(a.value * b.value);
     }
-    constexpr m2ps2 operator*(const mps2 &a, const m &b) {
+    constexpr m2ps2 operator*(const mps2 &a, const m &b) noexcept {
         return static_cast<m2ps2>(a.value * b.value);
     }
-    constexpr mps2 operator/(const m2ps2 &a, const m &b) {
+    constexpr mps2 operator/(const m2ps2 &a, const m &b) noexcept {
         return static_cast<mps2>(a.value / b.value);
     }
 

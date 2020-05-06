@@ -43,7 +43,7 @@ namespace autopilot
         double 勾配;
         mps2 影響加速度;
 
-        勾配区間(double 勾配) :
+        constexpr explicit 勾配区間(double 勾配) noexcept :
             勾配{勾配}, 影響加速度{-0.75 * 重力加速度 * 勾配} { }
         // 本当は tan を sin に変換すべきだがほとんど違わないので無視する
 
@@ -52,7 +52,7 @@ namespace autopilot
     勾配グラフ::勾配グラフ() = default;
     勾配グラフ::~勾配グラフ() = default;
 
-    void 勾配グラフ::消去()
+    void 勾配グラフ::消去() noexcept
     {
         _区間リスト.clear();
     }

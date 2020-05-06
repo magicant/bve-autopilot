@@ -37,13 +37,13 @@ namespace autopilot {
 
         /// 「停車場へ移動」でワープする間に通過する地上子の位置は信頼
         /// できないので、地上子が示す位置は 0 メートル地点と仮定する
-        constexpr bool 信頼できる(区間 範囲) {
+        constexpr bool 信頼できる(区間 範囲) noexcept {
             return 範囲.始点 != 0.0_m || 範囲.終点 == 0.0_m;
         }
 
     }
 
-    void 共通状態::リセット()
+    void 共通状態::リセット() noexcept
     {
         // _設定.リセット(); // ファイルから読み込むのでリセットしない
         _互換モード = 互換モード型::無効;
@@ -104,12 +104,12 @@ namespace autopilot {
         _制動特性.経過(*this);
     }
 
-    void 共通状態::出力(const ATS_HANDLES & 出力)
+    void 共通状態::出力(const ATS_HANDLES & 出力) noexcept
     {
         _前回出力 = 出力;
     }
 
-    void 共通状態::戸閉(bool 戸閉)
+    void 共通状態::戸閉(bool 戸閉) noexcept
     {
         _戸閉 = 戸閉;
 
@@ -122,24 +122,19 @@ namespace autopilot {
         }
     }
 
-    void 共通状態::逆転器操作(int ノッチ)
+    void 共通状態::逆転器操作(int ノッチ) noexcept
     {
         _入力逆転器ノッチ = ノッチ;
     }
 
-    void 共通状態::力行操作(int ノッチ)
+    void 共通状態::力行操作(int ノッチ) noexcept
     {
         _入力力行ノッチ = ノッチ;
     }
 
-    void 共通状態::制動操作(int ノッチ)
+    void 共通状態::制動操作(int ノッチ) noexcept
     {
         _入力制動ノッチ = 手動制動自然数ノッチ{static_cast<unsigned>(ノッチ)};
-    }
-
-    区間 共通状態::現在範囲() const
-    {
-        return 区間{ 現在位置() - 列車長(), 現在位置() };
     }
 
     bool 共通状態::自動発進可能な時刻である() const

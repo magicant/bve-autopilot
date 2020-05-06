@@ -31,20 +31,20 @@ namespace autopilot
     class 早着防止
     {
     public:
-        void リセット();
+        void リセット() noexcept;
         void 発進(const 共通状態 &状態);
         void 地上子通過(
             const ATS_BEACONDATA &地上子, m 直前位置, const 共通状態 &状態);
         void 経過(const 共通状態 &状態);
 
-        自動制御指令 出力ノッチ() const { return _出力ノッチ; }
+        自動制御指令 出力ノッチ() const noexcept { return _出力ノッチ; }
 
     private:
         s _次の設定時刻 = {};
         std::forward_list<走行モデル> _予定表;
         自動制御指令 _出力ノッチ;
 
-        void 通過時刻設定(const ATS_BEACONDATA &地上子);
+        void 通過時刻設定(const ATS_BEACONDATA &地上子) noexcept;
         void 通過位置設定(
             const ATS_BEACONDATA &地上子, m 地上子位置, const 共通状態 &状態);
         bool 加速可(const 共通状態 &状態) const;

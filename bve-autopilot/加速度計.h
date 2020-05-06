@@ -31,13 +31,13 @@ namespace autopilot
             s _時刻;
         };
 
-        加速度計();
+        加速度計() noexcept;
 
-        void リセット();
+        void リセット() noexcept;
         void 経過(観測 データ);
 
-        mps2 加速度() const { return _加速度; }
-        mps3 加加速度() const { return _加加速度; }
+        mps2 加速度() const noexcept { return _加速度; }
+        mps3 加加速度() const noexcept { return _加加速度; }
 
     private:
         constexpr static unsigned 記録数 = 3;
