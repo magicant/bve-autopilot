@@ -32,6 +32,7 @@ namespace autopilot
         value_type value;
 
         static constexpr Self 無限大() noexcept {
+            static_assert(std::numeric_limits<value_type>::has_infinity);
             return static_cast<Self>(
                 std::numeric_limits<value_type>::infinity());
         }
