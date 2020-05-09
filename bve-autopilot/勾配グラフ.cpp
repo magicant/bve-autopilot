@@ -90,22 +90,20 @@ namespace autopilot
         }
 
         mps2 加速度 = 0.0_mps2;
-        auto 終点 = m::無限大();
-        for (auto i = _区間リスト.rbegin();
-            i != _区間リスト.rend();
-            終点 = i++->first)
-        {
-            auto 影響区間 = 重なり({i->first, 終点}, 対象範囲);
+        auto i = _区間リスト.lower_bound(対象範囲.終点);
+        m 終点 = i == _区間リスト.end() ? m::無限大() : i->first;
+        while (i != _区間リスト.begin() && 対象範囲.始点 < 終点) {
+            --i;
+            m 始点 = i->first;
+            区間 影響区間 = 重なり({始点, 終点}, 対象範囲);
             m 影響長さ = 影響区間.長さ();
-            if (!(影響長さ > 0.0_m)) {
-                continue;
-            }
-
             double 影響割合 = 影響長さ / 全体長さ;
             if (std::isnan(影響割合)) {
                 影響割合 = 1;
             }
             加速度 += i->second.影響加速度 * 影響割合;
+
+            終点 = 始点;
         }
         return 加速度;
     }
