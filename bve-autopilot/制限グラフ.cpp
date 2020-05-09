@@ -55,49 +55,7 @@ namespace autopilot
 
     void 制限グラフ::制限区間追加(m 減速目標地点, m 始点, mps 速度)
     {
-        // データを追加するだけなら
-        // _区間リスト.insert_or_assign(始点, 制限区間{減速目標地点, 速度});
-        // だけでもよいのだが、無駄に多くのデータを追加しないように
-        // 以下の長々としたコードで最適化する。
-
-        auto i = _区間リスト.lower_bound(始点);
-
-        if (i != _区間リスト.end()) {
-            if (速度 == i->second.速度) {
-                // 既に同じ制限速度の区間があるなら区間を追加しない
-                auto n = _区間リスト.extract(i++);
-                assert(始点 <= n.key());
-                n.key() = 始点;
-                n.mapped().減速目標地点を再設定(減速目標地点);
-                _区間リスト.insert(i, std::move(n));
-                return;
-            }
-
-            if (始点 == i->first) {
-                // 既に同じ位置に区間があるなら上書きする
-                i->second.減速目標地点 = 減速目標地点;
-                i->second.速度 = 速度;
-                return;
-            }
-        }
-
-        if (i != _区間リスト.begin()) {
-            auto j = std::prev(i);
-            assert(j->first < 始点);
-            if (速度 == j->second.速度) {
-                // 既に同じ制限速度の区間があるなら区間を追加しない
-                j->second.減速目標地点を再設定(減速目標地点);
-                return;
-            }
-        }
-        else if (速度 == mps::無限大()) {
-            // 制限区間のない位置で制限速度を解除するのは無意味
-            return;
-        }
-
-        auto j =
-            _区間リスト.try_emplace(i, 始点, 制限区間{減速目標地点, 速度});
-        assert(std::next(j) == i);
+        _区間リスト.insert_or_assign(始点, 制限区間{減速目標地点, 速度});
     }
 
     void 制限グラフ::通過(m 位置)
@@ -118,11 +76,6 @@ namespace autopilot
         i = _区間リスト.erase(_区間リスト.begin(), i);
         assert(!_区間リスト.empty());
         assert(i == _区間リスト.begin());
-
-        // 速度が無制限の区間は未通過でも消す
-        if (i->second.速度 == mps::無限大()) {
-            _区間リスト.erase(i);
-        }
     }
 
     mps 制限グラフ::制限速度(区間 対象区間) const
