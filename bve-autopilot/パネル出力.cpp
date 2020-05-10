@@ -114,6 +114,22 @@ namespace autopilot
             {L"atoenabled", パネル出力対象([](const Main & main) {
                 return main.ato有効();
             })},
+            {L"atostatus", パネル出力対象([](const Main &main) {
+                if (!main.ato有効()) {
+                    return 0;
+                }
+                if (main.ato状態().状態() != ato::制御状態::停止) {
+                    return 2;
+                }
+                if (!ato::発進可能(main.状態()) ||
+                    main.tasc状態().出力ノッチ().力行成分() == 力行ノッチ{0})
+                {
+                    return 1;
+                }
+                // 3 と 4 を交互に表示 (点滅)
+                auto m = std::fmod(main.状態().現在時刻().value, 1.0);
+                return m < 0.5 ? 3 : 4;
+            })},
             {L"powerthrottle", パネル出力対象([](const Main &main) {
                 return main.ato有効() && main.力行抑止中();
             })},

@@ -39,6 +39,10 @@ namespace autopilot
         using 信号インデックス = 信号順守::信号インデックス;
         using 発進方式 = 信号順守::発進方式;
 
+        enum class 制御状態 { 停止, 発進, 走行, };
+
+        static bool 発進可能(const 共通状態 &状態) noexcept;
+
         ato();
         ~ato();
 
@@ -66,11 +70,10 @@ namespace autopilot
             return _早着防止.出力ノッチ() <= 力行ノッチ{1};
         }
 
+        制御状態 状態() const noexcept { return _制御状態; }
         自動制御指令 出力ノッチ() const noexcept { return _出力ノッチ; }
 
     private:
-        enum class 制御状態 { 停止, 発進, 走行, };
-
         制限グラフ _制限速度1006, _制限速度1007,
             _制限速度6, _制限速度8, _制限速度9, _制限速度10;
         信号順守 _信号;

@@ -31,13 +31,6 @@ namespace autopilot
     namespace
     {
 
-        bool 発進可能(const 共通状態 &状態) noexcept
-        {
-            return 状態.入力逆転器ノッチ() > 0 &&
-                状態.入力制動ノッチ() == 手動制動自然数ノッチ{0} &&
-                状態.戸閉();
-        }
-
         /// 「停車場へ移動」でワープする間に通過する地上子の位置は信頼
         /// できないので、制限区間は 0 メートル地点から始まると仮定する
         constexpr bool 信頼できる(区間 範囲) noexcept {
@@ -71,6 +64,13 @@ namespace autopilot
             グラフ.制限区間追加(終了位置, 終了位置, mps::無限大());
         }
 
+    }
+
+    bool ato::発進可能(const 共通状態 &状態) noexcept
+    {
+        return 状態.入力逆転器ノッチ() > 0 &&
+            状態.入力制動ノッチ() == 手動制動自然数ノッチ{0} &&
+            状態.戸閉();
     }
 
     ato::ato() = default;
