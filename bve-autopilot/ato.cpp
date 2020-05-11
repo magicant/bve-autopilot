@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include "tasc.h"
 #include "共通状態.h"
 #include "物理量.h"
 
@@ -66,10 +67,12 @@ namespace autopilot
 
     }
 
-    bool ato::発進可能(const 共通状態 &状態) noexcept
+    bool ato::発進可能(const 共通状態 &状態, const tasc &tasc状態) noexcept
     {
         return 状態.入力逆転器ノッチ() > 0 &&
             (!状態.設定().ato一時停止あり() || 状態.入力力行ノッチ() == 0) &&
+            (!状態.停車中() ||
+                tasc状態.出力ノッチ().力行成分() != 力行ノッチ{0}) &&
             状態.入力制動ノッチ() == 手動制動自然数ノッチ{0} &&
             状態.戸閉();
     }
@@ -91,9 +94,9 @@ namespace autopilot
         _リセット直後 = true;
     }
 
-    void ato::発進(const 共通状態 &状態, 発進方式 方式)
+    void ato::発進(const 共通状態 &状態, const tasc &tasc状態, 発進方式 方式)
     {
-        if (!発進可能(状態)) {
+        if (!発進可能(状態, tasc状態)) {
             return;
         }
         if (方式 == 発進方式::自動 && !_信号.発進可能(状態)) {
@@ -161,7 +164,7 @@ namespace autopilot
         _早着防止.地上子通過(地上子, 直前位置, 状態);
     }
 
-    void ato::経過(const 共通状態 &状態)
+    void ato::経過(const 共通状態 &状態, const tasc &tasc状態)
     {
         m 最後尾 = 状態.現在位置() - 状態.列車長();
         _制限速度1006.通過(最後尾);
@@ -174,7 +177,7 @@ namespace autopilot
         _早着防止.経過(状態);
 
         if (_制御状態 == 制御状態::発進) {
-            if (!状態.停車中() || !発進可能(状態)) {
+            if (!状態.停車中() || !発進可能(状態, tasc状態)) {
                 _制御状態 = 制御状態::走行;
             }
         }

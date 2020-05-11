@@ -123,10 +123,7 @@ namespace autopilot
                 {
                     return 2;
                 }
-                if (!ato::発進可能(main.状態()) ||
-                    main.状態().停車中() &&
-                    main.tasc状態().出力ノッチ().力行成分() == 力行ノッチ{0})
-                {
+                if (!ato::発進可能(main.状態(), main.tasc状態())) {
                     return 1;
                 }
                 // 3 と 4 を交互に表示 (点滅)

@@ -32,6 +32,7 @@ namespace autopilot
 {
 
     class 共通状態;
+    class tasc;
 
     class ato
     {
@@ -46,13 +47,14 @@ namespace autopilot
             走行, //! 列車が走行している
         };
 
-        static bool 発進可能(const 共通状態 &状態) noexcept;
+        static bool 発進可能(const 共通状態 &状態, const tasc &tasc状態)
+            noexcept;
 
         ato();
         ~ato();
 
         void リセット();
-        void 発進(const 共通状態 &状態, 発進方式 方式);
+        void 発進(const 共通状態 &状態, const tasc &tasc状態, 発進方式 方式);
         void 信号現示変化(信号インデックス 指示) {
             _信号.信号現示変化(指示);
         }
@@ -73,7 +75,7 @@ namespace autopilot
         }
         void 地上子通過(
             const ATS_BEACONDATA &地上子, m 直前位置, const 共通状態 &状態);
-        void 経過(const 共通状態 &状態);
+        void 経過(const 共通状態 &状態, const tasc &tasc状態);
 
         mps 現在制限速度(const 共通状態 &状態) const;
         mps 現在常用パターン速度(const 共通状態 &状態) const;
