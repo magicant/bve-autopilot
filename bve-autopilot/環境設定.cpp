@@ -136,6 +136,7 @@ namespace autopilot
         _転動防止制動割合(0.5),
         _pressure_rates{},
         _atc事前減速(true),
+        _ato一時停止あり(false),
         _キー割り当て{
             {キー操作::モード切替, デフォルトキー組合せ()},
             {キー操作::ato発進, デフォルトキー組合せ()}, },
@@ -267,6 +268,14 @@ namespace autopilot
             設定ファイル名);
         if (0 < size && size < buffer_size - 1) {
             _atc事前減速 = (buffer != L"false"sv);
+        }
+
+        // ATO 一時停止
+        size = GetPrivateProfileStringW(
+            L"ato", L"pauseonshift", L"", buffer, buffer_size,
+            設定ファイル名);
+        if (0 < size && size < buffer_size - 1) {
+            _ato一時停止あり = (buffer == L"true"sv);
         }
 
         // キー割り当て

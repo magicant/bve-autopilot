@@ -48,6 +48,9 @@ namespace autopilot
         mps 現在orp照査速度() const noexcept {
             return _ato.現在orp照査速度(_状態);
         }
+        bool ato一時停止中() const noexcept {
+            return _ato有効 && _ato.状態() == ato::制御状態::一時停止;
+        }
         bool 力行抑止中() const noexcept { return _ato.力行抑止中(); }
 
         void 車両仕様設定(const ATS_VEHICLESPEC &車両仕様) {
@@ -56,12 +59,9 @@ namespace autopilot
         void リセット(int 制動状態);
         void 設定ファイル読込(LPCWSTR 設定ファイル名);
 
-        void 逆転器操作(int ノッチ) noexcept { _状態.逆転器操作(ノッチ); }
-        void 力行操作(int ノッチ) noexcept { _状態.力行操作(ノッチ); }
-        void 制動操作(int ノッチ) {
-            _状態.制動操作(ノッチ);
-            _tasc.制動操作(_状態);
-        }
+        void 逆転器操作(int ノッチ) noexcept;
+        void 力行操作(int ノッチ) noexcept;
+        void 制動操作(int ノッチ);
         void 警笛操作(int /*警笛種類*/) noexcept { }
         void キー押し(int キー);
         void キー放し(int キー) { _状態.キー放し(キー); }

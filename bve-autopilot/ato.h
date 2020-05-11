@@ -39,7 +39,12 @@ namespace autopilot
         using 信号インデックス = 信号順守::信号インデックス;
         using 発進方式 = 信号順守::発進方式;
 
-        enum class 制御状態 { 停止, 発進, 走行, };
+        enum class 制御状態 {
+            一時停止, //! ATO が一時的に動作していない
+            停止, //! 列車が停止している
+            発進, //! 列車を発進させようとしている
+            走行, //! 列車が走行している
+        };
 
         static bool 発進可能(const 共通状態 &状態) noexcept;
 
@@ -56,6 +61,15 @@ namespace autopilot
         }
         void tasc目標停止位置変化(区間 位置のある範囲) {
             _信号.tasc目標停止位置変化(位置のある範囲);
+        }
+        void 逆転器操作(const 共通状態 &状態) noexcept {
+            レバー操作(状態);
+        }
+        void 力行操作(const 共通状態 &状態) noexcept {
+            レバー操作(状態);
+        }
+        void 制動操作(const 共通状態 &状態) noexcept {
+            レバー操作(状態);
         }
         void 地上子通過(
             const ATS_BEACONDATA &地上子, m 直前位置, const 共通状態 &状態);
@@ -82,6 +96,8 @@ namespace autopilot
         自動制御指令 _出力ノッチ;
         急動作抑制 _急動作抑制;
         bool _リセット直後 = true;
+
+        void レバー操作(const 共通状態 &状態) noexcept;
     };
 
 }

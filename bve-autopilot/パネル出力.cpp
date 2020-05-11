@@ -79,7 +79,7 @@ namespace autopilot
                 return main.tasc有効() && main.tasc状態().制御中();
             })},
             {L"tascbrake", パネル出力対象([](const Main & main) {
-                if (!main.tasc有効()) {
+                if (!main.tasc有効() || main.ato一時停止中()) {
                     return 0;
                 }
                 return static_cast<int>(
@@ -118,10 +118,13 @@ namespace autopilot
                 if (!main.ato有効()) {
                     return 0;
                 }
-                if (main.ato状態().状態() != ato::制御状態::停止) {
+                if (main.ato状態().状態() != ato::制御状態::停止 &&
+                    main.ato状態().状態() != ato::制御状態::一時停止)
+                {
                     return 2;
                 }
                 if (!ato::発進可能(main.状態()) ||
+                    main.状態().停車中() &&
                     main.tasc状態().出力ノッチ().力行成分() == 力行ノッチ{0})
                 {
                     return 1;
