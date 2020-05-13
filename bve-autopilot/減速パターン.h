@@ -44,9 +44,9 @@ namespace autopilot
 
         ~減速パターン() = default;
 
-        std::pair<mps, mps2> 期待速度と期待減速度(m 現在位置) const;
+        std::pair<mps, mps2> 期待状態(m 現在位置) const;
         mps 期待速度(m 現在位置) const {
-            return 期待速度と期待減速度(現在位置).first;
+            return 期待状態(現在位置).first;
         }
 
         mps2 出力減速度(m 現在位置, mps 現在速度) const;
