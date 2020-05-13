@@ -23,6 +23,7 @@
 #include <cassert>
 #include <cmath>
 #include <iterator>
+#include <limits>
 #include "共通状態.h"
 
 #pragma warning(disable:4819)
@@ -237,7 +238,9 @@ namespace autopilot
         else {
             ノッチ = std::ceil(ノッチ);
         }
-        ノッチ = std::max(ノッチ, 0.0);
+
+        constexpr double max = std::numeric_limits<int>::max();
+        ノッチ = std::clamp(ノッチ, 0.0, max);
         return 自動制動自然数ノッチ{static_cast<unsigned>(ノッチ)};
     }
 
