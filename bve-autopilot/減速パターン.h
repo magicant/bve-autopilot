@@ -31,26 +31,16 @@ namespace autopilot
 
     struct 減速パターン
     {
-        static constexpr mps2 標準最終減速度 = 0.5_kmphps;
-        static constexpr mps2 停止最終減速度 = 1.0_kmphps;
-
         m 目標位置;
         mps 目標速度;
-        mps2 初期減速度, 最終減速度;
+        mps2 目標減速度;
         bool 素早い速度超過回復;
 
         constexpr 減速パターン(
-            m 目標位置, mps 目標速度, mps2 初期減速度,
-            bool 素早い速度超過回復 = false) noexcept :
-            減速パターン{目標位置, 目標速度,
-                初期減速度, 初期減速度, 素早い速度超過回復} {}
-        constexpr 減速パターン(
-            m 目標位置, mps 目標速度,
-            mps2 初期減速度, mps2 最終減速度,
+            m 目標位置, mps 目標速度, mps2 目標減速度,
             bool 素早い速度超過回復 = false) noexcept :
             目標位置(目標位置), 目標速度(目標速度),
-            初期減速度(初期減速度), 最終減速度(最終減速度),
-            素早い速度超過回復{素早い速度超過回復} {}
+            目標減速度(目標減速度), 素早い速度超過回復{素早い速度超過回復} {}
 
         ~減速パターン() = default;
 
