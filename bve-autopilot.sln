@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.329
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30104.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bve-autopilot", "bve-autopilot\bve-autopilot.vcxproj", "{5F8F0BDB-A90B-43B0-BB16-6F6DF27F9C67}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bve-autopilot-test", "bve-autopilot-test\bve-autopilot-test.vcxproj", "{7991893E-1480-4CA5-BEC2-2B40A5257E77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,14 @@ Global
 		{5F8F0BDB-A90B-43B0-BB16-6F6DF27F9C67}.Release|x64.Build.0 = Release|x64
 		{5F8F0BDB-A90B-43B0-BB16-6F6DF27F9C67}.Release|x86.ActiveCfg = Release|Win32
 		{5F8F0BDB-A90B-43B0-BB16-6F6DF27F9C67}.Release|x86.Build.0 = Release|Win32
+		{7991893E-1480-4CA5-BEC2-2B40A5257E77}.Debug|x64.ActiveCfg = Debug|x64
+		{7991893E-1480-4CA5-BEC2-2B40A5257E77}.Debug|x64.Build.0 = Debug|x64
+		{7991893E-1480-4CA5-BEC2-2B40A5257E77}.Debug|x86.ActiveCfg = Debug|Win32
+		{7991893E-1480-4CA5-BEC2-2B40A5257E77}.Debug|x86.Build.0 = Debug|Win32
+		{7991893E-1480-4CA5-BEC2-2B40A5257E77}.Release|x64.ActiveCfg = Release|x64
+		{7991893E-1480-4CA5-BEC2-2B40A5257E77}.Release|x64.Build.0 = Release|x64
+		{7991893E-1480-4CA5-BEC2-2B40A5257E77}.Release|x86.ActiveCfg = Release|Win32
+		{7991893E-1480-4CA5-BEC2-2B40A5257E77}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
