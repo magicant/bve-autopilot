@@ -35,6 +35,7 @@ namespace autopilot
         ~勾配グラフ();
 
         void 消去() noexcept;
+        void 列車長を設定(m 列車長) noexcept;
         void 勾配区間追加(m 始点, double 勾配);
         void 通過(m 位置);
 
@@ -46,6 +47,10 @@ namespace autopilot
 
         // 区間の始点からその区間のデータへの写像
         std::map<m, 勾配区間> _区間リスト;
+
+        m _列車長 = 0.0_m;
+
+        void キャッシュ消去() noexcept;
     };
 
 }
