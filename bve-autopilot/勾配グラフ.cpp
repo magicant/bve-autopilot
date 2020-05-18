@@ -82,30 +82,14 @@ namespace autopilot
         assert(i == _区間リスト.begin());
     }
 
-    mps2 勾配グラフ::勾配加速度(区間 対象範囲) const
+    mps2 勾配グラフ::列車勾配加速度(m 列車先頭位置) const
     {
-        m 全体長さ = 対象範囲.長さ();
-        if (!(全体長さ > 0.0_m)) {
-            return 0.0_mps2;
-        }
+        return mps2(); // TODO not implemented yet
+    }
 
-        mps2 加速度 = 0.0_mps2;
-        auto i = _区間リスト.lower_bound(対象範囲.終点);
-        m 終点 = i == _区間リスト.end() ? m::無限大() : i->first;
-        while (i != _区間リスト.begin() && 対象範囲.始点 < 終点) {
-            --i;
-            m 始点 = i->first;
-            区間 影響区間 = 重なり({始点, 終点}, 対象範囲);
-            m 影響長さ = 影響区間.長さ();
-            double 影響割合 = 影響長さ / 全体長さ;
-            if (std::isnan(影響割合)) {
-                影響割合 = 1;
-            }
-            加速度 += i->second.影響加速度 * 影響割合;
-
-            終点 = 始点;
-        }
-        return 加速度;
+    m2ps2 勾配グラフ::下り勾配比エネルギー(区間 変位) const
+    {
+        return m2ps2(); // TODO not implemented yet
     }
 
 }
