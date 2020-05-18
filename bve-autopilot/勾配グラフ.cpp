@@ -36,18 +36,12 @@ namespace autopilot
 
         constexpr mps2 重力加速度 = 9.80665_mps2;
 
+        constexpr mps2 勾配加速度(勾配グラフ::勾配 勾配) noexcept
+        {
+            return -0.75 * 重力加速度 * 勾配;
+        }
+
     }
-
-    struct 勾配グラフ::勾配区間
-    {
-        double 勾配;
-        mps2 影響加速度;
-
-        constexpr explicit 勾配区間(double 勾配) noexcept :
-            勾配{勾配}, 影響加速度{-0.75 * 重力加速度 * 勾配} { }
-        // 本当は tan を sin に変換すべきだがほとんど違わないので無視する
-
-    };
 
     勾配グラフ::勾配グラフ() = default;
     勾配グラフ::~勾配グラフ() = default;
@@ -63,9 +57,9 @@ namespace autopilot
         キャッシュ消去();
     }
 
-    void 勾配グラフ::勾配区間追加(m 始点, double 勾配)
+    void 勾配グラフ::勾配区間追加(m 始点, 勾配 勾配)
     {
-        _区間リスト.insert_or_assign(始点, 勾配区間{勾配});
+        _区間リスト.insert_or_assign(始点, 勾配);
     }
 
     void 勾配グラフ::通過(m 列車先頭位置)

@@ -31,22 +31,22 @@ namespace autopilot
     class 勾配グラフ
     {
     public:
+        using 勾配 = double;
+
         勾配グラフ();
         ~勾配グラフ();
 
         void 消去() noexcept;
         void 列車長を設定(m 列車長) noexcept;
-        void 勾配区間追加(m 始点, double 勾配);
+        void 勾配区間追加(m 始点, 勾配 勾配);
         void 通過(m 位置);
 
         mps2 列車勾配加速度(m 列車先頭位置) const;
         m2ps2 下り勾配比エネルギー(区間 変位) const;
 
     private:
-        struct 勾配区間;
-
-        // 区間の始点からその区間のデータへの写像
-        std::map<m, 勾配区間> _区間リスト;
+        // 区間の始点からその区間の勾配への写像
+        std::map<m, 勾配> _区間リスト;
 
         m _列車長 = 0.0_m;
 
