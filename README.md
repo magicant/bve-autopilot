@@ -75,6 +75,7 @@ Bve trainsim 5.7.6224.40815 で動作確認しています。BVE4 や OpenBVE �
 
 ブレーキのかけ方などは頻繁に改良を行っているので古い動画でのプラグインの動きは最新版とは異なることがあります。
 
+- [東京メトロ副都心線 小竹向原→渋谷](https://youtu.be/6kXDLosXjx8) - v1.4 で撮影
 - [阪和線・関西空港線 関空快速 天王寺→関西空港](https://youtu.be/92c_utzGNos) - v0.9 で撮影
 - [東急東横線・みなとみらい線 渋谷→元町・中華街](https://youtu.be/y3LwPA8is3I) - v0.6 で撮影
 - [信号試験線](https://youtu.be/ywAtS5WGzSg) - v0.5 で撮影
