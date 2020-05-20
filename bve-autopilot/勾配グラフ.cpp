@@ -23,6 +23,7 @@
 #include <cassert>
 #include <cmath>
 #include <iterator>
+#include <stdexcept>
 #include <utility>
 #include "区間.h"
 
@@ -41,6 +42,48 @@ namespace autopilot
             return -0.75 * 重力加速度 * 勾配;
         }
 
+    }
+
+    void 勾配加速度グラフ::勾配変化追加(区間 変化区間, 勾配 勾配変化量)
+    {
+        if (変化区間.始点 >= 変化区間.終点) {
+            throw std::invalid_argument("non-empty interval required");
+        }
+
+        // まず始点の値を設定する
+        const_iterator h = upper_bound(変化区間.始点);
+        iterator i = _変化点リスト.insert_or_assign(
+                h, 変化区間.始点, 勾配加速度(h, 変化区間.始点));
+
+        // 終点の値を求める
+        mps2 加速度変化量 = autopilot::勾配加速度(勾配変化量);
+        mps2 新しい終点加速度 = 勾配加速度(変化区間.終点) + 加速度変化量;
+
+        // 始点より後にある点を更新する
+        m 区間長さ = 変化区間.長さ();
+        while (++i != end()) {
+            double 比 = std::min((i->first - 変化区間.始点) / 区間長さ, 1.0);
+            i->second += 比 * 加速度変化量;
+        }
+
+        // 終点の値を設定する
+        _変化点リスト.insert_or_assign(end(), 変化区間.終点, 新しい終点加速度);
+    }
+
+    mps2 勾配加速度グラフ::勾配加速度(const_iterator i, m 位置) const
+    {
+        if (i == begin()) {
+            return 0.0_mps2;
+        }
+        const_iterator h = std::prev(i);
+        if (i == end()) {
+            return h->second;
+        }
+        m h位置 = h->first, i位置 = i->first;
+        assert(h位置 <= 位置);
+        assert(位置 < i位置);
+        double 比 = (位置 - h位置) / (i位置 - h位置);
+        return h->second + 比 * (i->second - h->second);
     }
 
     勾配グラフ::勾配グラフ() = default;
