@@ -44,10 +44,15 @@ namespace autopilot
         void 勾配変化追加(区間 変化区間, 勾配 勾配変化量);
 
     private:
-        using const_iterator = std::map<m, mps2>::const_iterator;
-        using iterator = std::map<m, mps2>::iterator;
+        struct 変化点 {
+            mps2 勾配加速度;
+            mutable m2ps2 累積比エネルギー;
+        };
 
-        std::map<m, mps2> _変化点リスト;
+        using const_iterator = std::map<m, 変化点>::const_iterator;
+        using iterator = std::map<m, 変化点>::iterator;
+
+        std::map<m, 変化点> _変化点リスト;
 
         /// i == upper_bound(位置)
         mps2 勾配加速度(const_iterator i, m 位置) const;

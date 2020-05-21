@@ -115,5 +115,18 @@ namespace bveautopilottest
             Assert::AreEqual(0.074, g.勾配加速度(130.1_m).value, 0.001);
         }
 
+        TEST_METHOD(一致する勾配二つのグラフの勾配加速度)
+        {
+            勾配加速度グラフ g;
+            g.勾配変化追加({10.0_m, 20.0_m}, 0.04);
+            g.勾配変化追加({10.0_m, 20.0_m}, -0.02);
+            Assert::AreEqual(0.0, g.勾配加速度(9.9_m).value, 0.0);
+            Assert::AreEqual(0.0, g.勾配加速度(10.0_m).value, 0.0);
+            Assert::AreEqual(-0.147, g.勾配加速度(20.0_m).value, 0.001);
+            Assert::AreEqual(-0.147, g.勾配加速度(20.1_m).value, 0.001);
+            Assert::AreEqual(-0.074, g.勾配加速度(15.0_m).value, 0.001);
+            Assert::AreEqual(-0.037, g.勾配加速度(12.5_m).value, 0.001);
+        }
+
     };
 }
