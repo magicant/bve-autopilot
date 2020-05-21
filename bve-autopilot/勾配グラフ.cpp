@@ -44,6 +44,11 @@ namespace autopilot
 
     }
 
+    mps2 勾配加速度グラフ::勾配加速度(m 位置) const
+    {
+        return 勾配加速度(_変化点リスト.upper_bound(位置), 位置);
+    }
+
     void 勾配加速度グラフ::勾配変化追加(区間 変化区間, 勾配 勾配変化量)
     {
         if (変化区間.始点 >= 変化区間.終点) {
@@ -51,7 +56,7 @@ namespace autopilot
         }
 
         // まず始点の値を設定する
-        const_iterator h = upper_bound(変化区間.始点);
+        const_iterator h = _変化点リスト.upper_bound(変化区間.始点);
         iterator i = _変化点リスト.insert_or_assign(
                 h, 変化区間.始点, 勾配加速度(h, 変化区間.始点));
 
@@ -61,22 +66,23 @@ namespace autopilot
 
         // 始点より後にある点を更新する
         m 区間長さ = 変化区間.長さ();
-        while (++i != end()) {
+        while (++i != _変化点リスト.end()) {
             double 比 = std::min((i->first - 変化区間.始点) / 区間長さ, 1.0);
             i->second += 比 * 加速度変化量;
         }
 
         // 終点の値を設定する
-        _変化点リスト.insert_or_assign(end(), 変化区間.終点, 新しい終点加速度);
+        _変化点リスト.insert_or_assign(
+            _変化点リスト.end(), 変化区間.終点, 新しい終点加速度);
     }
 
     mps2 勾配加速度グラフ::勾配加速度(const_iterator i, m 位置) const
     {
-        if (i == begin()) {
+        if (i == _変化点リスト.begin()) {
             return 0.0_mps2;
         }
         const_iterator h = std::prev(i);
-        if (i == end()) {
+        if (i == _変化点リスト.end()) {
             return h->second;
         }
         m h位置 = h->first, i位置 = i->first;

@@ -32,26 +32,11 @@ namespace autopilot
     {
     public:
         using 勾配 = double;
-        using const_iterator = std::map<m, mps2>::const_iterator;
 
         bool empty() const noexcept {
             return _変化点リスト.empty();
         }
-        const_iterator begin() const noexcept {
-            return _変化点リスト.begin();
-        }
-        const_iterator end() const noexcept {
-            return _変化点リスト.end();
-        }
-        const_iterator lower_bound(m 位置) const {
-            return _変化点リスト.lower_bound(位置);
-        }
-        const_iterator upper_bound(m 位置) const {
-            return _変化点リスト.upper_bound(位置);
-        }
-        mps2 勾配加速度(m 位置) const {
-            return 勾配加速度(upper_bound(位置), 位置);
-        }
+        mps2 勾配加速度(m 位置) const;
 
         void clear() noexcept {
             return _変化点リスト.clear();
@@ -59,6 +44,7 @@ namespace autopilot
         void 勾配変化追加(区間 変化区間, 勾配 勾配変化量);
 
     private:
+        using const_iterator = std::map<m, mps2>::const_iterator;
         using iterator = std::map<m, mps2>::iterator;
 
         std::map<m, mps2> _変化点リスト;
