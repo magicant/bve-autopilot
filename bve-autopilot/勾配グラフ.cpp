@@ -24,6 +24,7 @@
 #include <cmath>
 #include <iterator>
 #include <stdexcept>
+#include <tuple>
 #include <utility>
 #include "区間.h"
 
@@ -77,6 +78,25 @@ namespace autopilot
         _変化点リスト.insert_or_assign(
             _変化点リスト.end(), 変化区間.終点,
             変化点{新しい終点加速度, m2ps2::quiet_NaN()});
+
+        _累積比エネルギー未計算位置 =
+            std::min(_累積比エネルギー未計算位置, 変化区間.始点);
+    }
+
+    m2ps2 勾配加速度グラフ::比エネルギー差(mps2 a2, mps2 a1, m 変位)
+    {
+        if (a2 <= 0.0_mps2) {
+            if (a1 <= 0.0_mps2) {
+                return 0.0_m2ps2;
+            }
+            double 比 = a1 / (a1 - a2);
+            return 0.5 * 比 * 変位 * a1;
+        }
+        if (a1 >= 0.0_mps2) {
+            return 0.5 * 変位 * (a1 + a2);
+        }
+        double 比 = a2 / (a2 - a1);
+        return 0.5 * 比 * 変位 * a2;
     }
 
     mps2 勾配加速度グラフ::勾配加速度(const_iterator i, m 位置) const
@@ -94,6 +114,46 @@ namespace autopilot
         double 比 = (位置 - h位置) / (i位置 - h位置);
         return h->second.勾配加速度 +
             比 * (i->second.勾配加速度 - h->second.勾配加速度);
+    }
+
+    m2ps2 勾配加速度グラフ::比エネルギー(m 位置) const
+    {
+        const_iterator i = _変化点リスト.upper_bound(位置);
+        if (i == _変化点リスト.begin()) {
+            return 0.0_m2ps2;
+        }
+        const_iterator h = std::prev(i);
+
+        if (isnan(h->second.累積比エネルギー)) {
+            // 累積比エネルギーが未計算なので計算する
+            const_iterator g =
+                _変化点リスト.lower_bound(_累積比エネルギー未計算位置);
+            m z;
+            変化点 p;
+            if (g == _変化点リスト.begin()) {
+                g->second.累積比エネルギー = 0.0_m2ps2;
+                std::tie(z, p) = *g;
+                ++g;
+            }
+            else {
+                std::tie(z, p) = *std::prev(g);
+            }
+
+            for (; g != i; ++g) {
+                auto &[z2, p2] = *g;
+                p2.累積比エネルギー = p.累積比エネルギー +
+                    比エネルギー差(p2.勾配加速度, p.勾配加速度, z2 - z);
+                z = z2, p = p2;
+            }
+
+            _累積比エネルギー未計算位置 = z;
+        }
+
+        assert(!isnan(h->second.累積比エネルギー));
+        mps2 a2 = 勾配加速度(i, 位置);
+        m dz = 位置 - h->first;
+        return h->second.累積比エネルギー +
+            比エネルギー差(a2, h->second.勾配加速度, dz);
     }
 
     勾配グラフ::勾配グラフ() = default;

@@ -37,25 +37,35 @@ namespace autopilot
             return _変化点リスト.empty();
         }
         mps2 勾配加速度(m 位置) const;
+        m2ps2 比エネルギー差(区間 変位) const {
+            return 比エネルギー(変位.終点) - 比エネルギー(変位.始点);
+        }
 
         void clear() noexcept {
-            return _変化点リスト.clear();
+            _変化点リスト.clear();
+            _累積比エネルギー未計算位置 = -m::無限大();
         }
         void 勾配変化追加(区間 変化区間, 勾配 勾配変化量);
 
     private:
         struct 変化点 {
             mps2 勾配加速度;
-            mutable m2ps2 累積比エネルギー;
+            mutable m2ps2 累積比エネルギー; // 未計算なら NaN
         };
 
         using const_iterator = std::map<m, 変化点>::const_iterator;
         using iterator = std::map<m, 変化点>::iterator;
 
+        /// 加速度が a1 から a2 に変化するときの比エネルギーを求める。
+        /// ただし加速度が正の範囲のみ計算に加える。
+        static m2ps2 比エネルギー差(mps2 a2, mps2 a1, m 変位);
+
         std::map<m, 変化点> _変化点リスト;
+        mutable m _累積比エネルギー未計算位置 = -m::無限大();
 
         /// i == upper_bound(位置)
         mps2 勾配加速度(const_iterator i, m 位置) const;
+        m2ps2 比エネルギー(m 位置) const;
     };
 
     class 勾配グラフ
