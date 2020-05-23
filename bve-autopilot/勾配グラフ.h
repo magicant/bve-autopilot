@@ -71,7 +71,7 @@ namespace autopilot
     class 勾配グラフ
     {
     public:
-        using 勾配 = double;
+        using 勾配 = 勾配加速度グラフ::勾配;
 
         勾配グラフ();
         ~勾配グラフ();
@@ -90,7 +90,11 @@ namespace autopilot
 
         m _列車長 = 0.0_m;
 
-        void キャッシュ消去() noexcept;
+        /// 区間リストに対応する加速度のキャッシュ。
+        /// ただし使用されるときに初めて構築される。
+        mutable 勾配加速度グラフ _加速度キャッシュ;
+
+        void 加速度キャッシュ構築() const;
     };
 
 }

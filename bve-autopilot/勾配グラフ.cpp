@@ -162,6 +162,7 @@ namespace autopilot
     void 勾配グラフ::消去() noexcept
     {
         _区間リスト.clear();
+        _加速度キャッシュ.clear();
     }
 
     void 勾配グラフ::列車長を設定(m 列車長) noexcept
@@ -169,12 +170,14 @@ namespace autopilot
         // 勾配加速度グラフは長さ 0 の列車を扱えないので 0 にはしない
         _列車長 = std::max(列車長, 0.5_m);
 
-        キャッシュ消去();
+        _加速度キャッシュ.clear();
     }
 
     void 勾配グラフ::勾配区間追加(m 始点, 勾配 勾配)
     {
         _区間リスト.insert_or_assign(始点, 勾配);
+
+        _加速度キャッシュ.clear();
     }
 
     void 勾配グラフ::通過(m 列車先頭位置)
@@ -199,22 +202,34 @@ namespace autopilot
         i = _区間リスト.erase(_区間リスト.begin(), i);
         assert(!_区間リスト.empty());
         assert(i == _区間リスト.begin());
-        キャッシュ消去();
+
+        _加速度キャッシュ.clear();
     }
 
     mps2 勾配グラフ::列車勾配加速度(m 列車先頭位置) const
     {
-        return mps2(); // TODO not implemented yet
+        加速度キャッシュ構築();
+        return _加速度キャッシュ.勾配加速度(列車先頭位置);
     }
 
     m2ps2 勾配グラフ::下り勾配比エネルギー(区間 変位) const
     {
-        return m2ps2(); // TODO not implemented yet
+        加速度キャッシュ構築();
+        return _加速度キャッシュ.比エネルギー差(変位);
     }
 
-    void 勾配グラフ::キャッシュ消去() noexcept
+    void 勾配グラフ::加速度キャッシュ構築() const
     {
-        // TODO not implemented yet
+        if (!_加速度キャッシュ.empty()) {
+            return;
+        }
+
+        勾配 前の勾配 = 0.0;
+        for (auto &[位置, 勾配] : _区間リスト) {
+            _加速度キャッシュ.勾配変化追加(
+                {位置, 位置 + _列車長}, 勾配 - 前の勾配);
+            前の勾配 = 勾配;
+        }
     }
 
 }
