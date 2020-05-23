@@ -27,6 +27,7 @@
 namespace autopilot
 {
 
+    class 勾配グラフ;
     class 共通状態;
 
     struct 減速パターン
@@ -45,18 +46,21 @@ namespace autopilot
         ~減速パターン() = default;
 
         /// 目標到達後も減速を続けた場合の期待状態
-        std::pair<mps, mps2> 延長期待状態(m 現在位置) const;
+        std::pair<mps, mps2> 延長期待状態(
+            m 現在位置, const 勾配グラフ &勾配) const;
         /// 目標到達後は目標速度を維持する場合の期待状態
-        std::pair<mps, mps2> 期待状態(m 現在位置) const;
-        mps 延長期待速度(m 現在位置) const {
-            return 延長期待状態(現在位置).first;
+        std::pair<mps, mps2> 期待状態(
+            m 現在位置, const 勾配グラフ &勾配) const;
+        mps 延長期待速度(m 現在位置, const 勾配グラフ &勾配) const {
+            return 延長期待状態(現在位置, 勾配).first;
         }
-        mps 期待速度(m 現在位置) const {
-            return 期待状態(現在位置).first;
+        mps 期待速度(m 現在位置, const 勾配グラフ &勾配) const {
+            return 期待状態(現在位置, 勾配).first;
         }
 
         /// 延長期待状態に従って減速し続けるための出力減速度
-        mps2 減速用出力減速度(m 現在位置, mps 現在速度) const;
+        mps2 減速用出力減速度(m 現在位置, mps 現在速度, const 勾配グラフ &勾配)
+            const;
         /// 目標速度に達したら減速をやめるための出力減速度の下限
         mps2 収束用出力減速度(mps 現在速度) const;
         自動制動自然数ノッチ 出力制動ノッチ(
