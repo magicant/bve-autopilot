@@ -60,15 +60,6 @@ namespace autopilot
         return {期待速度, 期待減速度};
     }
 
-    std::pair<mps, mps2> 減速パターン::期待状態(
-        m 現在位置, const 勾配グラフ &勾配) const
-    {
-        if (現在位置 >= 目標位置) {
-            return {目標速度, 0.0_mps2};
-        }
-        return 延長期待状態(現在位置, 勾配);
-    }
-
     mps2 減速パターン::減速用出力減速度(
         m 現在位置, mps 現在速度, const 勾配グラフ &勾配) const
     {
