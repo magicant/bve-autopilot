@@ -41,6 +41,14 @@ namespace autopilot
             return sqrt(速度 * 速度 + 2.0 * 比エネルギー);
         }
 
+        自動制動自然数ノッチ ノッチ切り上げ(自動制動実数ノッチ ノッチ)
+        {
+            constexpr double max = std::numeric_limits<int>::max();
+            double r = std::clamp(ノッチ.value, 0.0, max);
+            unsigned n = static_cast<unsigned>(std::ceil(r));
+            return 自動制動自然数ノッチ{n};
+        }
+
         /// 一定時間惰行した後、下り勾配による加速を加味する。
         /// (結果の位置と速度は正しいが時刻は正確でない)
         void 惰行(走行モデル &モデル, s 時間, const 勾配グラフ &勾配)
@@ -157,6 +165,7 @@ namespace autopilot
         mps2 勾配加速度 = 状態.勾配().列車勾配加速度(現在位置);
         自動制動実数ノッチ 出力実数 = 制動.自動ノッチ(出力減速度 + 勾配加速度);
 
+        自動制動自然数ノッチ 出力自然数;
         if (目標位置 >= 現在位置) {
             // 小刻みに制動ノッチを変化させるのを防ぐ
             double 補正ノッチ =
@@ -168,19 +177,12 @@ namespace autopilot
                 出力実数.value += 補正ノッチ;
             }
 
-            出力実数 = 制動.自動ノッチ丸め(出力実数);
+            出力自然数 = 制動.自動ノッチ丸め(出力実数);
         }
         else {
-            出力実数.value = std::ceil(出力実数.value);
+            出力自然数 = ノッチ切り上げ(出力実数);
         }
-
-        if (出力実数.value > std::numeric_limits<int>::max()) {
-            return 制動.自動最大ノッチ();
-        }
-        return std::clamp(
-            自動制動自然数ノッチ{static_cast<unsigned>(出力実数.value)},
-            自動制動自然数ノッチ{0},
-            制動.自動最大ノッチ());
+        return std::min(出力自然数, 制動.自動最大ノッチ());
     }
 
     bool 減速パターン::力行する余裕あり(
