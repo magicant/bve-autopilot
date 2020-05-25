@@ -69,7 +69,7 @@ namespace autopilot
             const 共通状態 &状態) const;
         bool 力行する余裕あり(
             力行ノッチ 力行ノッチ, mps2 想定加速度, s 想定惰行時間,
-            mps2 勾配影響, const 共通状態 &状態) const;
+            const 共通状態 &状態) const;
         自動制御指令 出力ノッチ(const 共通状態 &状態) const;
 
         /// 指定した速度におけるパターン上の位置と時刻を返します。
