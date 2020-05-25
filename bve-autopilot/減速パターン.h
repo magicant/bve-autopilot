@@ -27,6 +27,7 @@
 namespace autopilot
 {
 
+    class 勾配グラフ;
     class 共通状態;
 
     struct 減速パターン
@@ -54,12 +55,14 @@ namespace autopilot
 
         ~減速パターン() = default;
 
-        std::pair<mps, mps2> 期待速度と期待減速度(m 現在位置) const;
-        mps 期待速度(m 現在位置) const {
-            return 期待速度と期待減速度(現在位置).first;
+        std::pair<mps, mps2> 期待速度と期待減速度(
+            m 現在位置, const 勾配グラフ &勾配) const;
+        mps 期待速度(m 現在位置, const 勾配グラフ &勾配) const {
+            return 期待速度と期待減速度(現在位置, 勾配).first;
         }
 
-        mps2 出力減速度(m 現在位置, mps 現在速度) const;
+        mps2 出力減速度(
+            m 現在位置, mps 現在速度, const 勾配グラフ &勾配) const;
         自動制動自然数ノッチ 出力制動ノッチ(
             m 現在位置, mps 現在速度, 自動制動自然数ノッチ 現在制動ノッチ,
             mps2 勾配影響, const 共通状態 &状態) const;
