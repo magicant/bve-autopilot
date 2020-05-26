@@ -64,7 +64,7 @@ namespace autopilot {
         void 次駅停止位置を設定(m 残距離, m 直前位置, const 共通状態 &状態);
         void 最大許容誤差を設定(m 最大許容誤差);
 
-        mps2 出力減速度(m 停止位置, const 共通状態 &状態) const;
+        mps2 出力減速度(m 停止位置, mps2 勾配影響, const 共通状態 &状態) const;
     };
 
 }

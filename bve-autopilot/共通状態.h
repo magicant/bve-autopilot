@@ -102,6 +102,7 @@ namespace autopilot {
         const 制動特性 &制動() const noexcept { return _制動特性; }
         自動制動自然数ノッチ 転動防止自動ノッチ() const;
         const 勾配グラフ &勾配() const noexcept { return _勾配グラフ; }
+        mps2 進路勾配加速度(m 目標位置) const;
         mps2 車両勾配加速度() const;
         int 前回逆転器ノッチ() const noexcept { return _前回出力.Reverser; }
         /// 抑速ノッチでは値は負になる
