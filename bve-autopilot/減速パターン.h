@@ -55,7 +55,6 @@ namespace autopilot
 
         ~減速パターン() = default;
 
-        std::pair<mps, mps2> 平坦時の期待速度と期待減速度(m 現在位置) const;
         std::pair<mps, mps2> 期待速度と期待減速度(
             m 現在位置, const 勾配グラフ &勾配) const;
         mps 期待速度(m 現在位置, const 勾配グラフ &勾配) const {
