@@ -38,7 +38,8 @@ namespace autopilot
         /// 速度に比エネルギーを加算する
         mps 加算(mps 速度, m2ps2 比エネルギー)
         {
-            return sqrt(速度 * 速度 + 2.0 * 比エネルギー);
+            m2ps2 e = 速度 * 速度 + 2.0 * 比エネルギー;
+            return sqrt(std::max(e, 0.0_m2ps2));
         }
 
         自動制動自然数ノッチ ノッチ切り上げ(自動制動実数ノッチ ノッチ)
