@@ -120,6 +120,9 @@
     <ClInclude Include="atsplugin.h">
       <Filter>ヘッダー ファイル\制御系</Filter>
     </ClInclude>
+    <ClInclude Include="減速目標.h">
+      <Filter>ヘッダー ファイル\コア</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -180,6 +183,9 @@
       <Filter>ソース ファイル\コア</Filter>
     </ClCompile>
     <ClCompile Include="早着防止.cpp">
+      <Filter>ソース ファイル\コア</Filter>
+    </ClCompile>
+    <ClCompile Include="減速目標.cpp">
       <Filter>ソース ファイル\コア</Filter>
     </ClCompile>
   </ItemGroup>
