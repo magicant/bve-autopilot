@@ -76,4 +76,25 @@ namespace autopilot
 
     };
 
+    class 減速パターン
+    {
+    public:
+        constexpr 減速パターン(
+            m 通過地点, mps 通過速度, mps2 基準減速度) noexcept :
+            _通過地点{通過地点}, _通過速度{通過速度}, _基準減速度{基準減速度}
+        {}
+
+        constexpr m 通過地点() const noexcept { return _通過地点; }
+        constexpr mps 通過速度() const noexcept { return _通過速度; }
+        constexpr mps2 基準減速度() const noexcept { return _基準減速度; }
+
+    private:
+        m _通過地点;
+        mps _通過速度;
+        /// 出力ノッチ計算の基準となる減速度。
+        /// 上り勾配では実際の減速度が基準減速度に一致するように調整される。
+        /// 下り勾配では乗客が感じる減速度が基準減速度に一致するようにする。
+        mps2 _基準減速度;
+    };
+
 }
