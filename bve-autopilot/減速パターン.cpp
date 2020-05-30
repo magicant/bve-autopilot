@@ -34,7 +34,7 @@ namespace autopilot
         constexpr mps3 終盤加加速度 = 0.5_kmphps2;
     }
 
-    std::pair<mps, mps2> 減速パターン::期待速度と期待減速度(
+    std::pair<mps, mps2> 旧式パターン::期待速度と期待減速度(
         m 現在位置) const
     {
         if (現在位置 >= 目標位置) {
@@ -62,7 +62,7 @@ namespace autopilot
         return { 走行.速度(), 初期減速度 };
     }
 
-    mps2 減速パターン::出力減速度(m 現在位置, mps 現在速度) const
+    mps2 旧式パターン::出力減速度(m 現在位置, mps 現在速度) const
     {
         if (現在位置 >= 目標位置) {
             if (目標速度 > 0.0_mps) {
@@ -117,7 +117,7 @@ namespace autopilot
         return std::min(出力減速度1, 出力減速度2);
     }
 
-    自動制動自然数ノッチ 減速パターン::出力制動ノッチ(
+    自動制動自然数ノッチ 旧式パターン::出力制動ノッチ(
         m 現在位置, mps 現在速度, 自動制動自然数ノッチ 現在制動ノッチ,
         mps2 勾配影響, const 共通状態 &状態) const
     {
@@ -151,7 +151,7 @@ namespace autopilot
             制動.自動最大ノッチ());
     }
 
-    bool 減速パターン::力行する余裕あり(
+    bool 旧式パターン::力行する余裕あり(
         力行ノッチ 力行ノッチ, mps2 想定加速度, s 想定惰行時間,
         mps2 勾配影響, const 共通状態 &状態) const
     {
@@ -170,7 +170,7 @@ namespace autopilot
         return 制動ノッチ == 自動制動自然数ノッチ{0};
     }
 
-    自動制御指令 減速パターン::出力ノッチ(const 共通状態 &状態) const
+    自動制御指令 旧式パターン::出力ノッチ(const 共通状態 &状態) const
     {
         mps 現在速度 = 状態.現在速度();
         自動制動自然数ノッチ 現在制動ノッチ =
@@ -250,7 +250,7 @@ namespace autopilot
         return 惰行;
     }
 
-    走行モデル 減速パターン::パターン到達状態(mps 速度) const
+    走行モデル 旧式パターン::パターン到達状態(mps 速度) const
     {
         走行モデル 走行{目標位置, 目標速度};
         if (速度 <= 目標速度) {

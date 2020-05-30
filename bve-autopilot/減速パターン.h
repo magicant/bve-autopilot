@@ -29,7 +29,7 @@ namespace autopilot
 
     class 共通状態;
 
-    struct 減速パターン
+    struct 旧式パターン
     {
         static constexpr mps2 標準最終減速度 = 0.5_kmphps;
         static constexpr mps2 停止最終減速度 = 1.0_kmphps;
@@ -39,12 +39,12 @@ namespace autopilot
         mps2 初期減速度, 最終減速度;
         bool 素早い速度超過回復;
 
-        constexpr 減速パターン(
+        constexpr 旧式パターン(
             m 目標位置, mps 目標速度, mps2 初期減速度,
             bool 素早い速度超過回復 = false) noexcept :
-            減速パターン{目標位置, 目標速度,
+            旧式パターン{目標位置, 目標速度,
                 初期減速度, 初期減速度, 素早い速度超過回復} {}
-        constexpr 減速パターン(
+        constexpr 旧式パターン(
             m 目標位置, mps 目標速度,
             mps2 初期減速度, mps2 最終減速度,
             bool 素早い速度超過回復 = false) noexcept :
@@ -52,7 +52,7 @@ namespace autopilot
             初期減速度(初期減速度), 最終減速度(最終減速度),
             素早い速度超過回復{素早い速度超過回復} {}
 
-        ~減速パターン() = default;
+        ~旧式パターン() = default;
 
         std::pair<mps, mps2> 期待速度と期待減速度(m 現在位置) const;
         mps 期待速度(m 現在位置) const {
