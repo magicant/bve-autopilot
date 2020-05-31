@@ -18,17 +18,21 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include "減速パターン.h"
 #include "物理量.h"
 #include "走行モデル.h"
 
 namespace autopilot
 {
 
+    class 勾配グラフ;
     class 共通状態;
 
     class 減速目標
     {
     public:
+        constexpr static mps 速度マージン = 0.5_kmph;
+
         constexpr 減速目標(m 位置, mps 速度, mps2 基準減速度) noexcept :
             _位置{位置}, _速度{速度}, _基準減速度{基準減速度} {}
 
@@ -49,6 +53,8 @@ namespace autopilot
         m _位置;
         mps _速度;
         mps2 _基準減速度;
+
+        減速パターン 主パターン(const 勾配グラフ &勾配) const;
     };
 
 }
