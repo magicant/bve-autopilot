@@ -27,6 +27,7 @@
 namespace autopilot
 {
 
+    class 勾配グラフ;
     class 共通状態;
 
     struct 旧式パターン
@@ -87,6 +88,9 @@ namespace autopilot
         constexpr m 通過地点() const noexcept { return _通過地点; }
         constexpr mps 通過速度() const noexcept { return _通過速度; }
         constexpr mps2 基準減速度() const noexcept { return _基準減速度; }
+
+        mps 期待速度(m 位置, const 勾配グラフ &勾配) const;
+        mps2 期待減速度(m 位置, const 勾配グラフ &勾配) const;
 
     private:
         m _通過地点;
