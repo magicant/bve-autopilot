@@ -62,6 +62,7 @@ namespace autopilot
 
         自動制動自然数ノッチ 出力制動ノッチ(
             const 走行モデル &運動状態, const 共通状態 &状態) const;
+        自動制動自然数ノッチ 出力制動強めノッチ(const 共通状態 &状態) const;
 
         力行ノッチ 出力力行ノッチ(const 共通状態 &状態) const;
     };
