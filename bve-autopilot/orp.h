@@ -46,7 +46,7 @@ namespace autopilot
         void 経過(const 共通状態 &状態);
 
         bool 制御中() const noexcept {
-            return _運転パターン.目標位置 < m::無限大();
+            return _照査パターン.通過地点() < m::無限大();
         }
 
         自動制御指令 出力ノッチ() const noexcept { return _出力ノッチ; }
@@ -54,7 +54,7 @@ namespace autopilot
         mps 照査速度() const noexcept { return _照査速度; }
 
     private:
-        旧式パターン _照査パターン, _運転パターン;
+        減速パターン _照査パターン;
         自動制御指令 _出力ノッチ;
         mps _照査速度;
     };
