@@ -89,6 +89,10 @@ namespace autopilot
         constexpr mps 通過速度() const noexcept { return _通過速度; }
         constexpr mps2 基準減速度() const noexcept { return _基準減速度; }
 
+        static 減速パターン 二点間パターン(
+            m 通過地点, mps 通過速度, m 現在位置, mps 現在速度,
+            const 勾配グラフ &勾配);
+
         mps 期待速度(m 位置, const 勾配グラフ &勾配) const;
         mps2 期待減速度(m 位置, const 勾配グラフ &勾配) const;
 
