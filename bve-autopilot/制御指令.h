@@ -19,6 +19,7 @@
 
 #pragma once
 #include <algorithm>
+#include <cmath>
 #include <limits>
 #include <variant>
 
@@ -215,8 +216,25 @@ namespace autopilot
     struct 自動制動実数ノッチ : 制動力<自動制動実数ノッチ>
     {
         using 制動力::制動力;
+
         constexpr 自動制動実数ノッチ(const 自動制動自然数ノッチ &v) noexcept :
             制動力{v.value} {}
+
+        自動制動自然数ノッチ ceil() const
+        {
+            constexpr double max = std::numeric_limits<int>::max();
+            double r = std::clamp(value, 0.0, max);
+            unsigned n = static_cast<unsigned>(std::ceil(r));
+            return 自動制動自然数ノッチ{n};
+        }
+
+        自動制動自然数ノッチ floor() const
+        {
+            constexpr double max = std::numeric_limits<int>::max();
+            double r = std::clamp(value, 0.0, max);
+            unsigned n = static_cast<unsigned>(std::floor(r));
+            return 自動制動自然数ノッチ{n};
+        }
     };
 
     /// 制動の強さを最大常用ブレーキに対する割合で表したもの

@@ -177,6 +177,7 @@
     <ClInclude Include="パネル出力.h" />
     <ClInclude Include="信号順守.h" />
     <ClInclude Include="共通状態.h" />
+    <ClInclude Include="出力制御.h" />
     <ClInclude Include="制動力推定.h" />
     <ClInclude Include="制動特性.h" />
     <ClInclude Include="制御指令.h" />
@@ -208,6 +209,7 @@
     <ClCompile Include="パネル出力.cpp" />
     <ClCompile Include="信号順守.cpp" />
     <ClCompile Include="共通状態.cpp" />
+    <ClCompile Include="出力制御.cpp" />
     <ClCompile Include="制動力推定.cpp" />
     <ClCompile Include="制動特性.cpp" />
     <ClCompile Include="制限グラフ.cpp" />

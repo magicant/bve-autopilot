@@ -22,7 +22,9 @@
 #include <algorithm>
 #include <cassert>
 #include <cmath>
+#include <functional>
 #include <limits>
+#include "出力制御.h"
 #include "区間.h"
 #include "減速パターン.h"
 #include "減速目標.h"
@@ -137,10 +139,13 @@ namespace autopilot {
             _調整した次駅停止位置 = m::無限大();
         }
 
+        using namespace std::placeholders;
         m 計算用目標停止位置 =
             std::min(名目の目標停止位置, _調整した次駅停止位置);
         減速目標 目標{計算用目標停止位置, 0.0_mps, 状態.目安減速度()};
-        _出力ノッチ = 目標.出力ノッチ(状態);
+        _出力ノッチ = 出力制御::出力ノッチ(
+            std::bind(&減速目標::出力制動ノッチ, &目標, _1, _2),
+            状態);
 
         if (残距離 > _最大許容誤差) {
             return; // まだ目標停止位置に十分近付いていない

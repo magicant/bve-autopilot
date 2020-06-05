@@ -123,6 +123,9 @@
     <ClInclude Include="減速目標.h">
       <Filter>ヘッダー ファイル\コア</Filter>
     </ClInclude>
+    <ClInclude Include="出力制御.h">
+      <Filter>ヘッダー ファイル\コア</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -186,6 +189,9 @@
       <Filter>ソース ファイル\コア</Filter>
     </ClCompile>
     <ClCompile Include="減速目標.cpp">
+      <Filter>ソース ファイル\コア</Filter>
+    </ClCompile>
+    <ClCompile Include="出力制御.cpp">
       <Filter>ソース ファイル\コア</Filter>
     </ClCompile>
   </ItemGroup>

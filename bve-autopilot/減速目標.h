@@ -47,7 +47,8 @@ namespace autopilot
         走行モデル パターン到達状態(mps 速度) const;
 
         /// 制限速度を維持するために適したノッチを計算します
-        自動制御指令 出力ノッチ(const 共通状態 &状態) const;
+        自動制動自然数ノッチ 出力制動ノッチ(
+            const 走行モデル &運動状態, const 共通状態 &状態) const;
 
     private:
         m _位置;
@@ -60,14 +61,6 @@ namespace autopilot
             const 走行モデル &運動状態, const 勾配グラフ &勾配) const;
         mps2 収束用出力減速度(mps 現在速度) const;
 
-        自動制動自然数ノッチ 出力制動ノッチ(
-            const 走行モデル &運動状態, const 共通状態 &状態) const;
-        自動制動自然数ノッチ 出力制動強めノッチ(const 共通状態 &状態) const;
-
-        bool 力行する余裕あり(
-            力行ノッチ ノッチ, mps2 想定加速度, s 想定惰行時間,
-            const 共通状態 &状態) const;
-        力行ノッチ 出力力行ノッチ(const 共通状態 &状態) const;
     };
 
 }

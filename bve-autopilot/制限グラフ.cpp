@@ -21,11 +21,13 @@
 #include "制限グラフ.h"
 #include <algorithm>
 #include <cassert>
+#include <functional>
 #include <iterator>
 #include <limits>
 #include <numeric>
 #include <utility>
 #include "共通状態.h"
+#include "出力制御.h"
 #include "区間.h"
 #include "減速パターン.h"
 #include "減速目標.h"
@@ -138,8 +140,12 @@ namespace autopilot
                 // 目標位置を超えてから減速が始まるようにする。
                 目標減速度 = mps2::無限大();
             }
+
+            using namespace std::placeholders;
             減速目標 目標 = 区間.目標(目標減速度);
-            自動制御指令 ノッチ2 = 目標.出力ノッチ(状態);
+            自動制御指令 ノッチ2 = 出力制御::出力ノッチ(
+                std::bind(&減速目標::出力制動ノッチ, &目標, _1, _2),
+                状態);
             ノッチ = std::min(ノッチ, ノッチ2);
         }
 
