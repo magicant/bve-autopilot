@@ -18,64 +18,12 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
-#include <utility>
-#include "制動特性.h"
-#include "制御指令.h"
 #include "物理量.h"
-#include "走行モデル.h"
 
 namespace autopilot
 {
 
     class 勾配グラフ;
-    class 共通状態;
-
-    struct 旧式パターン
-    {
-        static constexpr mps2 標準最終減速度 = 0.5_kmphps;
-        static constexpr mps2 停止最終減速度 = 1.0_kmphps;
-
-        m 目標位置;
-        mps 目標速度;
-        mps2 初期減速度, 最終減速度;
-        bool 素早い速度超過回復;
-
-        constexpr 旧式パターン(
-            m 目標位置, mps 目標速度, mps2 初期減速度,
-            bool 素早い速度超過回復 = false) noexcept :
-            旧式パターン{目標位置, 目標速度,
-                初期減速度, 初期減速度, 素早い速度超過回復} {}
-        constexpr 旧式パターン(
-            m 目標位置, mps 目標速度,
-            mps2 初期減速度, mps2 最終減速度,
-            bool 素早い速度超過回復 = false) noexcept :
-            目標位置(目標位置), 目標速度(目標速度),
-            初期減速度(初期減速度), 最終減速度(最終減速度),
-            素早い速度超過回復{素早い速度超過回復} {}
-
-        ~旧式パターン() = default;
-
-        std::pair<mps, mps2> 期待速度と期待減速度(m 現在位置) const;
-        mps 期待速度(m 現在位置) const {
-            return 期待速度と期待減速度(現在位置).first;
-        }
-
-        mps2 出力減速度(m 現在位置, mps 現在速度) const;
-        自動制動自然数ノッチ 出力制動ノッチ(
-            m 現在位置, mps 現在速度, 自動制動自然数ノッチ 現在制動ノッチ,
-            mps2 勾配影響, const 共通状態 &状態) const;
-        bool 力行する余裕あり(
-            力行ノッチ 力行ノッチ, mps2 想定加速度, s 想定惰行時間,
-            mps2 勾配影響, const 共通状態 &状態) const;
-        自動制御指令 出力ノッチ(const 共通状態 &状態) const;
-
-        /// 指定した速度におけるパターン上の位置と時刻を返します。
-        /// 時刻は、減速目標に到達する時刻を 0 とし、
-        /// それより前のパターン上の時刻は負になります。
-        /// 指定した速度が目標速度以下ならパターン終了時の状態を返します。
-        走行モデル パターン到達状態(mps 速度) const;
-
-    };
 
     class 減速パターン
     {
