@@ -27,6 +27,7 @@ namespace autopilot
 
     class 共通状態;
     class 信号順守;
+    class 走行モデル;
 
     class orp
     {
@@ -39,9 +40,9 @@ namespace autopilot
         ~orp() = default;
 
         void リセット() noexcept;
-        void 設定(mps 初期照査速度, m 初期位置, m 限界位置) noexcept;
-        void 設定(int 地上子値, m 初期位置) noexcept;
-        void 設定(mps 直前閉塞速度, m 初期位置) noexcept;
+        void 設定(mps 初期照査速度, m 初期位置, m 限界位置);
+        void 設定(int 地上子値, m 初期位置);
+        void 設定(mps 直前閉塞速度, m 初期位置);
 
         void 経過(const 共通状態 &状態);
 
@@ -55,8 +56,14 @@ namespace autopilot
 
     private:
         減速パターン _照査パターン;
+        bool _照査速度下限到達;
         自動制御指令 _出力ノッチ;
         mps _照査速度;
+
+        mps2 パターン出力減速度(const 走行モデル &運動状態) const;
+        mps2 下限照査出力減速度(const 走行モデル &運動状態) const;
+        自動制動自然数ノッチ 出力制動ノッチ(
+            const 走行モデル &運動状態, const 共通状態 &状態) const;
     };
 
 }

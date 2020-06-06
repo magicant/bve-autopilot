@@ -159,6 +159,8 @@ namespace autopilot
     勾配グラフ::勾配グラフ() = default;
     勾配グラフ::~勾配グラフ() = default;
 
+    const 勾配グラフ 勾配グラフ::平坦グラフ{};
+
     void 勾配グラフ::消去() noexcept
     {
         _区間リスト.clear();

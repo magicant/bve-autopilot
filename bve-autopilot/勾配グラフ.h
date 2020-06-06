@@ -76,6 +76,8 @@ namespace autopilot
         勾配グラフ();
         ~勾配グラフ();
 
+        static const 勾配グラフ 平坦グラフ;
+
         void 消去() noexcept;
         void 列車長を設定(m 列車長) noexcept;
         void 勾配区間追加(m 始点, 勾配 勾配);
