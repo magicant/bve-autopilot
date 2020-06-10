@@ -56,7 +56,7 @@ namespace autopilot
         mps2 _基準減速度;
 
         減速パターン 主パターン(const 勾配グラフ &勾配) const;
-
+        mps2 副パターン減速度(const 走行モデル &運動状態) const;
         mps2 減速用出力減速度(
             const 走行モデル &運動状態, const 勾配グラフ &勾配) const;
         mps2 収束用出力減速度(mps 現在速度) const;
