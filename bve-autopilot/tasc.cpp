@@ -26,7 +26,6 @@
 #include <limits>
 #include "出力制御.h"
 #include "区間.h"
-#include "減速パターン.h"
 #include "減速目標.h"
 #include "物理量.h"
 #include "走行モデル.h"

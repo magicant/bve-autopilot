@@ -25,7 +25,6 @@
 #include "共通状態.h"
 #include "区間.h"
 #include "物理量.h"
-#include "走行モデル.h"
 
 namespace autopilot {
 
