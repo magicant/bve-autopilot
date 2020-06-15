@@ -21,13 +21,16 @@
 #include "制限グラフ.h"
 #include <algorithm>
 #include <cassert>
+#include <functional>
 #include <iterator>
 #include <limits>
 #include <numeric>
 #include <utility>
 #include "共通状態.h"
+#include "出力制御.h"
 #include "区間.h"
 #include "減速パターン.h"
+#include "減速目標.h"
 #include "物理量.h"
 
 #pragma warning(disable:4819)
@@ -40,7 +43,7 @@ namespace autopilot
         m 減速目標地点;
         mps 速度;
 
-        減速パターン 目標パターン(mps2 初期減速度) const;
+        減速目標 目標(mps2 基準減速度) const;
     };
 
     制限グラフ::制限グラフ() = default;
@@ -110,11 +113,10 @@ namespace autopilot
             }
             最小目標減速度 = 区間.速度;
 
-            mps2 勾配影響 = std::max(状態.進路勾配加速度(位置), 0.0_mps2);
-            mps2 目標減速度 = 標準減速度 - 勾配影響;
-            減速パターン パターン{位置, 区間.速度, 目標減速度};
-            パターン速度 =
-                std::min(パターン速度, パターン.期待速度(状態.現在位置()));
+            減速パターン パターン{位置, 区間.速度, 標準減速度};
+            mps 期待速度 = パターン.期待速度(状態.現在位置(), 状態.勾配());
+            mps パターン速度2 = std::max(期待速度, 区間.速度);
+            パターン速度 = std::min(パターン速度, パターン速度2);
         }
         return パターン速度;
     }
@@ -132,36 +134,28 @@ namespace autopilot
 
             mps2 目標減速度;
             if (_事前減速) {
-                mps2 勾配影響 = std::max(状態.進路勾配加速度(位置), 0.0_mps2);
-                目標減速度 = 状態.目安減速度() - 勾配影響;
+                目標減速度 = 状態.目安減速度();
             }
             else {
                 // 目標位置を超えてから減速が始まるようにする。
                 目標減速度 = mps2::無限大();
             }
-            減速パターン パターン = 区間.目標パターン(目標減速度);
-            自動制御指令 パターンノッチ = パターン.出力ノッチ(状態);
-            ノッチ = std::min(ノッチ, パターンノッチ);
+
+            using namespace std::placeholders;
+            減速目標 目標 = 区間.目標(目標減速度);
+            自動制御指令 ノッチ2 = 出力制御::出力ノッチ(
+                std::bind(&減速目標::出力制動ノッチ, &目標, _1, _2),
+                状態);
+            ノッチ = std::min(ノッチ, ノッチ2);
         }
 
         return ノッチ;
     }
 
-    減速パターン 制限グラフ::制限区間::目標パターン(mps2 初期減速度) const
+    減速目標 制限グラフ::制限区間::目標(mps2 基準減速度) const
     {
-        constexpr mps 速度マージン = 0.5_kmph;
-        mps 目標速度 = std::max(速度 - 速度マージン, 0.0_mps);
-        mps2 最終減速度;
-        if (初期減速度 == mps2::無限大()) {
-            最終減速度 = mps2::無限大();
-        }
-        else if (目標速度 == 0.0_mps) {
-            最終減速度 = 減速パターン::停止最終減速度;
-        }
-        else {
-            最終減速度 = 減速パターン::標準最終減速度;
-        }
-        return 減速パターン{減速目標地点, 目標速度, 初期減速度, 最終減速度};
+        mps 目標速度 = std::max(速度 - 減速目標::速度マージン, 0.0_mps);
+        return 減速目標{減速目標地点, 目標速度, 基準減速度};
     }
 
 }

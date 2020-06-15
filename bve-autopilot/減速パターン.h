@@ -18,62 +18,39 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
-#include <utility>
-#include "制動特性.h"
-#include "制御指令.h"
 #include "物理量.h"
-#include "走行モデル.h"
 
 namespace autopilot
 {
 
-    class 共通状態;
+    class 勾配グラフ;
 
-    struct 減速パターン
+    class 減速パターン
     {
-        static constexpr mps2 標準最終減速度 = 0.5_kmphps;
-        static constexpr mps2 停止最終減速度 = 1.0_kmphps;
-
-        m 目標位置;
-        mps 目標速度;
-        mps2 初期減速度, 最終減速度;
-        bool 素早い速度超過回復;
-
+    public:
         constexpr 減速パターン(
-            m 目標位置, mps 目標速度, mps2 初期減速度,
-            bool 素早い速度超過回復 = false) noexcept :
-            減速パターン{目標位置, 目標速度,
-                初期減速度, 初期減速度, 素早い速度超過回復} {}
-        constexpr 減速パターン(
-            m 目標位置, mps 目標速度,
-            mps2 初期減速度, mps2 最終減速度,
-            bool 素早い速度超過回復 = false) noexcept :
-            目標位置(目標位置), 目標速度(目標速度),
-            初期減速度(初期減速度), 最終減速度(最終減速度),
-            素早い速度超過回復{素早い速度超過回復} {}
+            m 通過地点, mps 通過速度, mps2 基準減速度) noexcept :
+            _通過地点{通過地点}, _通過速度{通過速度}, _基準減速度{基準減速度}
+        {}
 
-        ~減速パターン() = default;
+        constexpr m 通過地点() const noexcept { return _通過地点; }
+        constexpr mps 通過速度() const noexcept { return _通過速度; }
+        constexpr mps2 基準減速度() const noexcept { return _基準減速度; }
 
-        std::pair<mps, mps2> 期待速度と期待減速度(m 現在位置) const;
-        mps 期待速度(m 現在位置) const {
-            return 期待速度と期待減速度(現在位置).first;
-        }
+        static 減速パターン 二点間パターン(
+            m 通過地点, mps 通過速度, m 現在位置, mps 現在速度,
+            const 勾配グラフ &勾配);
 
-        mps2 出力減速度(m 現在位置, mps 現在速度) const;
-        自動制動自然数ノッチ 出力制動ノッチ(
-            m 現在位置, mps 現在速度, 自動制動自然数ノッチ 現在制動ノッチ,
-            mps2 勾配影響, const 共通状態 &状態) const;
-        bool 力行する余裕あり(
-            力行ノッチ 力行ノッチ, mps2 想定加速度, s 想定惰行時間,
-            mps2 勾配影響, const 共通状態 &状態) const;
-        自動制御指令 出力ノッチ(const 共通状態 &状態) const;
+        mps 期待速度(m 位置, const 勾配グラフ &勾配) const;
+        mps2 期待減速度(m 位置, const 勾配グラフ &勾配) const;
 
-        /// 指定した速度におけるパターン上の位置と時刻を返します。
-        /// 時刻は、減速目標に到達する時刻を 0 とし、
-        /// それより前のパターン上の時刻は負になります。
-        /// 指定した速度が目標速度以下ならパターン終了時の状態を返します。
-        走行モデル パターン到達状態(mps 速度) const;
-
+    private:
+        m _通過地点;
+        mps _通過速度;
+        /// 出力ノッチ計算の基準となる減速度。
+        /// 上り勾配では実際の減速度が基準減速度に一致するように調整される。
+        /// 下り勾配では乗客が感じる減速度が基準減速度に一致するようにする。
+        mps2 _基準減速度;
     };
 
 }

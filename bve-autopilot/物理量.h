@@ -436,5 +436,8 @@ namespace autopilot
     inline mps sqrt(const m2ps2 &v) {
         return static_cast<mps>(std::sqrt(v.value));
     }
+    inline mps 加算(const mps &v, const m2ps2 &e) {
+        return sqrt(v * v + 2.0 * e);
+    }
 
 }
