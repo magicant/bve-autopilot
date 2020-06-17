@@ -50,14 +50,13 @@ namespace autopilot
 
         自動制御指令 atc停止出力ノッチ(const 共通状態 &状態)
         {
+            constexpr mps2 最小減速度 = 1.0_kmphps;
             mps2 目標減速度 = 状態.現在速度() / 2.0_s;
             mps2 勾配加速度 = 状態.車両勾配加速度();
-            mps2 出力減速度 = std::max(
-                目標減速度 + 勾配加速度, static_cast<mps2>(1.0_kmphps));
+            mps2 出力減速度 = std::max(目標減速度, 最小減速度) + 勾配加速度;
             自動制動実数ノッチ 制動ノッチ実数 =
                 状態.制動().自動ノッチ(出力減速度);
-            自動制動自然数ノッチ 制動ノッチ{
-                static_cast<unsigned>(std::ceil(制動ノッチ実数.value))};
+            自動制動自然数ノッチ 制動ノッチ = 制動ノッチ実数.ceil();
             return std::min(制動ノッチ, 状態.制動().自動最大ノッチ());
         }
 
