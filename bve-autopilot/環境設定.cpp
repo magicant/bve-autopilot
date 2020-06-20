@@ -126,8 +126,7 @@ namespace autopilot
     }
 
     環境設定::環境設定() :
-        _tasc初期起動(true),
-        _ato初期起動(true),
+        _初期稼働状態(稼働状態::ato有効),
         _車両長(20),
         _加速終了遅延(2.0_s),
         _常用最大減速度(3.0_kmphps),
@@ -168,16 +167,13 @@ namespace autopilot
             設定ファイル名);
         if (0 < size && size < buffer_size - 1) {
             if (buffer == L"off"sv) {
-                _tasc初期起動 = false;
-                _ato初期起動 = false;
+                _初期稼働状態 = 稼働状態::切;
             }
             else if (buffer == L"tasc"sv) {
-                _tasc初期起動 = true;
-                _ato初期起動 = false;
+                _初期稼働状態 = 稼働状態::tascのみ有効;
             }
             else {
-                _tasc初期起動 = true;
-                _ato初期起動 = true;
+                _初期稼働状態 = 稼働状態::ato有効;
             }
         }
 

@@ -22,8 +22,9 @@
 #include <cstddef>
 #include <unordered_map>
 #include <vector>
-#include "制御指令.h"
 #include "パネル出力.h"
+#include "稼働状態.h"
+#include "制御指令.h"
 #include "物理量.h"
 
 #pragma warning(push)
@@ -60,8 +61,7 @@ namespace autopilot
         // void リセット();
         void ファイル読込(LPCWSTR 設定ファイル名);
 
-        bool tasc初期起動() const noexcept { return _tasc初期起動; }
-        bool ato初期起動() const noexcept { return _ato初期起動; }
+        稼働状態 初期稼働状態() const noexcept { return _初期稼働状態; }
         m 車両長() const noexcept { return _車両長; }
         s 加速終了遅延() const noexcept { return _加速終了遅延; }
         mps2 常用最大減速度() const noexcept { return _常用最大減速度; }
@@ -97,7 +97,7 @@ namespace autopilot
         }
 
     private:
-        bool _tasc初期起動, _ato初期起動;
+        稼働状態 _初期稼働状態;
         m _車両長;
         s _加速終了遅延;
         mps2 _常用最大減速度;
