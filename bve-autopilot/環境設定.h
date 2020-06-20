@@ -62,6 +62,9 @@ namespace autopilot
         void ファイル読込(LPCWSTR 設定ファイル名);
 
         稼働状態 初期稼働状態() const noexcept { return _初期稼働状態; }
+        const std::vector<稼働状態> &稼働状態切替順序() const noexcept {
+            return _稼働状態切替順序;
+        }
         m 車両長() const noexcept { return _車両長; }
         s 加速終了遅延() const noexcept { return _加速終了遅延; }
         mps2 常用最大減速度() const noexcept { return _常用最大減速度; }
@@ -98,6 +101,7 @@ namespace autopilot
 
     private:
         稼働状態 _初期稼働状態;
+        std::vector<稼働状態> _稼働状態切替順序;
         m _車両長;
         s _加速終了遅延;
         mps2 _常用最大減速度;

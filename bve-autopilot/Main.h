@@ -38,7 +38,7 @@ namespace autopilot
         const 共通状態 &状態() const noexcept { return _状態; }
         const tasc &tasc状態() const noexcept { return _tasc; }
         const ato &ato状態() const noexcept { return _ato; }
-        稼働状態 現在稼働状態() const noexcept { return _稼働状態; }
+        稼働状態 現在稼働状態() const noexcept { return *_稼働状態; }
         bool tasc有効() const noexcept {
             return autopilot::tasc有効(現在稼働状態());
         }
@@ -88,7 +88,7 @@ namespace autopilot
         共通状態 _状態;
         tasc _tasc;
         ato _ato;
-        稼働状態 _稼働状態;
+        std::vector<稼働状態>::const_iterator _稼働状態;
         std::vector<ATS_BEACONDATA> _通過済地上子;
         std::unordered_map<音声, 音声出力> _音声状態;
 
