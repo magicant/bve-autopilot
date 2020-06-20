@@ -78,7 +78,8 @@ namespace autopilot
         if (_拡張ノッチ列.empty()) {
             return 自動制動自然数ノッチ{標準最大ノッチ().value};
         }
-        return 自動制動自然数ノッチ{_拡張ノッチ列.size() - 1};
+        return 自動制動自然数ノッチ{
+            static_cast<unsigned>(_拡張ノッチ列.size() - 1)};
     }
 
     自動制動実数ノッチ 制動特性::自動ノッチ(制動力割合 割合) const
