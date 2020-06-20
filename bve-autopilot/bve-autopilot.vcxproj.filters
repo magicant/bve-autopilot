@@ -126,6 +126,9 @@
     <ClInclude Include="出力制御.h">
       <Filter>ヘッダー ファイル\コア</Filter>
     </ClInclude>
+    <ClInclude Include="稼働状態.h">
+      <Filter>ヘッダー ファイル\制御系</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
