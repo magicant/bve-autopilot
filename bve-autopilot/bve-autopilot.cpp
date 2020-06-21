@@ -37,7 +37,10 @@ namespace {
         std::wstring name;
         name.resize(1u << 8);
         while (name.size() < 1u << 16) {
-            DWORD s = GetModuleFileNameW(hModule, name.data(), name.size());
+            DWORD s = GetModuleFileNameW(
+                hModule,
+                name.data(),
+                static_cast<DWORD>(name.size()));
             if (0 < s && s < name.size()) {
                 name.resize(s);
                 name.shrink_to_fit();
