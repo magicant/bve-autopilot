@@ -182,6 +182,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="tasc.h" />
     <ClInclude Include="パネル出力.h" />
+    <ClInclude Include="稼働状態.h" />
     <ClInclude Include="信号順守.h" />
     <ClInclude Include="共通状態.h" />
     <ClInclude Include="出力制御.h" />

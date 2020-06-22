@@ -22,6 +22,7 @@
 #include <unordered_map>
 #include "ato.h"
 #include "tasc.h"
+#include "稼働状態.h"
 #include "共通状態.h"
 #include "音声出力.h"
 
@@ -37,8 +38,13 @@ namespace autopilot
         const 共通状態 &状態() const noexcept { return _状態; }
         const tasc &tasc状態() const noexcept { return _tasc; }
         const ato &ato状態() const noexcept { return _ato; }
-        bool tasc有効() const noexcept { return _tasc有効; }
-        bool ato有効() const noexcept { return _ato有効; }
+        稼働状態 現在稼働状態() const noexcept { return *_稼働状態; }
+        bool tasc有効() const noexcept {
+            return autopilot::tasc有効(現在稼働状態());
+        }
+        bool ato有効() const noexcept {
+            return autopilot::ato有効(現在稼働状態());
+        }
         mps 現在制限速度() const {
             return _ato.現在制限速度(_状態);
         }
@@ -49,7 +55,7 @@ namespace autopilot
             return _ato.現在orp照査速度(_状態);
         }
         bool ato一時停止中() const noexcept {
-            return _ato有効 && _ato.状態() == ato::制御状態::一時停止;
+            return ato有効() && _ato.状態() == ato::制御状態::一時停止;
         }
         bool 力行抑止中() const noexcept { return _ato.力行抑止中(); }
 
@@ -82,7 +88,7 @@ namespace autopilot
         共通状態 _状態;
         tasc _tasc;
         ato _ato;
-        bool _tasc有効, _ato有効;
+        std::vector<稼働状態>::const_iterator _稼働状態;
         std::vector<ATS_BEACONDATA> _通過済地上子;
         std::unordered_map<音声, 音声出力> _音声状態;
 

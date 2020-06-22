@@ -19,11 +19,13 @@
 
 #include "stdafx.h"
 #include "環境設定.h"
+#include <algorithm>
 #include <cmath>
 #include <cstddef>
 #include <cwchar>
 #include <cwctype>
 #include <initializer_list>
+#include <iterator>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -42,6 +44,48 @@ namespace autopilot
             キー組合せ 組合せ;
             組合せ[ATS_KEY_L] = true;
             return 組合せ;
+        }
+
+        std::vector<std::wstring> カンマ区切り文字列を分割(LPCWSTR s) {
+            std::vector<std::wstring> values;
+            while (*s != L'\0') {
+                while (*s == L',' || std::iswblank(*s)) {
+                    ++s;
+                }
+
+                LPCWSTR start = s;
+                while (*s != L'\0' && *s != L',' && !std::iswblank(*s)) {
+                    ++s;
+                }
+
+                if (s != start) {
+                    values.emplace_back(start, s);
+                }
+            }
+            return values;
+        }
+
+        稼働状態 稼働状態を解析(std::wstring_view s) {
+            using namespace std::string_view_literals;
+
+            if (s == L"off"sv) {
+                return 稼働状態::切;
+            }
+            else if (s == L"tasc"sv) {
+                return 稼働状態::tascのみ有効;
+            }
+            else {
+                return 稼働状態::ato有効;
+            }
+        }
+
+        std::vector<稼働状態> 稼働状態列を解析(
+            const std::vector<std::wstring> &s)
+        {
+            std::vector<稼働状態> r;
+            std::transform(
+                s.begin(), s.end(), std::back_inserter(r), 稼働状態を解析);
+            return r;
         }
 
         std::vector<制動力割合> 実数列(LPCWSTR s) {
@@ -126,8 +170,9 @@ namespace autopilot
     }
 
     環境設定::環境設定() :
-        _tasc初期起動(true),
-        _ato初期起動(true),
+        _初期稼働状態(稼働状態::ato有効),
+        _稼働状態切替順序{
+            稼働状態::ato有効, 稼働状態::tascのみ有効, 稼働状態::切},
         _車両長(20),
         _加速終了遅延(2.0_s),
         _常用最大減速度(3.0_kmphps),
@@ -167,17 +212,18 @@ namespace autopilot
             L"init", L"mode", L"", buffer, buffer_size,
             設定ファイル名);
         if (0 < size && size < buffer_size - 1) {
-            if (buffer == L"off"sv) {
-                _tasc初期起動 = false;
-                _ato初期起動 = false;
-            }
-            else if (buffer == L"tasc"sv) {
-                _tasc初期起動 = true;
-                _ato初期起動 = false;
-            }
-            else {
-                _tasc初期起動 = true;
-                _ato初期起動 = true;
+            _初期稼働状態 = 稼働状態を解析(buffer);
+        }
+
+        // モード切替順序
+        size = GetPrivateProfileStringW(
+            L"control", L"modes", L"", buffer, buffer_size,
+            設定ファイル名);
+        if (0 < size && size < buffer_size - 1) {
+            auto tokens = カンマ区切り文字列を分割(buffer);
+            auto 順序列 = 稼働状態列を解析(tokens);
+            if (!順序列.empty()) {
+                _稼働状態切替順序 = 順序列;
             }
         }
 
