@@ -153,7 +153,7 @@ namespace autopilot
                 return 設定;
             }
             while (*key != L'\0') {
-                constexpr std::size_t buffer2_size = 256;
+                constexpr std::size_t buffer2_size = 1024;
                 WCHAR buffer2[buffer2_size];
                 size = GetPrivateProfileStringW(
                     セクション名, key, L"", buffer2, buffer2_size,
@@ -203,7 +203,7 @@ namespace autopilot
     {
         using namespace std::string_view_literals;
 
-        constexpr std::size_t buffer_size = 256;
+        constexpr std::size_t buffer_size = 1024;
         WCHAR buffer[buffer_size];
         DWORD size;
 
