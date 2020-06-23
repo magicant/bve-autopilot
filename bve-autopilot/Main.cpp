@@ -21,6 +21,7 @@
 #include "Main.h"
 #include <algorithm>
 #include <functional>
+#include <iterator>
 #include <limits>
 
 namespace autopilot
@@ -147,26 +148,31 @@ namespace autopilot
         _状態.キー押し(キー);
         auto 新キー = _状態.押しているキー();
 
-        // モード切替
-        auto 目標キー = _状態.設定().キー割り当て().at(キー操作::モード切替);
-        if (キー組合せ完成(旧キー, 新キー, 目標キー)) {
-            if (_状態.入力逆転器ノッチ() == 0 &&
-                _状態.制動().非常ブレーキである(_状態.入力制動ノッチ()))
-            {
-                ++_稼働状態;
-                if (_稼働状態 == _状態.設定().稼働状態切替順序().end()) {
-                    _稼働状態 = _状態.設定().稼働状態切替順序().begin();
-                }
-                _音声状態[切替時音声(*_稼働状態)].次に出力(ATS_SOUND_PLAY);
+        for (const auto &i : _状態.設定().キー割り当て()) {
+            auto 目標キー = i.second;
+            if (!キー組合せ完成(旧キー, 新キー, 目標キー)) {
+                continue;
             }
-        }
 
-        // ATO 発進
-        目標キー = _状態.設定().キー割り当て().at(キー操作::ato発進);
-        if (キー組合せ完成(旧キー, 新キー, 目標キー)) {
-            if (ato有効()) {
-                _ato.発進(_状態, _tasc, ato::発進方式::手動);
-                _音声状態[音声::ato発進音].次に出力(ATS_SOUND_PLAY);
+            switch (i.first) {
+            case キー操作::モード切替:
+                モード切替(true, true);
+                break;
+            case キー操作::モード切替逆:
+                モード切替(false, true);
+                break;
+            case キー操作::モード切替次:
+                モード切替(true, false);
+                break;
+            case キー操作::モード切替前:
+                モード切替(false, false);
+                break;
+            case キー操作::ato発進:
+                if (ato有効()) {
+                    _ato.発進(_状態, _tasc, ato::発進方式::手動);
+                    _音声状態[音声::ato発進音].次に出力(ATS_SOUND_PLAY);
+                }
+                break;
             }
         }
     }
@@ -237,6 +243,38 @@ namespace autopilot
         }
 
         return ハンドル位置;
+    }
+
+    void Main::モード切替(bool 順方向, bool ループ)
+    {
+        if (_状態.入力逆転器ノッチ() != 0) {
+            return;
+        }
+        if (!_状態.制動().非常ブレーキである(_状態.入力制動ノッチ())) {
+            return;
+        }
+
+        if (順方向) {
+            auto 新状態 = std::next(_稼働状態);
+            if (新状態 == _状態.設定().稼働状態切替順序().end()) {
+                if (!ループ) {
+                    return;
+                }
+                新状態 = _状態.設定().稼働状態切替順序().begin();
+            }
+            _稼働状態 = 新状態;
+        }
+        else {
+            if (_稼働状態 == _状態.設定().稼働状態切替順序().begin()) {
+                if (!ループ) {
+                    return;
+                }
+                _稼働状態 = _状態.設定().稼働状態切替順序().end();
+            }
+            --_稼働状態;
+        }
+
+        _音声状態[切替時音声(*_稼働状態)].次に出力(ATS_SOUND_PLAY);
     }
 
     void Main::地上子通過執行(m 直前位置)

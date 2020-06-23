@@ -327,11 +327,18 @@ namespace autopilot
         // キー割り当て
         for (auto &i : std::initializer_list<std::pair<キー操作, LPCWSTR>>
             { {キー操作::モード切替, L"mode"},
+              {キー操作::モード切替逆, L"modeback"},
+              {キー操作::モード切替次, L"modenext"},
+              {キー操作::モード切替前, L"modeprevious"},
               {キー操作::ato発進, L"atostart"} })
         {
             size = GetPrivateProfileStringW(
                 L"key", i.second, L"", buffer, buffer_size, 設定ファイル名);
             if (0 < size && size < buffer_size - 1) {
+                if (buffer == L"-"sv) {
+                    _キー割り当て.erase(i.first);
+                    continue;
+                }
                 try {
                     _キー割り当て[i.first] = キー組合せを解析(buffer);
                 }

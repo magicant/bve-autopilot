@@ -36,6 +36,9 @@ namespace autopilot
     enum class キー操作
     {
         モード切替,
+        モード切替逆,
+        モード切替次,
+        モード切替前,
         ato発進,
     };
 
