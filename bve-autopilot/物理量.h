@@ -18,8 +18,10 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include <chrono>
 #include <cmath>
 #include <limits>
+#include <ratio>
 
 namespace autopilot
 {
@@ -224,32 +226,21 @@ namespace autopilot
 
     // 時間
 
-    struct s;
-    struct ms;
-
-    // 秒
+    /// 秒
     struct s : 物理量<double, s>
     {
         using 物理量::物理量;
-        constexpr s(const ms &v) noexcept;
+        template<typename R, typename P>
+        constexpr s(const std::chrono::duration<R, P> &d) :
+            物理量(std::chrono::duration<double>(d).count()) {}
     };
-
-    // ミリ秒
-    struct ms : 物理量<double, ms>
-    {
-        using 物理量::物理量;
-        constexpr ms(const s &v) noexcept;
-    };
-
-    constexpr s::s(const ms &v) noexcept : 物理量(v.value / 1000.0) {}
-    constexpr ms::ms(const s &v) noexcept : 物理量(v.value * 1000.0) {}
 
     constexpr s operator"" _s(long double v) noexcept {
         return static_cast<s>(static_cast<double>(v));
     }
-    constexpr ms operator"" _ms(long double v) noexcept {
-        return static_cast<ms>(static_cast<double>(v));
-    }
+
+    /// ミリ秒
+    using ms = std::chrono::duration<int, std::milli>;
 
     // 距離
 
