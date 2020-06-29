@@ -26,8 +26,10 @@ namespace autopilot {
     class 走行モデル
     {
     public:
+        using 時刻型 = autopilot::時刻;
+
         constexpr explicit 走行モデル(
-            m 位置 = {}, mps 速度 = {}, s 時刻 = {}) noexcept :
+            m 位置 = {}, mps 速度 = {}, 時刻型 時刻 = {}) noexcept :
             _位置(位置), _速度(速度), _時刻(時刻) { }
         ~走行モデル() = default;
 
@@ -35,10 +37,12 @@ namespace autopilot {
         constexpr void 位置変更(m 位置) noexcept { _位置 = 位置; }
         constexpr mps 速度() const noexcept { return _速度; }
         constexpr void 速度変更(mps 速度) noexcept { _速度 = 速度; }
-        constexpr s 時刻() const noexcept { return _時刻; }
-        constexpr void 時刻変更(s 時刻) noexcept { _時刻 = 時刻; }
+        constexpr 時刻型 時刻() const noexcept { return _時刻; }
+        constexpr void 時刻変更(時刻型 時刻) noexcept { _時刻 = 時刻; }
 
-        constexpr void 変更(m 位置 = {}, mps 速度 = {}, s 時刻 = {}) noexcept {
+        constexpr void 変更(m 位置 = {}, mps 速度 = {}, 時刻型 時刻 = {})
+            noexcept
+        {
             _位置 = 位置;
             _速度 = 速度;
             _時刻 = 時刻;
@@ -47,7 +51,8 @@ namespace autopilot {
         // 等加加速度運動
         mps2 指定時間走行(s 時間, mps2 初加速度 = {}, mps3 加加速度 = {})
             noexcept;
-        mps2 指定時刻まで走行(s 時刻, mps2 初加速度 = {}, mps3 加加速度 = {})
+        mps2 指定時刻まで走行(
+            時刻型 時刻, mps2 初加速度 = {}, mps3 加加速度 = {})
             noexcept;
 
         // 等加速度運動
@@ -72,7 +77,7 @@ namespace autopilot {
     private:
         m _位置;
         mps _速度;
-        s _時刻;
+        時刻型 _時刻;
     };
 
     class 共通状態;

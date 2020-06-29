@@ -127,7 +127,8 @@ namespace autopilot
                     return 1;
                 }
                 // 3 と 4 を交互に表示 (点滅)
-                auto m = std::fmod(main.状態().現在時刻().value, 1.0);
+                auto m =
+                    std::fmod(main.状態().現在時刻().経過時間().value, 1.0);
                 return m < 0.5 ? 3 : 4;
             })},
             {L"powerthrottle", パネル出力対象([](const Main &main) {

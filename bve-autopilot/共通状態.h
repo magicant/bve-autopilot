@@ -75,7 +75,9 @@ namespace autopilot {
         区間 現在範囲() const noexcept {
             return 区間{現在位置() - 列車長(), 現在位置()};
         }
-        s 現在時刻() const noexcept { return static_cast<ms>(_状態.Time); }
+        時刻 現在時刻() const noexcept {
+            return static_cast<時刻>(static_cast<ms>(_状態.Time));
+        }
         mps 現在速度() const noexcept {
             return static_cast<kmph>(_状態.Speed);
         }
@@ -119,7 +121,7 @@ namespace autopilot {
         mps2 _目安減速度 = {};
         bool _戸閉 = false;
         s _自動発進待ち時間 = {}; // 地上子から設定された毎回の待ち時間
-        s _自動発進時刻 = {}; // 現在の駅を発車する時刻
+        時刻 _自動発進時刻 = {}; // 現在の駅を発車する時刻
         int _入力逆転器ノッチ = 0, _入力力行ノッチ = 0;
         手動制動自然数ノッチ _入力制動ノッチ;
         キー組合せ _押しているキー;
