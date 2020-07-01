@@ -18,8 +18,10 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include <chrono>
 #include <cmath>
 #include <limits>
+#include <ratio>
 
 namespace autopilot
 {
@@ -224,31 +226,103 @@ namespace autopilot
 
     // 時間
 
-    struct s;
-    struct ms;
-
-    // 秒
+    /// 秒
     struct s : 物理量<double, s>
     {
         using 物理量::物理量;
-        constexpr s(const ms &v) noexcept;
-    };
+        template<typename R, typename P>
+        constexpr s(const std::chrono::duration<R, P> &d) :
+            物理量(std::chrono::duration<double>(d).count()) {}
 
-    // ミリ秒
-    struct ms : 物理量<double, ms>
-    {
-        using 物理量::物理量;
-        constexpr ms(const s &v) noexcept;
+        constexpr static s 半日() noexcept {
+            return std::chrono::hours(12);
+        }
+        constexpr static s 一日() noexcept {
+            return std::chrono::hours(24);
+        }
     };
-
-    constexpr s::s(const ms &v) noexcept : 物理量(v.value / 1000.0) {}
-    constexpr ms::ms(const s &v) noexcept : 物理量(v.value * 1000.0) {}
 
     constexpr s operator"" _s(long double v) noexcept {
         return static_cast<s>(static_cast<double>(v));
     }
-    constexpr ms operator"" _ms(long double v) noexcept {
-        return static_cast<ms>(static_cast<double>(v));
+
+    /// ミリ秒
+    using ms = std::chrono::duration<int, std::milli>;
+
+    // 時刻
+
+    class 時刻
+    {
+    public:
+        constexpr 時刻() noexcept : _経過時間{} {}
+        constexpr explicit 時刻(const s &v) noexcept :_経過時間{v} {}
+
+        constexpr s 経過時間() const noexcept { return _経過時間; }
+
+        constexpr 時刻 &operator+=(const s &v) noexcept {
+            _経過時間 += v;
+            return *this;
+        }
+        constexpr 時刻 &operator-=(const s &v) noexcept {
+            _経過時間 -= v;
+            return *this;
+        }
+
+        /// <summary>
+        /// ラップを考慮して二つの時刻を比較し、差を返します。
+        /// </summary>
+        /// <param name="a">左辺値</param>
+        /// <param name="b">右辺値</param>
+        /// <returns>左辺値と右辺値の経過時間の差。</returns>
+        constexpr static s 時間差(const 時刻 &a, const 時刻 &b) noexcept {
+            // BVE では正子をまたいで日付が変わると時刻が 00:00:00 に戻るので
+            // 単純に引き算しただけでは必ずしも正しい結果にならない。
+            // ここでは 12 時間を超えるシナリオはないと仮定し、二日目の午前を
+            // 表している可能性のある時刻を補正する。
+
+            s 差 = a.経過時間() - b.経過時間();
+            if (差 < -s::半日()) {
+                return 差 + s::一日();
+            }
+            if (差 > s::半日()) {
+                return 差 - s::一日();
+            }
+            return 差;
+        }
+
+    private:
+        s _経過時間;
+    };
+
+    constexpr 時刻 operator+(const 時刻 &a, const s &b) noexcept {
+        return static_cast<時刻>(a.経過時間() + b);
+    }
+    constexpr 時刻 operator+(const s &a, const 時刻 &b) noexcept {
+        return static_cast<時刻>(a + b.経過時間());
+    }
+    constexpr s operator-(const 時刻 &a, const 時刻 &b) noexcept {
+        return a.経過時間() - b.経過時間();
+    }
+    constexpr 時刻 operator-(const 時刻 &a, const s &b) noexcept {
+        return static_cast<時刻>(a.経過時間() - b);
+    }
+    constexpr bool operator==(const 時刻 &a, const 時刻 &b) noexcept {
+        return 時刻::時間差(a, b) == 0.0_s;
+    }
+    constexpr bool operator!=(const 時刻 &a, const 時刻 &b) noexcept {
+        return 時刻::時間差(a, b) != 0.0_s;
+    }
+    constexpr bool operator<(const 時刻 &a, const 時刻 &b) noexcept {
+        return 時刻::時間差(a, b) < 0.0_s;
+    }
+    constexpr bool operator<=(const 時刻 &a, const 時刻 &b) noexcept {
+        return 時刻::時間差(a, b) <= 0.0_s;
+    }
+    constexpr bool operator>(const 時刻 &a, const 時刻 &b) noexcept {
+        return 時刻::時間差(a, b) > 0.0_s;
+    }
+    constexpr bool operator>=(const 時刻 &a, const 時刻 &b) noexcept {
+        return 時刻::時間差(a, b) >= 0.0_s;
     }
 
     // 距離

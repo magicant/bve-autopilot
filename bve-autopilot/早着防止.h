@@ -40,7 +40,7 @@ namespace autopilot
         自動制御指令 出力ノッチ() const noexcept { return _出力ノッチ; }
 
     private:
-        s _次の設定時刻 = {};
+        時刻 _次の設定時刻 = {};
         std::forward_list<走行モデル> _予定表;
         自動制御指令 _出力ノッチ;
 
