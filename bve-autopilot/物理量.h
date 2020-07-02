@@ -268,28 +268,6 @@ namespace autopilot
             return *this;
         }
 
-        /// <summary>
-        /// ラップを考慮して二つの時刻を比較し、差を返します。
-        /// </summary>
-        /// <param name="a">左辺値</param>
-        /// <param name="b">右辺値</param>
-        /// <returns>左辺値と右辺値の経過時間の差。</returns>
-        constexpr static s 時間差(const 時刻 &a, const 時刻 &b) noexcept {
-            // BVE では正子をまたいで日付が変わると時刻が 00:00:00 に戻るので
-            // 単純に引き算しただけでは必ずしも正しい結果にならない。
-            // ここでは 12 時間を超えるシナリオはないと仮定し、二日目の午前を
-            // 表している可能性のある時刻を補正する。
-
-            s 差 = a.経過時間() - b.経過時間();
-            if (差 < -s::半日()) {
-                return 差 + s::一日();
-            }
-            if (差 > s::半日()) {
-                return 差 - s::一日();
-            }
-            return 差;
-        }
-
     private:
         s _経過時間;
     };
@@ -300,29 +278,41 @@ namespace autopilot
     constexpr 時刻 operator+(const s &a, const 時刻 &b) noexcept {
         return static_cast<時刻>(a + b.経過時間());
     }
-    constexpr s operator-(const 時刻 &a, const 時刻 &b) noexcept {
-        return a.経過時間() - b.経過時間();
-    }
     constexpr 時刻 operator-(const 時刻 &a, const s &b) noexcept {
         return static_cast<時刻>(a.経過時間() - b);
     }
+    constexpr s operator-(const 時刻 &a, const 時刻 &b) noexcept {
+        // BVE では正子をまたいで日付が変わると時刻が 00:00:00 に戻るので
+        // 単純に引き算しただけでは必ずしも正しい結果にならない。
+        // ここでは 12 時間を超えるシナリオはないと仮定し、二日目の午前を
+        // 表している可能性のある時刻を補正する。
+
+        s 差 = a.経過時間() - b.経過時間();
+        if (差 < -s::半日()) {
+            return 差 + s::一日();
+        }
+        if (差 > s::半日()) {
+            return 差 - s::一日();
+        }
+        return 差;
+    }
     constexpr bool operator==(const 時刻 &a, const 時刻 &b) noexcept {
-        return 時刻::時間差(a, b) == 0.0_s;
+        return a - b == 0.0_s;
     }
     constexpr bool operator!=(const 時刻 &a, const 時刻 &b) noexcept {
-        return 時刻::時間差(a, b) != 0.0_s;
+        return a - b != 0.0_s;
     }
     constexpr bool operator<(const 時刻 &a, const 時刻 &b) noexcept {
-        return 時刻::時間差(a, b) < 0.0_s;
+        return a - b < 0.0_s;
     }
     constexpr bool operator<=(const 時刻 &a, const 時刻 &b) noexcept {
-        return 時刻::時間差(a, b) <= 0.0_s;
+        return a - b <= 0.0_s;
     }
     constexpr bool operator>(const 時刻 &a, const 時刻 &b) noexcept {
-        return 時刻::時間差(a, b) > 0.0_s;
+        return a - b > 0.0_s;
     }
     constexpr bool operator>=(const 時刻 &a, const 時刻 &b) noexcept {
-        return 時刻::時間差(a, b) >= 0.0_s;
+        return a - b >= 0.0_s;
     }
 
     // 距離
