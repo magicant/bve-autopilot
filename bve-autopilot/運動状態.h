@@ -61,9 +61,11 @@ namespace autopilot {
         void 指定速度まで走行(mps 速度, mps2 加速度 = {}) noexcept;
 
         // 等加加速度運動
+#if 0
         mps2 指定位置まで走行(m 位置, mps2 初加速度, mps3 加加速度);
         void 等加加速度で指定加速度まで走行(
             mps2 初加速度, mps2 終加速度, mps3 加加速度) noexcept;
+#endif
         mps2 指定速度まで走行(
             mps 速度, mps2 初加速度, mps3 加加速度, bool 減速);
 
