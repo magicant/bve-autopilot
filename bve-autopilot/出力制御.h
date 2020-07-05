@@ -25,14 +25,14 @@
 namespace autopilot
 {
 
-    class 走行モデル;
+    class 運動状態;
     class 共通状態;
 
     class 出力制御
     {
     public:
         using 制動計算 = std::function<自動制動自然数ノッチ(
-            const 走行モデル &運動状態, const 共通状態 &状態)>;
+            const 運動状態 &運動状態, const 共通状態 &状態)>;
 
         static 自動制御指令 出力ノッチ(
             const 制動計算 &出力制動ノッチ, const 共通状態 &状態)
@@ -49,7 +49,7 @@ namespace autopilot
             _出力制動ノッチ{出力制動ノッチ}, _状態{状態}
         {}
 
-        自動制動自然数ノッチ 出力制動ノッチ(const 走行モデル &運動状態) const {
+        自動制動自然数ノッチ 出力制動ノッチ(const 運動状態 &運動状態) const {
             return _出力制動ノッチ(運動状態, _状態);
         }
 

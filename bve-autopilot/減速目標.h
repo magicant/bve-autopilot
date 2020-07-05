@@ -20,7 +20,7 @@
 #pragma once
 #include "減速パターン.h"
 #include "物理量.h"
-#include "走行モデル.h"
+#include "運動状態.h"
 
 namespace autopilot
 {
@@ -45,12 +45,12 @@ namespace autopilot
         /// 時刻は、減速目標に到達する時刻を引数の時刻とし、
         /// パターン上の時刻はそれより前になります。
         /// 指定した速度が目標速度以下ならパターン終了時の状態を返します。
-        走行モデル パターン到達状態(mps 速度, 時刻 終端時刻 = {}) const;
+        運動状態 パターン到達状態(mps 速度, 時刻 終端時刻 = {}) const;
 #endif
 
         /// 制限速度を維持するために適したノッチを計算します
         自動制動自然数ノッチ 出力制動ノッチ(
-            const 走行モデル &運動状態, const 共通状態 &状態) const;
+            const 運動状態 &運動状態, const 共通状態 &状態) const;
 
     private:
         m _位置;
@@ -58,9 +58,9 @@ namespace autopilot
         mps2 _基準減速度;
 
         減速パターン 主パターン(const 勾配グラフ &勾配) const;
-        mps2 副パターン減速度(const 走行モデル &運動状態) const;
+        mps2 副パターン減速度(const 運動状態 &運動状態) const;
         mps2 減速用出力減速度(
-            const 走行モデル &運動状態, const 勾配グラフ &勾配) const;
+            const 運動状態 &運動状態, const 勾配グラフ &勾配) const;
         mps2 収束用出力減速度(mps 現在速度) const;
 
     };

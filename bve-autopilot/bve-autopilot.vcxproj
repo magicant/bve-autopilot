@@ -198,7 +198,7 @@
     <ClInclude Include="減速目標.h" />
     <ClInclude Include="物理量.h" />
     <ClInclude Include="環境設定.h" />
-    <ClInclude Include="走行モデル.h" />
+    <ClInclude Include="運動状態.h" />
     <ClInclude Include="音声出力.h" />
   </ItemGroup>
   <ItemGroup>
@@ -228,7 +228,7 @@
     <ClCompile Include="減速パターン.cpp" />
     <ClCompile Include="減速目標.cpp" />
     <ClCompile Include="環境設定.cpp" />
-    <ClCompile Include="走行モデル.cpp" />
+    <ClCompile Include="運動状態.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="bve-autopilot.def" />

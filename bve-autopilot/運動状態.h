@@ -1,4 +1,4 @@
-// 走行モデル.h : 走行列車の位置・速度・時刻をシミュレートします。
+// 運動状態.h : 走行列車の位置・速度・時刻をシミュレートします。
 //
 // Copyright © 2019 Watanabe, Yuki
 //
@@ -23,15 +23,15 @@
 
 namespace autopilot {
 
-    class 走行モデル
+    class 運動状態
     {
     public:
         using 時刻型 = autopilot::時刻;
 
-        constexpr explicit 走行モデル(
+        constexpr explicit 運動状態(
             m 位置 = {}, mps 速度 = {}, 時刻型 時刻 = {}) noexcept :
             _位置(位置), _速度(速度), _時刻(時刻) { }
-        ~走行モデル() = default;
+        ~運動状態() = default;
 
         constexpr m 位置() const noexcept { return _位置; }
         constexpr void 位置変更(m 位置) noexcept { _位置 = 位置; }
@@ -83,7 +83,7 @@ namespace autopilot {
     class 共通状態;
 
     void 短く力行(
-        走行モデル &モデル, 力行ノッチ 力行ノッチ, mps2 想定加速度,
+        運動状態 &運動状態, 力行ノッチ 力行ノッチ, mps2 想定加速度,
         const 共通状態 &状態);
 
 }

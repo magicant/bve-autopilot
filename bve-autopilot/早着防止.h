@@ -21,7 +21,7 @@
 #include <forward_list>
 #include "制御指令.h"
 #include "物理量.h"
-#include "走行モデル.h"
+#include "運動状態.h"
 
 namespace autopilot
 {
@@ -41,7 +41,7 @@ namespace autopilot
 
     private:
         時刻 _次の設定時刻 = {};
-        std::forward_list<走行モデル> _予定表;
+        std::forward_list<運動状態> _予定表;
         自動制御指令 _出力ノッチ;
 
         void 通過時刻設定(const ATS_BEACONDATA &地上子) noexcept;

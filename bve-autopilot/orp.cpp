@@ -27,7 +27,7 @@
 #include "共通状態.h"
 #include "出力制御.h"
 #include "物理量.h"
-#include "走行モデル.h"
+#include "運動状態.h"
 
 namespace autopilot
 {
@@ -104,7 +104,7 @@ namespace autopilot
             std::bind(&orp::出力制動ノッチ, this, _1, _2), 状態);
     }
 
-    mps2 orp::パターン出力減速度(const 走行モデル &運動状態) const
+    mps2 orp::パターン出力減速度(const 運動状態 &運動状態) const
     {
         constexpr mps マージン変化点上 = 12.0_kmph;
         constexpr mps マージン変化点下 = 6.0_kmph;
@@ -132,7 +132,7 @@ namespace autopilot
         // より高い基準減速度のパターンを使う
     }
 
-    mps2 orp::下限照査出力減速度(const 走行モデル &運動状態) const
+    mps2 orp::下限照査出力減速度(const 運動状態 &運動状態) const
     {
         if (!_照査速度下限到達) {
             return 0.0_mps2;
@@ -141,7 +141,7 @@ namespace autopilot
     }
 
     自動制動自然数ノッチ orp::出力制動ノッチ(
-        const 走行モデル &運動状態, const 共通状態 &状態) const
+        const 運動状態 &運動状態, const 共通状態 &状態) const
     {
         mps2 平坦時減速度1 = パターン出力減速度(運動状態);
         mps2 平坦時減速度2 = 下限照査出力減速度(運動状態);

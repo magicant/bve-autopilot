@@ -25,7 +25,7 @@
 #include "区間.h"
 #include "環境設定.h"
 #include "物理量.h"
-#include "走行モデル.h"
+#include "運動状態.h"
 
 #pragma warning(push)
 #pragma warning(disable:4819)
@@ -84,8 +84,8 @@ namespace autopilot {
         bool 停車中() const noexcept {
             return static_cast<kmph>(_状態.Speed) < 0.05_kmph;
         }
-        走行モデル 現在走行状態() const noexcept {
-            return 走行モデル{ 現在位置(), 現在速度(), 現在時刻() };
+        運動状態 現在走行状態() const noexcept {
+            return 運動状態{ 現在位置(), 現在速度(), 現在時刻() };
         }
         float 現在電流() const noexcept { return _状態.Current; }
         float 現在ブレーキシリンダー圧() const noexcept {

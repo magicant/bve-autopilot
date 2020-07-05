@@ -96,9 +96,6 @@
     <ClInclude Include="早着防止.h">
       <Filter>ヘッダー ファイル\コア</Filter>
     </ClInclude>
-    <ClInclude Include="走行モデル.h">
-      <Filter>ヘッダー ファイル\コア</Filter>
-    </ClInclude>
     <ClInclude Include="環境設定.h">
       <Filter>ヘッダー ファイル\制御系</Filter>
     </ClInclude>
@@ -129,6 +126,9 @@
     <ClInclude Include="稼働状態.h">
       <Filter>ヘッダー ファイル\制御系</Filter>
     </ClInclude>
+    <ClInclude Include="運動状態.h">
+      <Filter>ヘッダー ファイル\コア</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -154,9 +154,6 @@
     </ClCompile>
     <ClCompile Include="共通状態.cpp">
       <Filter>ソース ファイル\コア\基本</Filter>
-    </ClCompile>
-    <ClCompile Include="走行モデル.cpp">
-      <Filter>ソース ファイル\コア</Filter>
     </ClCompile>
     <ClCompile Include="ato.cpp">
       <Filter>ソース ファイル\コア</Filter>
@@ -195,6 +192,9 @@
       <Filter>ソース ファイル\コア</Filter>
     </ClCompile>
     <ClCompile Include="出力制御.cpp">
+      <Filter>ソース ファイル\コア</Filter>
+    </ClCompile>
+    <ClCompile Include="運動状態.cpp">
       <Filter>ソース ファイル\コア</Filter>
     </ClCompile>
   </ItemGroup>
