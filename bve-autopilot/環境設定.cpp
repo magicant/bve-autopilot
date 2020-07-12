@@ -103,6 +103,35 @@ namespace autopilot
             return values;
         }
 
+        イベント イベントを解析(std::wstring_view s) {
+            while (!s.empty() && std::iswblank(s.front())) {
+                s.remove_prefix(1);
+            }
+
+            using namespace std::string_view_literals;
+            if (s == L"stop"sv) {
+                return イベント::停止;
+            }
+            if (s == L"dooropen"sv) {
+                return イベント::戸開;
+            }
+            if (s == L"manualbrake"sv) {
+                return イベント::手動ブレーキ;
+            }
+            return イベント::なし;
+        }
+
+        リセット条件 リセット条件を解析(LPCWSTR v) {
+            LPWSTR end;
+            double 遅延 = std::wcstod(v, &end);
+            if (!std::isfinite(遅延)) {
+                遅延 = 0.0;
+            }
+
+            イベント イベント = イベントを解析(end);
+            return リセット条件{イベント, static_cast<s>(遅延)};
+        }
+
         // 無効なキーは std::out_of_range を投げる
         キー組合せ キー組合せを解析(std::wstring s) {
             キー組合せ 組合せ;
@@ -180,6 +209,8 @@ namespace autopilot
         _制動最大拡張ノッチ{0},
         _転動防止制動割合(0.5),
         _pressure_rates{},
+        _tasc制御リセット条件{イベント::なし, 0.0_s},
+        _tasc緩解条件{イベント::手動ブレーキ, 0.0_s},
         _atc事前減速(true),
         _ato一時停止あり(false),
         _キー割り当て{
@@ -306,6 +337,22 @@ namespace autopilot
             設定ファイル名);
         if (0 < size && size < buffer_size - 1) {
             _pressure_rates = 実数列(buffer);
+        }
+
+        // TASC 制御リセット条件
+        size = GetPrivateProfileStringW(
+            L"tasc", L"monitoroff", L"", buffer, buffer_size,
+            設定ファイル名);
+        if (0 < size && size < buffer_size - 1) {
+            _tasc制御リセット条件 = リセット条件を解析(buffer);
+        }
+
+        // TASC 緩解条件
+        size = GetPrivateProfileStringW(
+            L"tasc", L"brakeoff", L"", buffer, buffer_size,
+            設定ファイル名);
+        if (0 < size && size < buffer_size - 1) {
+            _tasc緩解条件 = リセット条件を解析(buffer);
         }
 
         // ATC 事前減速
