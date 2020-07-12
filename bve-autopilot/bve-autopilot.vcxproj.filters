@@ -40,6 +40,18 @@
     <Filter Include="ソース ファイル\制御系">
       <UniqueIdentifier>{b72f39a3-2e98-4ac4-82bf-fa9fc86a4266}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\コア\車両物理">
+      <UniqueIdentifier>{3a9b9c94-9da6-44d3-94d6-82be188092e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\コア\車両物理">
+      <UniqueIdentifier>{c6244858-9405-4510-b1df-ba4bc203fd8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\コア\運転">
+      <UniqueIdentifier>{035fc7e7-f132-45c4-91bb-f190824ec124}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\コア\運転">
+      <UniqueIdentifier>{cae5f2c6-3c56-4383-a7dc-e11555f81255}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -63,39 +75,6 @@
     <ClInclude Include="live.h">
       <Filter>ヘッダー ファイル\共通ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="ato.h">
-      <Filter>ヘッダー ファイル\コア</Filter>
-    </ClInclude>
-    <ClInclude Include="orp.h">
-      <Filter>ヘッダー ファイル\コア</Filter>
-    </ClInclude>
-    <ClInclude Include="tasc.h">
-      <Filter>ヘッダー ファイル\コア</Filter>
-    </ClInclude>
-    <ClInclude Include="急動作抑制.h">
-      <Filter>ヘッダー ファイル\コア</Filter>
-    </ClInclude>
-    <ClInclude Include="減速パターン.h">
-      <Filter>ヘッダー ファイル\コア</Filter>
-    </ClInclude>
-    <ClInclude Include="勾配グラフ.h">
-      <Filter>ヘッダー ファイル\コア</Filter>
-    </ClInclude>
-    <ClInclude Include="信号順守.h">
-      <Filter>ヘッダー ファイル\コア</Filter>
-    </ClInclude>
-    <ClInclude Include="制限グラフ.h">
-      <Filter>ヘッダー ファイル\コア</Filter>
-    </ClInclude>
-    <ClInclude Include="制動特性.h">
-      <Filter>ヘッダー ファイル\コア</Filter>
-    </ClInclude>
-    <ClInclude Include="制動力推定.h">
-      <Filter>ヘッダー ファイル\コア</Filter>
-    </ClInclude>
-    <ClInclude Include="早着防止.h">
-      <Filter>ヘッダー ファイル\コア</Filter>
-    </ClInclude>
     <ClInclude Include="環境設定.h">
       <Filter>ヘッダー ファイル\制御系</Filter>
     </ClInclude>
@@ -117,17 +96,50 @@
     <ClInclude Include="atsplugin.h">
       <Filter>ヘッダー ファイル\制御系</Filter>
     </ClInclude>
-    <ClInclude Include="減速目標.h">
-      <Filter>ヘッダー ファイル\コア</Filter>
-    </ClInclude>
-    <ClInclude Include="出力制御.h">
-      <Filter>ヘッダー ファイル\コア</Filter>
-    </ClInclude>
     <ClInclude Include="稼働状態.h">
       <Filter>ヘッダー ファイル\制御系</Filter>
     </ClInclude>
     <ClInclude Include="運動状態.h">
-      <Filter>ヘッダー ファイル\コア</Filter>
+      <Filter>ヘッダー ファイル\コア\車両物理</Filter>
+    </ClInclude>
+    <ClInclude Include="減速パターン.h">
+      <Filter>ヘッダー ファイル\コア\車両物理</Filter>
+    </ClInclude>
+    <ClInclude Include="減速目標.h">
+      <Filter>ヘッダー ファイル\コア\車両物理</Filter>
+    </ClInclude>
+    <ClInclude Include="出力制御.h">
+      <Filter>ヘッダー ファイル\コア\車両物理</Filter>
+    </ClInclude>
+    <ClInclude Include="制動特性.h">
+      <Filter>ヘッダー ファイル\コア\車両物理</Filter>
+    </ClInclude>
+    <ClInclude Include="制動力推定.h">
+      <Filter>ヘッダー ファイル\コア\車両物理</Filter>
+    </ClInclude>
+    <ClInclude Include="ato.h">
+      <Filter>ヘッダー ファイル\コア\運転</Filter>
+    </ClInclude>
+    <ClInclude Include="orp.h">
+      <Filter>ヘッダー ファイル\コア\運転</Filter>
+    </ClInclude>
+    <ClInclude Include="tasc.h">
+      <Filter>ヘッダー ファイル\コア\運転</Filter>
+    </ClInclude>
+    <ClInclude Include="急動作抑制.h">
+      <Filter>ヘッダー ファイル\コア\運転</Filter>
+    </ClInclude>
+    <ClInclude Include="勾配グラフ.h">
+      <Filter>ヘッダー ファイル\コア\運転</Filter>
+    </ClInclude>
+    <ClInclude Include="信号順守.h">
+      <Filter>ヘッダー ファイル\コア\運転</Filter>
+    </ClInclude>
+    <ClInclude Include="制限グラフ.h">
+      <Filter>ヘッダー ファイル\コア\運転</Filter>
+    </ClInclude>
+    <ClInclude Include="早着防止.h">
+      <Filter>ヘッダー ファイル\コア\運転</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -155,47 +167,47 @@
     <ClCompile Include="共通状態.cpp">
       <Filter>ソース ファイル\コア\基本</Filter>
     </ClCompile>
-    <ClCompile Include="ato.cpp">
-      <Filter>ソース ファイル\コア</Filter>
-    </ClCompile>
-    <ClCompile Include="orp.cpp">
-      <Filter>ソース ファイル\コア</Filter>
-    </ClCompile>
-    <ClCompile Include="tasc.cpp">
-      <Filter>ソース ファイル\コア</Filter>
-    </ClCompile>
-    <ClCompile Include="急動作抑制.cpp">
-      <Filter>ソース ファイル\コア</Filter>
+    <ClCompile Include="運動状態.cpp">
+      <Filter>ソース ファイル\コア\車両物理</Filter>
     </ClCompile>
     <ClCompile Include="減速パターン.cpp">
-      <Filter>ソース ファイル\コア</Filter>
-    </ClCompile>
-    <ClCompile Include="勾配グラフ.cpp">
-      <Filter>ソース ファイル\コア</Filter>
-    </ClCompile>
-    <ClCompile Include="信号順守.cpp">
-      <Filter>ソース ファイル\コア</Filter>
-    </ClCompile>
-    <ClCompile Include="制限グラフ.cpp">
-      <Filter>ソース ファイル\コア</Filter>
-    </ClCompile>
-    <ClCompile Include="制動特性.cpp">
-      <Filter>ソース ファイル\コア</Filter>
-    </ClCompile>
-    <ClCompile Include="制動力推定.cpp">
-      <Filter>ソース ファイル\コア</Filter>
-    </ClCompile>
-    <ClCompile Include="早着防止.cpp">
-      <Filter>ソース ファイル\コア</Filter>
+      <Filter>ソース ファイル\コア\車両物理</Filter>
     </ClCompile>
     <ClCompile Include="減速目標.cpp">
-      <Filter>ソース ファイル\コア</Filter>
+      <Filter>ソース ファイル\コア\車両物理</Filter>
     </ClCompile>
     <ClCompile Include="出力制御.cpp">
-      <Filter>ソース ファイル\コア</Filter>
+      <Filter>ソース ファイル\コア\車両物理</Filter>
     </ClCompile>
-    <ClCompile Include="運動状態.cpp">
-      <Filter>ソース ファイル\コア</Filter>
+    <ClCompile Include="制動特性.cpp">
+      <Filter>ソース ファイル\コア\車両物理</Filter>
+    </ClCompile>
+    <ClCompile Include="制動力推定.cpp">
+      <Filter>ソース ファイル\コア\車両物理</Filter>
+    </ClCompile>
+    <ClCompile Include="ato.cpp">
+      <Filter>ソース ファイル\コア\運転</Filter>
+    </ClCompile>
+    <ClCompile Include="orp.cpp">
+      <Filter>ソース ファイル\コア\運転</Filter>
+    </ClCompile>
+    <ClCompile Include="tasc.cpp">
+      <Filter>ソース ファイル\コア\運転</Filter>
+    </ClCompile>
+    <ClCompile Include="急動作抑制.cpp">
+      <Filter>ソース ファイル\コア\運転</Filter>
+    </ClCompile>
+    <ClCompile Include="勾配グラフ.cpp">
+      <Filter>ソース ファイル\コア\運転</Filter>
+    </ClCompile>
+    <ClCompile Include="信号順守.cpp">
+      <Filter>ソース ファイル\コア\運転</Filter>
+    </ClCompile>
+    <ClCompile Include="制限グラフ.cpp">
+      <Filter>ソース ファイル\コア\運転</Filter>
+    </ClCompile>
+    <ClCompile Include="早着防止.cpp">
+      <Filter>ソース ファイル\コア\運転</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
