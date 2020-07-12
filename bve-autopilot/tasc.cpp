@@ -36,9 +36,9 @@ namespace autopilot {
     {
 
         constexpr m デフォルト最大許容誤差 = 0.5_m;
-        constexpr tasc::リセット条件
-            デフォルト制御リセット条件{tasc::イベント::なし, 0.0_s},
-            デフォルト緩解条件{tasc::イベント::手動ブレーキ, 0.0_s};
+        constexpr リセット条件
+            デフォルト制御リセット条件{イベント::なし, 0.0_s},
+            デフォルト緩解条件{イベント::手動ブレーキ, 0.0_s};
         constexpr 自動制御指令 緩解指令 =
             力行ノッチ{std::numeric_limits<unsigned>::max()};
 

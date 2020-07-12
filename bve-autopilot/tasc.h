@@ -25,24 +25,13 @@
 #include "共通状態.h"
 #include "区間.h"
 #include "物理量.h"
+#include "環境設定.h"
 
 namespace autopilot {
 
     class tasc
     {
     public:
-        enum class イベント
-        {
-            なし,
-            停止,
-            戸開,
-            手動ブレーキ,
-        };
-        struct リセット条件 {
-            イベント タイミング;
-            s 遅延;
-        };
-
         tasc();
         ~tasc() = default;
 

@@ -45,6 +45,19 @@ namespace autopilot
     constexpr std::size_t キー種類数 = 16;
     using キー組合せ = std::bitset<キー種類数>;
 
+    enum class イベント
+    {
+        なし,
+        停止,
+        戸開,
+        手動ブレーキ,
+    };
+
+    struct リセット条件 {
+        イベント タイミング;
+        s 遅延;
+    };
+
     enum class 音声
     {
         tasc無効設定音,
