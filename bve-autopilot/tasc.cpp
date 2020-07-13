@@ -36,8 +36,6 @@ namespace autopilot {
     {
 
         constexpr m デフォルト最大許容誤差 = 0.5_m;
-        constexpr 自動制御指令 緩解指令 =
-            力行ノッチ{std::numeric_limits<unsigned>::max()};
 
     }
 
@@ -48,7 +46,7 @@ namespace autopilot {
         _最大許容誤差(デフォルト最大許容誤差),
         _制御リセット時刻(s::無限大()),
         _緩解時刻(s::無限大()),
-        _出力ノッチ(緩解指令)
+        _出力ノッチ()
     {
     }
 
@@ -148,7 +146,7 @@ namespace autopilot {
             }
             else {
                 // 時間がたったらブレーキをやめる
-                _出力ノッチ = 緩解指令;
+                _出力ノッチ = 状態.最大力行ノッチ();
             }
         }
     }
