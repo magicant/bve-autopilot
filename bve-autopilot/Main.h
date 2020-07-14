@@ -76,7 +76,10 @@ namespace autopilot
             _状態.戸閉(true);
             _tasc.戸閉(_状態);
         }
-        void 戸開() noexcept{ _状態.戸閉(false); }
+        void 戸開() noexcept{
+            _状態.戸閉(false);
+            _tasc.戸開(_状態);
+        }
 
         void 信号現示変化(int 信号指示) { _ato.信号現示変化(信号指示); }
         void 地上子通過(const ATS_BEACONDATA & 地上子);

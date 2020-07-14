@@ -62,7 +62,8 @@ namespace autopilot {
             _押しているキー[キー] = false;
         }
 
-        const 環境設定 & 設定() const noexcept { return _設定; }
+        環境設定 &設定() noexcept { return _設定; }
+        const 環境設定 &設定() const noexcept { return _設定; }
         互換モード型 互換モード() const noexcept { return _互換モード; }
         const ATS_VEHICLESPEC & 車両仕様() const noexcept { return _車両仕様; }
         力行ノッチ 最大力行ノッチ() const noexcept {

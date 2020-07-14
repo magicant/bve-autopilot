@@ -76,7 +76,8 @@ namespace autopilot
                 return main.tasc有効();
             })},
             {L"tascmonitor", パネル出力対象([](const Main & main) {
-                return main.tasc有効() && main.tasc状態().制御中();
+                return main.tasc有効() &&
+                    main.tasc状態().制御中(main.状態().現在時刻());
             })},
             {L"tascbrake", パネル出力対象([](const Main & main) {
                 if (!main.tasc有効() || main.ato一時停止中()) {

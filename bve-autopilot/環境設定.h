@@ -45,6 +45,19 @@ namespace autopilot
     constexpr std::size_t キー種類数 = 16;
     using キー組合せ = std::bitset<キー種類数>;
 
+    enum class イベント
+    {
+        なし,
+        停止,
+        戸開,
+        手動ブレーキ,
+    };
+
+    struct リセット条件 {
+        イベント タイミング;
+        s 遅延;
+    };
+
     enum class 音声
     {
         tasc無効設定音,
@@ -81,6 +94,18 @@ namespace autopilot
         const std::vector<制動力割合> &pressure_rates() const noexcept {
             return _pressure_rates;
         }
+        const リセット条件 &tasc制御リセット条件() const noexcept {
+            return _tasc制御リセット条件;
+        }
+        void tasc制御リセット条件を設定(const リセット条件 &条件) noexcept {
+            _tasc制御リセット条件 = 条件;
+        }
+        const リセット条件 &tasc緩解条件() const noexcept {
+            return _tasc緩解条件;
+        }
+        void tasc緩解条件を設定(const リセット条件 &条件) noexcept {
+            _tasc緩解条件 = 条件;
+        }
         bool atc事前減速() const noexcept { return _atc事前減速; }
         bool ato一時停止あり() const noexcept { return _ato一時停止あり; }
 
@@ -112,6 +137,7 @@ namespace autopilot
         自動制動自然数ノッチ _制動最大拡張ノッチ;
         制動力割合 _転動防止制動割合;
         std::vector<制動力割合> _pressure_rates;
+        リセット条件 _tasc制御リセット条件, _tasc緩解条件;
         bool _atc事前減速, _ato一時停止あり;
 
         std::unordered_map<キー操作, キー組合せ> _キー割り当て;
