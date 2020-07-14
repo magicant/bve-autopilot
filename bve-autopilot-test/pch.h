@@ -7,6 +7,6 @@
 #ifndef PCH_H
 #define PCH_H
 
-// プリコンパイルするヘッダーをここに追加します
+#include "bve-autopilot/stdafx.h"
 
 #endif //PCH_H

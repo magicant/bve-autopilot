@@ -97,8 +97,14 @@ namespace autopilot
         const リセット条件 &tasc制御リセット条件() const noexcept {
             return _tasc制御リセット条件;
         }
+        void tasc制御リセット条件を設定(const リセット条件 &条件) noexcept {
+            _tasc制御リセット条件 = 条件;
+        }
         const リセット条件 &tasc緩解条件() const noexcept {
             return _tasc緩解条件;
+        }
+        void tasc緩解条件を設定(const リセット条件 &条件) noexcept {
+            _tasc緩解条件 = 条件;
         }
         bool atc事前減速() const noexcept { return _atc事前減速; }
         bool ato一時停止あり() const noexcept { return _ato一時停止あり; }
