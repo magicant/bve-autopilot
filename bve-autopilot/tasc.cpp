@@ -168,6 +168,35 @@ namespace autopilot {
             isfinite(_次駅停止位置のある範囲.get().始点);
     }
 
+    bool tasc::インチング可能(const 共通状態 &状態) const
+    {
+        if (!状態.停車中()) {
+            return false;
+        }
+        if (!状態.戸閉()) {
+            return false;
+        }
+        if (状態.入力逆転器ノッチ() <= 0) {
+            return false;
+        }
+        if (状態.入力力行ノッチ() != 0) {
+            return false;
+        }
+        if (状態.入力制動ノッチ() != 手動制動自然数ノッチ{0}) {
+            return false;
+        }
+
+        m 残距離 = 目標停止位置() - 状態.現在位置();
+        if (残距離 > 5.0_m) {
+            return false; // 目標停止位置が未設定か遠すぎる
+        }
+        if (残距離 <= _最大許容誤差) {
+            return false; // もう十分目標停止位置に近いか超えている
+        }
+
+        return true;
+    }
+
     void tasc::停止位置を追加(m 停止位置, const 共通状態 &状態)
     {
         if (停止位置 < 状態.現在位置()) {

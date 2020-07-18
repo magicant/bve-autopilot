@@ -45,6 +45,9 @@ namespace autopilot
         bool ato有効() const noexcept {
             return autopilot::ato有効(現在稼働状態());
         }
+        bool インチング中() const noexcept {
+            return _インチング状態 != インチング状態::切;
+        }
         mps 現在制限速度() const {
             return _ato.現在制限速度(_状態);
         }
@@ -88,10 +91,18 @@ namespace autopilot
             const ATS_VEHICLESTATE &状態, int *出力値, int *音声状態);
 
     private:
+        enum class インチング状態
+        {
+            切, //! インチングを行っていない
+            発進, //! 列車を発進させようとしている
+            走行, //! 列車が走行している
+        };
+
         共通状態 _状態;
         tasc _tasc;
         ato _ato;
         std::vector<稼働状態>::const_iterator _稼働状態;
+        インチング状態 _インチング状態;
         std::vector<ATS_BEACONDATA> _通過済地上子;
         std::unordered_map<音声, 音声出力> _音声状態;
 

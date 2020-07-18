@@ -40,6 +40,7 @@ namespace autopilot
         モード切替次,
         モード切替前,
         ato発進,
+        tascインチング,
     };
 
     constexpr std::size_t キー種類数 = 16;

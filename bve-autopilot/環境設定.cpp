@@ -215,7 +215,8 @@ namespace autopilot
         _ato一時停止あり(false),
         _キー割り当て{
             {キー操作::モード切替, デフォルトキー組合せ()},
-            {キー操作::ato発進, デフォルトキー組合せ()}, },
+            {キー操作::ato発進, デフォルトキー組合せ()},
+            {キー操作::tascインチング, デフォルトキー組合せ()}, },
         _パネル出力対象登録簿(),
         _音声割り当て{}
     {
@@ -377,7 +378,8 @@ namespace autopilot
               {キー操作::モード切替逆, L"modeback"},
               {キー操作::モード切替次, L"modenext"},
               {キー操作::モード切替前, L"modeprevious"},
-              {キー操作::ato発進, L"atostart"} })
+              {キー操作::ato発進, L"atostart"},
+              {キー操作::tascインチング, L"inch"},})
         {
             size = GetPrivateProfileStringW(
                 L"key", i.second, L"", buffer, buffer_size, 設定ファイル名);

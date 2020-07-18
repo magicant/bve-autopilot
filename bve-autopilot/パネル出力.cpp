@@ -112,6 +112,9 @@ namespace autopilot
             {L"tascdistanced3", パネル出力対象(tasc残距離桁(5))},
             {L"tascdistanced4", パネル出力対象(tasc残距離桁(6))},
             {L"tascdistanced5", パネル出力対象(tasc残距離桁(7))},
+            {L"inching", パネル出力対象([](const Main &main) {
+                return main.インチング中();
+            })},
             {L"atoenabled", パネル出力対象([](const Main & main) {
                 return main.ato有効();
             })},
