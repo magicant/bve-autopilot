@@ -62,7 +62,9 @@ namespace autopilot
         自動制御指令 _出力ノッチ;
         mps _照査速度;
 
-        mps2 パターン出力減速度(const 運動状態 &運動状態) const;
+        mps2 照査下パターン出力減速度(const 運動状態 &運動状態) const;
+        mps2 接近パターン出力減速度(
+            const 運動状態 &運動状態, const 共通状態 &状態) const;
         mps2 下限照査出力減速度(const 運動状態 &運動状態) const;
         自動制動自然数ノッチ 出力制動ノッチ(
             const 運動状態 &運動状態, const 共通状態 &状態) const;
