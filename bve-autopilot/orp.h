@@ -55,6 +55,8 @@ namespace autopilot
         mps 照査速度() const noexcept { return _照査速度; }
 
     private:
+        m _開始位置;
+        mps _開始照査速度;
         減速パターン _照査パターン;
         bool _照査速度下限到達;
         自動制御指令 _出力ノッチ;
