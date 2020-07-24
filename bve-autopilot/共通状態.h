@@ -112,6 +112,7 @@ namespace autopilot {
         制動指令 前回制動指令() const noexcept {
             return 制動指令{_前回出力.Brake};
         }
+        bool 力行をやめた直後である() const noexcept;
         キー組合せ 押しているキー() const noexcept { return _押しているキー; }
 
     private:
@@ -130,6 +131,7 @@ namespace autopilot {
         制動特性 _制動特性;
         勾配グラフ _勾配グラフ;
         ATS_HANDLES _前回出力 = {};
+        時刻 _力行をやめた時刻 = static_cast<時刻>(-s::無限大());
 
         void 勾配追加(int 地上子値, m 直前位置);
     };
