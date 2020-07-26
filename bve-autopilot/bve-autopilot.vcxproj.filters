@@ -141,6 +141,9 @@
     <ClInclude Include="早着防止.h">
       <Filter>ヘッダー ファイル\コア\運転</Filter>
     </ClInclude>
+    <ClInclude Include="力行特性.h">
+      <Filter>ヘッダー ファイル\コア\車両物理</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -208,6 +211,9 @@
     </ClCompile>
     <ClCompile Include="早着防止.cpp">
       <Filter>ソース ファイル\コア\運転</Filter>
+    </ClCompile>
+    <ClCompile Include="力行特性.cpp">
+      <Filter>ソース ファイル\コア\車両物理</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

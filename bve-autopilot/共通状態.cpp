@@ -57,6 +57,7 @@ namespace autopilot {
     void 共通状態::車両仕様設定(const ATS_VEHICLESPEC & 仕様)
     {
         _車両仕様 = 仕様;
+        _力行特性.性能設定({2.5_kmphps});
         _制動特性.性能設定(
             手動制動自然数ノッチ{static_cast<unsigned>(仕様.BrakeNotches)},
             _設定.制動最大拡張ノッチ(),

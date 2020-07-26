@@ -18,6 +18,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include "力行特性.h"
 #include "制動特性.h"
 #include "制御指令.h"
 #include "加速度計.h"
@@ -102,6 +103,7 @@ namespace autopilot {
             return _入力制動ノッチ;
         }
         mps2 加速度() const noexcept { return _加速度計.加速度(); }
+        const 力行特性 &力行() const noexcept { return _力行特性; }
         const 制動特性 &制動() const noexcept { return _制動特性; }
         自動制動自然数ノッチ 転動防止自動ノッチ() const;
         const 勾配グラフ &勾配() const noexcept { return _勾配グラフ; }
@@ -128,6 +130,7 @@ namespace autopilot {
         手動制動自然数ノッチ _入力制動ノッチ;
         キー組合せ _押しているキー;
         加速度計 _加速度計;
+        力行特性 _力行特性;
         制動特性 _制動特性;
         勾配グラフ _勾配グラフ;
         ATS_HANDLES _前回出力 = {};
