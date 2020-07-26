@@ -45,20 +45,17 @@ namespace autopilot
         }
     }
 
+    力行ノッチ 力行特性::最大力行ノッチ() const noexcept
+    {
+        return 力行ノッチ{static_cast<unsigned>(_加速度一覧.size())};
+    }
+
     mps2 力行特性::加速度(力行ノッチ ノッチ) const
     {
         if (ノッチ.value == 0u) {
             return 0.0_mps2;
         }
-        if (ノッチ.value <= _加速度一覧.size()) {
-            return _加速度一覧[static_cast<std::size_t>(ノッチ.value - 1)];
-        }
-
-        constexpr mps2 最大加速度 = 5.0_kmphps;
-        if (_加速度一覧.empty()) {
-            return 最大加速度;
-        }
-        return std::max(_加速度一覧.back(), 最大加速度);
+        return _加速度一覧[static_cast<std::size_t>(ノッチ.value - 1)];
     }
 
 }

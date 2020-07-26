@@ -68,7 +68,7 @@ namespace autopilot {
         互換モード型 互換モード() const noexcept { return _互換モード; }
         const ATS_VEHICLESPEC & 車両仕様() const noexcept { return _車両仕様; }
         力行ノッチ 最大力行ノッチ() const noexcept {
-            return 力行ノッチ{static_cast<unsigned>(_車両仕様.PowerNotches)};
+            return _力行特性.最大力行ノッチ();
         }
         m 列車長() const noexcept {
             return _設定.車両長() * static_cast<double>(_車両仕様.Cars);
