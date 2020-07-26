@@ -26,9 +26,23 @@ namespace autopilot
     力行特性::力行特性() = default;
     力行特性::~力行特性() = default;
 
-    void 力行特性::性能設定(const std::vector<mps2> &加速度一覧)
+    void 力行特性::性能設定(
+        const std::vector<mps2> &加速度一覧, 力行ノッチ 最大ノッチ)
     {
-        _加速度一覧 = 加速度一覧;
+        if (!加速度一覧.empty()) {
+            _加速度一覧 = 加速度一覧;
+            return;
+        }
+
+        // デフォルトの加速度一覧を生成する
+        auto n = static_cast<std::size_t>(最大ノッチ.value);
+        _加速度一覧.reserve(n);
+        if (n > 1u) {
+            _加速度一覧.push_back(2.5_kmphps);
+        }
+        while (_加速度一覧.size() < n) {
+            _加速度一覧.push_back(5.0_kmphps);
+        }
     }
 
     mps2 力行特性::加速度(力行ノッチ ノッチ) const

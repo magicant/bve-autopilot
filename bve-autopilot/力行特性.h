@@ -31,7 +31,8 @@ namespace autopilot
         力行特性();
         ~力行特性();
 
-        void 性能設定(const std::vector<mps2> &加速度一覧);
+        void 性能設定(
+            const std::vector<mps2> &加速度一覧, 力行ノッチ 最大ノッチ);
 
         mps2 加速度(力行ノッチ ノッチ) const;
 
