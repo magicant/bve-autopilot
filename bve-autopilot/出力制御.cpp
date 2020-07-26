@@ -151,11 +151,6 @@ namespace autopilot
             return _状態.最大力行ノッチ();
         }
 
-        // ある程度速度が出ているなら弱い力行ノッチは無意味なので惰行する
-        if (_状態.現在速度() >= static_cast<mps>(10.0_kmph)) {
-            return 力行ノッチ{0};
-        }
-
         // 止まりかけならとにかく前に進む
         if (_状態.現在速度() < static_cast<mps>(0.5_kmph)) {
             return 力行ノッチ{1};
