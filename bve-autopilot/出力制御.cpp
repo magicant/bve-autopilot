@@ -19,6 +19,7 @@
 
 #include "stdafx.h"
 #include "出力制御.h"
+#include <algorithm>
 #include "共通状態.h"
 #include "運動状態.h"
 
@@ -144,9 +145,15 @@ namespace autopilot
 
         // 制限速度まで余裕があるなら力行する
         // ただし現在よりも弱いノッチでの加速度は予測できないので除く
+        // また抵抗器保護のため第一ノッチは低速域でしか使わないようにする
+        signed 最小ノッチ = std::max(_状態.前回力行ノッチ(), 1);
+        if (_状態.最大力行ノッチ() > 力行ノッチ{1} &&
+            _状態.現在速度() > static_cast<mps>(10.0_kmph))
+        {
+            最小ノッチ = std::max(最小ノッチ, 2);
+        }
         for (力行ノッチ ノッチ = _状態.最大力行ノッチ();
-            ノッチ > 力行ノッチ{0} &&
-            static_cast<signed>(ノッチ.value) >= _状態.前回力行ノッチ();
+            static_cast<signed>(ノッチ.value) >= 最小ノッチ;
             --ノッチ.value)
         {
             if (力行する余裕あり(ノッチ)) {
