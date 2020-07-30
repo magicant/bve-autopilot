@@ -31,7 +31,7 @@ namespace autopilot
     {
 
         constexpr s 接近時間 = 2.0_s;
-        constexpr double 減速度係数 = 0.25;
+        constexpr double 減速度係数 = 0.15;
 
     }
 
