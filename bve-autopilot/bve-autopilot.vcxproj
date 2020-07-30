@@ -181,6 +181,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="tasc.h" />
     <ClInclude Include="パネル出力.h" />
+    <ClInclude Include="力行特性.h" />
     <ClInclude Include="稼働状態.h" />
     <ClInclude Include="信号順守.h" />
     <ClInclude Include="共通状態.h" />
@@ -220,6 +221,7 @@
     <ClCompile Include="制動力推定.cpp" />
     <ClCompile Include="制動特性.cpp" />
     <ClCompile Include="制限グラフ.cpp" />
+    <ClCompile Include="力行特性.cpp" />
     <ClCompile Include="加速度計.cpp" />
     <ClCompile Include="勾配グラフ.cpp" />
     <ClCompile Include="区間.cpp" />

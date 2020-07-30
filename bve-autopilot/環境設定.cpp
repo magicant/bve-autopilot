@@ -88,7 +88,22 @@ namespace autopilot
             return r;
         }
 
-        std::vector<制動力割合> 実数列(LPCWSTR s) {
+        std::vector<mps2> 加速度列(LPCWSTR s) {
+            std::vector<mps2> values;
+            while (*s != L'\0') {
+                LPWSTR s2;
+                double value = std::wcstod(s, &s2);
+                if (s2 == s) {
+                    ++s;
+                    continue;
+                }
+                values.emplace_back(static_cast<kmphps>(value));
+                s = s2;
+            }
+            return values;
+        }
+
+        std::vector<制動力割合> 制動力割合列(LPCWSTR s) {
             std::vector<制動力割合> values;
             while (*s != L'\0') {
                 LPWSTR s2;
@@ -204,6 +219,7 @@ namespace autopilot
             稼働状態::ato有効, 稼働状態::tascのみ有効, 稼働状態::切},
         _車両長(20),
         _加速終了遅延(2.0_s),
+        _加速度一覧{},
         _常用最大減速度(3.0_kmphps),
         _制動反応時間(0.2_s),
         _制動最大拡張ノッチ{0},
@@ -281,6 +297,14 @@ namespace autopilot
             }
         }
 
+        // 力行加速度
+        size = GetPrivateProfileStringW(
+            L"power", L"acceleration", L"", buffer, buffer_size,
+            設定ファイル名);
+        if (0 < size && size < buffer_size - 1) {
+            _加速度一覧 = 加速度列(buffer);
+        }
+
         // 常用最大減速度
         size = GetPrivateProfileStringW(
             L"braking", L"maxdeceleration", L"", buffer, buffer_size,
@@ -337,7 +361,7 @@ namespace autopilot
             L"braking", L"pressurerates", L"", buffer, buffer_size,
             設定ファイル名);
         if (0 < size && size < buffer_size - 1) {
-            _pressure_rates = 実数列(buffer);
+            _pressure_rates = 制動力割合列(buffer);
         }
 
         // TASC 制御リセット条件

@@ -106,7 +106,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(SolutionDir)bve-autopilot\$(IntermediateOutputPath);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ato.obj;orp.obj;stdafx.obj;tasc.obj;パネル出力.obj;信号順守.obj;共通状態.obj;出力制御.obj;制動力推定.obj;制動特性.obj;制限グラフ.obj;加速度計.obj;勾配グラフ.obj;区間.obj;急動作抑制.obj;早着防止.obj;減速パターン.obj;減速目標.obj;環境設定.obj;運動状態.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ato.obj;orp.obj;stdafx.obj;tasc.obj;パネル出力.obj;力行特性.obj;信号順守.obj;共通状態.obj;出力制御.obj;制動力推定.obj;制動特性.obj;制限グラフ.obj;加速度計.obj;勾配グラフ.obj;区間.obj;急動作抑制.obj;早着防止.obj;減速パターン.obj;減速目標.obj;環境設定.obj;運動状態.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -124,7 +124,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(SolutionDir)bve-autopilot\$(IntermediateOutputPath);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ato.obj;orp.obj;stdafx.obj;tasc.obj;パネル出力.obj;信号順守.obj;共通状態.obj;出力制御.obj;制動力推定.obj;制動特性.obj;制限グラフ.obj;加速度計.obj;勾配グラフ.obj;区間.obj;急動作抑制.obj;早着防止.obj;減速パターン.obj;減速目標.obj;環境設定.obj;運動状態.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ato.obj;orp.obj;stdafx.obj;tasc.obj;パネル出力.obj;力行特性.obj;信号順守.obj;共通状態.obj;出力制御.obj;制動力推定.obj;制動特性.obj;制限グラフ.obj;加速度計.obj;勾配グラフ.obj;区間.obj;急動作抑制.obj;早着防止.obj;減速パターン.obj;減速目標.obj;環境設定.obj;運動状態.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -146,7 +146,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(SolutionDir)bve-autopilot\$(IntermediateOutputPath);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ato.obj;orp.obj;stdafx.obj;tasc.obj;パネル出力.obj;信号順守.obj;共通状態.obj;出力制御.obj;制動力推定.obj;制動特性.obj;制限グラフ.obj;加速度計.obj;勾配グラフ.obj;区間.obj;急動作抑制.obj;早着防止.obj;減速パターン.obj;減速目標.obj;環境設定.obj;運動状態.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ato.obj;orp.obj;stdafx.obj;tasc.obj;パネル出力.obj;力行特性.obj;信号順守.obj;共通状態.obj;出力制御.obj;制動力推定.obj;制動特性.obj;制限グラフ.obj;加速度計.obj;勾配グラフ.obj;区間.obj;急動作抑制.obj;早着防止.obj;減速パターン.obj;減速目標.obj;環境設定.obj;運動状態.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -168,7 +168,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(SolutionDir)bve-autopilot\$(IntermediateOutputPath);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ato.obj;orp.obj;stdafx.obj;tasc.obj;パネル出力.obj;信号順守.obj;共通状態.obj;出力制御.obj;制動力推定.obj;制動特性.obj;制限グラフ.obj;加速度計.obj;勾配グラフ.obj;区間.obj;急動作抑制.obj;早着防止.obj;減速パターン.obj;減速目標.obj;環境設定.obj;運動状態.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ato.obj;orp.obj;stdafx.obj;tasc.obj;パネル出力.obj;力行特性.obj;信号順守.obj;共通状態.obj;出力制御.obj;制動力推定.obj;制動特性.obj;制限グラフ.obj;加速度計.obj;勾配グラフ.obj;区間.obj;急動作抑制.obj;早着防止.obj;減速パターン.obj;減速目標.obj;環境設定.obj;運動状態.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

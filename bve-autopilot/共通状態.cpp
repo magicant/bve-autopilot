@@ -51,11 +51,15 @@ namespace autopilot {
         _押しているキー.reset();
         _加速度計.リセット();
         _勾配グラフ.消去();
+        _力行をやめた時刻 = static_cast<時刻>(-s::無限大());
     }
 
     void 共通状態::車両仕様設定(const ATS_VEHICLESPEC & 仕様)
     {
         _車両仕様 = 仕様;
+        _力行特性.性能設定(
+            _設定.加速度一覧(),
+            力行ノッチ{static_cast<unsigned>(仕様.PowerNotches)});
         _制動特性.性能設定(
             手動制動自然数ノッチ{static_cast<unsigned>(仕様.BrakeNotches)},
             _設定.制動最大拡張ノッチ(),
@@ -104,6 +108,10 @@ namespace autopilot {
 
     void 共通状態::出力(const ATS_HANDLES & 出力) noexcept
     {
+        if (_前回出力.Power > 0 && 出力.Power <= 0) {
+            _力行をやめた時刻 = 現在時刻();
+        }
+
         _前回出力 = 出力;
     }
 
@@ -152,6 +160,11 @@ namespace autopilot {
     mps2 共通状態::車両勾配加速度() const
     {
         return _勾配グラフ.列車勾配加速度(現在位置());
+    }
+
+    bool 共通状態::力行をやめた直後である() const noexcept
+    {
+        return 現在時刻() - _力行をやめた時刻 <= _設定.加速終了遅延();
     }
 
     void 共通状態::勾配追加(int 地上子値, m 直前位置)
