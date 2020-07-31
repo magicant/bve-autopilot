@@ -47,7 +47,7 @@ namespace autopilot
         void 通過時刻設定(const ATS_BEACONDATA &地上子) noexcept;
         void 通過位置設定(
             const ATS_BEACONDATA &地上子, m 地上子位置, const 共通状態 &状態);
-        bool 加速可(const 共通状態 &状態) const;
+        力行ノッチ 出力ノッチを計算(const 共通状態 &状態) const;
     };
 
 }
