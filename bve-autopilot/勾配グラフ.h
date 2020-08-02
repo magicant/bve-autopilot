@@ -58,6 +58,8 @@ namespace autopilot
         using iterator = std::map<m, 変化点>::iterator;
 
         /// 加速度が a1 から a2 に変化するときの比エネルギーを求める。
+        static m2ps2 比エネルギー差(mps2 a2, mps2 a1, m 変位);
+        /// 加速度が a1 から a2 に変化するときの比エネルギーを求める。
         /// ただし加速度が正の範囲のみ計算に加える。
         static m2ps2 下り勾配比エネルギー差(mps2 a2, mps2 a1, m 変位);
 

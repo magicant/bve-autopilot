@@ -83,6 +83,11 @@ namespace autopilot
             std::min(_累積比エネルギー未計算位置, 変化区間.始点);
     }
 
+    m2ps2 勾配加速度グラフ::比エネルギー差(mps2 a2, mps2 a1, m 変位)
+    {
+        return 0.5 * 変位 * (a1 + a2);
+    }
+
     m2ps2 勾配加速度グラフ::下り勾配比エネルギー差(mps2 a2, mps2 a1, m 変位)
     {
         if (a2 <= 0.0_mps2) {
