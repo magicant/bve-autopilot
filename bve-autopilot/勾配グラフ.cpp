@@ -71,7 +71,7 @@ namespace autopilot
         while (++i != _変化点リスト.end()) {
             double 比 = std::min((i->first - 変化区間.始点) / 区間長さ, 1.0);
             i->second.勾配加速度 += 比 * 加速度変化量;
-            i->second.累積比エネルギー = m2ps2::quiet_NaN();
+            i->second.累積下り勾配比エネルギー = m2ps2::quiet_NaN();
         }
 
         // 終点の値を設定する
@@ -83,7 +83,7 @@ namespace autopilot
             std::min(_累積比エネルギー未計算位置, 変化区間.始点);
     }
 
-    m2ps2 勾配加速度グラフ::比エネルギー差(mps2 a2, mps2 a1, m 変位)
+    m2ps2 勾配加速度グラフ::下り勾配比エネルギー差(mps2 a2, mps2 a1, m 変位)
     {
         if (a2 <= 0.0_mps2) {
             if (a1 <= 0.0_mps2) {
@@ -116,7 +116,7 @@ namespace autopilot
             比 * (i->second.勾配加速度 - h->second.勾配加速度);
     }
 
-    m2ps2 勾配加速度グラフ::比エネルギー(m 位置) const
+    m2ps2 勾配加速度グラフ::下り勾配比エネルギー(m 位置) const
     {
         const_iterator i = _変化点リスト.upper_bound(位置);
         if (i == _変化点リスト.begin()) {
@@ -124,14 +124,14 @@ namespace autopilot
         }
         const_iterator h = std::prev(i);
 
-        if (isnan(h->second.累積比エネルギー)) {
+        if (isnan(h->second.累積下り勾配比エネルギー)) {
             // 累積比エネルギーが未計算なので計算する
             const_iterator g =
                 _変化点リスト.lower_bound(_累積比エネルギー未計算位置);
             m z;
             変化点 p;
             if (g == _変化点リスト.begin()) {
-                g->second.累積比エネルギー = 0.0_m2ps2;
+                g->second.累積下り勾配比エネルギー = 0.0_m2ps2;
                 std::tie(z, p) = *g;
                 ++g;
             }
@@ -141,19 +141,20 @@ namespace autopilot
 
             for (; g != i; ++g) {
                 auto &[z2, p2] = *g;
-                p2.累積比エネルギー = p.累積比エネルギー +
-                    比エネルギー差(p2.勾配加速度, p.勾配加速度, z2 - z);
+                p2.累積下り勾配比エネルギー = p.累積下り勾配比エネルギー +
+                    下り勾配比エネルギー差(
+                        p2.勾配加速度, p.勾配加速度, z2 - z);
                 z = z2, p = p2;
             }
 
             _累積比エネルギー未計算位置 = z;
         }
 
-        assert(!isnan(h->second.累積比エネルギー));
+        assert(!isnan(h->second.累積下り勾配比エネルギー));
         mps2 a2 = 勾配加速度(i, 位置);
         m dz = 位置 - h->first;
-        return h->second.累積比エネルギー +
-            比エネルギー差(a2, h->second.勾配加速度, dz);
+        return h->second.累積下り勾配比エネルギー +
+            下り勾配比エネルギー差(a2, h->second.勾配加速度, dz);
     }
 
     勾配グラフ::勾配グラフ() = default;
@@ -217,7 +218,7 @@ namespace autopilot
     m2ps2 勾配グラフ::下り勾配比エネルギー(区間 変位) const
     {
         加速度キャッシュ構築();
-        return _加速度キャッシュ.比エネルギー差(変位);
+        return _加速度キャッシュ.下り勾配比エネルギー差(変位);
     }
 
     void 勾配グラフ::加速度キャッシュ構築() const
