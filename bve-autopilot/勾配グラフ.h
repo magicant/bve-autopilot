@@ -51,7 +51,12 @@ namespace autopilot
     private:
         struct 変化点 {
             mps2 勾配加速度;
-            mutable m2ps2 累積下り勾配比エネルギー; // 未計算なら NaN
+            mutable m2ps2 累積比エネルギー = m2ps2::quiet_NaN();
+            mutable m2ps2 累積下り勾配比エネルギー = m2ps2::quiet_NaN();
+
+            constexpr explicit 変化点() noexcept = default;
+            constexpr explicit 変化点(const mps2 &勾配加速度) noexcept :
+                勾配加速度{勾配加速度} {}
         };
 
         using const_iterator = std::map<m, 変化点>::const_iterator;
