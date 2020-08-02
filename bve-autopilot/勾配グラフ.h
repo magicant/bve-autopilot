@@ -85,7 +85,7 @@ namespace autopilot
         void 通過(m 位置);
 
         mps2 列車勾配加速度(m 列車先頭位置) const;
-        m2ps2 下り勾配比エネルギー(区間 変位) const;
+        m2ps2 下り勾配比エネルギー差(区間 変位) const;
 
     private:
         // 区間の始点からその区間の勾配への写像
