@@ -44,6 +44,7 @@ namespace autopilot
 
         void clear() noexcept {
             _変化点リスト.clear();
+            _累積比エネルギー未計算位置 = _変化点リスト.begin();
             _累積下り勾配比エネルギー未計算位置 = _変化点リスト.begin();
         }
         void 勾配変化追加(区間 変化区間, 勾配 勾配変化量);
@@ -69,6 +70,8 @@ namespace autopilot
         static m2ps2 下り勾配比エネルギー差(mps2 a2, mps2 a1, m 変位);
 
         std::map<m, 変化点> _変化点リスト;
+        mutable const_iterator _累積比エネルギー未計算位置 =
+            _変化点リスト.begin();
         mutable const_iterator _累積下り勾配比エネルギー未計算位置 =
             _変化点リスト.begin();
 
