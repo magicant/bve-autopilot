@@ -37,6 +37,9 @@ namespace autopilot
             return _変化点リスト.empty();
         }
         mps2 勾配加速度(m 位置) const;
+        m2ps2 比エネルギー差(区間 変位) const {
+            return 比エネルギー(変位.終点) - 比エネルギー(変位.始点);
+        }
         m2ps2 下り勾配比エネルギー差(区間 変位) const {
             return 下り勾配比エネルギー(変位.終点) -
                 下り勾配比エネルギー(変位.始点);
@@ -77,6 +80,7 @@ namespace autopilot
 
         /// i == upper_bound(位置)
         mps2 勾配加速度(const_iterator i, m 位置) const;
+        m2ps2 比エネルギー(m 位置) const;
         m2ps2 下り勾配比エネルギー(m 位置) const;
     };
 
@@ -96,6 +100,7 @@ namespace autopilot
         void 通過(m 位置);
 
         mps2 列車勾配加速度(m 列車先頭位置) const;
+        m2ps2 比エネルギー差(区間 変位) const;
         m2ps2 下り勾配比エネルギー差(区間 変位) const;
 
     private:

@@ -128,6 +128,42 @@ namespace autopilot
             比 * (i->second.勾配加速度 - h->second.勾配加速度);
     }
 
+    m2ps2 勾配加速度グラフ::比エネルギー(m 位置) const
+    {
+        const_iterator i = _変化点リスト.upper_bound(位置);
+        if (i == _変化点リスト.begin()) {
+            return 0.0_m2ps2;
+        }
+        const_iterator h = std::prev(i);
+
+        if (isnan(h->second.累積比エネルギー)) {
+            // 累積比エネルギーが未計算なので計算する
+            const_iterator p = _累積比エネルギー未計算位置;
+            if (p == _変化点リスト.begin()) {
+                p->second.累積比エネルギー = 0.0_m2ps2;
+                ++_累積比エネルギー未計算位置;
+            }
+            else {
+                --p;
+            }
+
+            for (; _累積比エネルギー未計算位置 != i;
+                ++p, ++_累積比エネルギー未計算位置)
+            {
+                auto &[z1, p1] = *p;
+                auto &[z2, p2] = *_累積比エネルギー未計算位置;
+                p2.累積比エネルギー = p1.累積比エネルギー +
+                    比エネルギー差(p2.勾配加速度, p1.勾配加速度, z2 - z1);
+            }
+        }
+
+        assert(!isnan(h->second.累積比エネルギー));
+        mps2 a2 = 勾配加速度(i, 位置);
+        m dz = 位置 - h->first;
+        return h->second.累積比エネルギー +
+            比エネルギー差(a2, h->second.勾配加速度, dz);
+    }
+
     m2ps2 勾配加速度グラフ::下り勾配比エネルギー(m 位置) const
     {
         const_iterator i = _変化点リスト.upper_bound(位置);
@@ -221,6 +257,12 @@ namespace autopilot
     {
         加速度キャッシュ構築();
         return _加速度キャッシュ.勾配加速度(列車先頭位置);
+    }
+
+    m2ps2 勾配グラフ::比エネルギー差(区間 変位) const
+    {
+        加速度キャッシュ構築();
+        return _加速度キャッシュ.比エネルギー差(変位);
     }
 
     m2ps2 勾配グラフ::下り勾配比エネルギー差(区間 変位) const

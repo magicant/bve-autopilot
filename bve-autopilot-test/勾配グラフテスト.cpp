@@ -128,6 +128,112 @@ namespace bveautopilottest
             Assert::AreEqual(-0.037, g.勾配加速度(12.5_m).value, 0.001);
         }
 
+        TEST_METHOD(空のグラフの比エネルギー差)
+        {
+            勾配加速度グラフ g;
+            Assert::AreEqual(0.0, g.比エネルギー差({0.0_m, 0.0_m}).value, 0.0);
+            Assert::AreEqual(0.0, g.比エネルギー差({0.0_m, 1.0_m}).value, 0.0);
+            Assert::AreEqual(0.0, g.比エネルギー差({5.0_m, 7.7_m}).value, 0.0);
+        }
+
+        TEST_METHOD(負の勾配一つのグラフの比エネルギー差)
+        {
+            勾配加速度グラフ g;
+            g.勾配変化追加({10.0_m, 20.0_m}, 0.01);
+            Assert::AreEqual(
+                0.0, g.比エネルギー差({0.0_m, 0.0_m}).value, 0.0);
+            Assert::AreEqual(
+                -0.07, g.比エネルギー差({12.5_m, 15.0_m}).value, 0.01);
+            Assert::AreEqual(
+                -0.02, g.比エネルギー差({5.0_m, 12.5_m}).value, 0.01);
+            Assert::AreEqual(
+                -0.35, g.比エネルギー差({15.0_m, 21.0_m}).value, 0.01);
+        }
+
+        TEST_METHOD(正の勾配一つのグラフの比エネルギー差)
+        {
+            勾配加速度グラフ g;
+            g.勾配変化追加({10.0_m, 20.0_m}, -0.01);
+            Assert::AreEqual(
+                0.0, g.比エネルギー差({0.0_m, 0.0_m}).value, 0.0);
+            Assert::AreEqual(
+                0.0, g.比エネルギー差({0.0_m, 9.9_m}).value, 0.0);
+            Assert::AreEqual(
+                0.0, g.比エネルギー差({0.0_m, 10.0_m}).value, 0.0);
+            Assert::AreEqual(
+                0.37, g.比エネルギー差({0.0_m, 20.0_m}).value, 0.01);
+            Assert::AreEqual(
+                1.10, g.比エネルギー差({0.0_m, 30.0_m}).value, 0.01);
+        }
+
+        TEST_METHOD(負の部分的勾配のグラフの比エネルギー差)
+        {
+            勾配加速度グラフ g;
+            g.勾配変化追加({0.0_m, 10.0_m}, 0.01);
+            g.勾配変化追加({20.0_m, 30.0_m}, -0.01);
+            Assert::AreEqual(
+                -1.47, g.比エネルギー差({0.0_m, 30.0_m}).value, 0.01);
+            Assert::AreEqual(
+                -0.74, g.比エネルギー差({0.0_m, 15.0_m}).value, 0.01);
+            Assert::AreEqual(
+                -1.47, g.比エネルギー差({0.0_m, 40.0_m}).value, 0.01);
+        }
+
+        TEST_METHOD(正の部分的勾配のグラフの比エネルギー差)
+        {
+            勾配加速度グラフ g;
+            g.勾配変化追加({0.0_m, 10.0_m}, -0.01);
+            g.勾配変化追加({20.0_m, 30.0_m}, 0.01);
+            Assert::AreEqual(
+                1.47, g.比エネルギー差({0.0_m, 30.0_m}).value, 0.01);
+            Assert::AreEqual(
+                0.74, g.比エネルギー差({0.0_m, 15.0_m}).value, 0.01);
+            Assert::AreEqual(
+                1.47, g.比エネルギー差({0.0_m, 40.0_m}).value, 0.01);
+        }
+
+        TEST_METHOD(負から正になる勾配のグラフの比エネルギー差)
+        {
+            勾配加速度グラフ g;
+            g.勾配変化追加({0.0_m, 10.0_m}, 0.01);
+            g.勾配変化追加({20.0_m, 30.0_m}, -0.04);
+            Assert::AreEqual(
+                0.0, g.比エネルギー差({0.0_m, 0.0_m}).value, 0.0);
+            Assert::AreEqual(
+                -0.37, g.比エネルギー差({0.0_m, 10.0_m}).value, 0.01);
+            Assert::AreEqual(
+                -1.10, g.比エネルギー差({0.0_m, 20.0_m}).value, 0.01);
+            Assert::AreEqual(
+                -1.20, g.比エネルギー差({0.0_m, 22.5_m}).value, 0.01);
+            Assert::AreEqual(
+                -1.10, g.比エネルギー差({0.0_m, 25.0_m}).value, 0.01);
+            Assert::AreEqual(
+                -0.83, g.比エネルギー差({0.0_m, 27.5_m}).value, 0.01);
+            Assert::AreEqual(
+                -0.37, g.比エネルギー差({0.0_m, 30.0_m}).value, 0.01);
+            Assert::AreEqual(
+                0.74, g.比エネルギー差({0.0_m, 35.0_m}).value, 0.01);
+        }
+
+        TEST_METHOD(正から負になる勾配のグラフの比エネルギー差)
+        {
+            勾配加速度グラフ g;
+            g.勾配変化追加({0.0_m, 10.0_m}, -0.01);
+            g.勾配変化追加({20.0_m, 30.0_m}, 0.05);
+            Assert::AreEqual(
+                1.10, g.比エネルギー差({0.0_m, 20.0_m}).value, 0.01);
+            Assert::AreEqual(
+                1.16, g.比エネルギー差({0.0_m, 21.0_m}).value, 0.01);
+            Assert::AreEqual(
+                1.18, g.比エネルギー差({0.0_m, 22.0_m}).value, 0.01);
+            Assert::AreEqual(
+                1.16, g.比エネルギー差({0.0_m, 23.0_m}).value, 0.01);
+            Assert::AreEqual(
+                0.0, g.比エネルギー差({0.0_m, 30.0_m}).value, 0.01);
+            Assert::AreEqual(
+                -1.47, g.比エネルギー差({0.0_m, 35.0_m}).value, 0.01);
+        }
+
         TEST_METHOD(空のグラフの下り勾配比エネルギー差)
         {
             勾配加速度グラフ g;
