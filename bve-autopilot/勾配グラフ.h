@@ -19,6 +19,7 @@
 
 #pragma once
 #include <map>
+#include <utility>
 #include "区間.h"
 #include "物理量.h"
 
@@ -44,6 +45,7 @@ namespace autopilot
             return 下り勾配比エネルギー(変位.終点) -
                 下り勾配比エネルギー(変位.始点);
         }
+        std::pair<m, m2ps2> 最大比エネルギー差(区間 区間) const;
 
         void clear() noexcept {
             _変化点リスト.clear();
@@ -80,6 +82,8 @@ namespace autopilot
 
         /// i == upper_bound(位置)
         mps2 勾配加速度(const_iterator i, m 位置) const;
+        /// i == upper_bound(位置)
+        m2ps2 比エネルギー(const_iterator i, m 位置) const;
         m2ps2 比エネルギー(m 位置) const;
         m2ps2 下り勾配比エネルギー(m 位置) const;
     };
@@ -102,6 +106,7 @@ namespace autopilot
         mps2 列車勾配加速度(m 列車先頭位置) const;
         m2ps2 比エネルギー差(区間 変位) const;
         m2ps2 下り勾配比エネルギー差(区間 変位) const;
+        std::pair<m, m2ps2> 最大比エネルギー差(区間 区間) const;
 
     private:
         // 区間の始点からその区間の勾配への写像

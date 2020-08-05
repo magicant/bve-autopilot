@@ -341,5 +341,438 @@ namespace bveautopilottest
                 1.18, g.下り勾配比エネルギー差({0.0_m, 35.0_m}).value, 0.01);
         }
 
+        TEST_METHOD(空のグラフの最大比エネルギー差)
+        {
+            勾配加速度グラフ g;
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 0.0_m});
+                Assert::AreEqual(0.0, z.value, 0.0);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({0.5_m, 1.0_m});
+                Assert::AreEqual(1.0, z.value, 0.0);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+        }
+
+        TEST_METHOD(負の勾配一つのグラフの最大比エネルギー差)
+        {
+            勾配加速度グラフ g;
+            g.勾配変化追加({10.0_m, 20.0_m}, 0.01);
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 5.0_m});
+                Assert::AreEqual(5.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+
+            {
+                auto [z, p] = g.最大比エネルギー差({9.0_m, 10.0_m});
+                Assert::AreEqual(10.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({9.0_m, 15.0_m});
+                Assert::AreEqual(10.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({9.0_m, 20.0_m});
+                Assert::AreEqual(10.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({9.0_m, 25.0_m});
+                Assert::AreEqual(10.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+
+            {
+                auto [z, p] = g.最大比エネルギー差({10.0_m, 10.0_m});
+                Assert::AreEqual(10.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({10.0_m, 15.0_m});
+                Assert::AreEqual(10.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({10.0_m, 20.0_m});
+                Assert::AreEqual(10.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({10.0_m, 25.0_m});
+                Assert::AreEqual(10.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+
+            {
+                auto [z, p] = g.最大比エネルギー差({12.5_m, 12.5_m});
+                Assert::AreEqual(12.5, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({12.5_m, 15.0_m});
+                Assert::AreEqual(12.5, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({12.5_m, 20.0_m});
+                Assert::AreEqual(12.5, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({12.5_m, 25.0_m});
+                Assert::AreEqual(12.5, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+
+            {
+                auto [z, p] = g.最大比エネルギー差({20.0_m, 20.0_m});
+                Assert::AreEqual(20.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({20.0_m, 25.0_m});
+                Assert::AreEqual(20.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+
+            {
+                auto [z, p] = g.最大比エネルギー差({22.5_m, 25.0_m});
+                Assert::AreEqual(22.5, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({25.0_m, 25.0_m});
+                Assert::AreEqual(25.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+        }
+
+        TEST_METHOD(正の勾配一つのグラフの最大比エネルギー差)
+        {
+            勾配加速度グラフ g;
+            g.勾配変化追加({10.0_m, 20.0_m}, -0.01);
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 5.0_m});
+                Assert::AreEqual(5.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+
+            {
+                auto [z, p] = g.最大比エネルギー差({9.0_m, 10.0_m});
+                Assert::AreEqual(10.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({9.0_m, 15.0_m});
+                Assert::AreEqual(15.0, z.value, 0.001);
+                auto e = g.比エネルギー差({9.0_m, 15.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({9.0_m, 20.0_m});
+                Assert::AreEqual(20.0, z.value, 0.001);
+                auto e = g.比エネルギー差({9.0_m, 20.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({9.0_m, 25.0_m});
+                Assert::AreEqual(25.0, z.value, 0.001);
+                auto e = g.比エネルギー差({9.0_m, 25.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+
+            {
+                auto [z, p] = g.最大比エネルギー差({10.0_m, 10.0_m});
+                Assert::AreEqual(10.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({10.0_m, 15.0_m});
+                Assert::AreEqual(15.0, z.value, 0.001);
+                auto e = g.比エネルギー差({10.0_m, 15.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({10.0_m, 20.0_m});
+                Assert::AreEqual(20.0, z.value, 0.001);
+                auto e = g.比エネルギー差({10.0_m, 20.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({10.0_m, 25.0_m});
+                Assert::AreEqual(25.0, z.value, 0.001);
+                auto e = g.比エネルギー差({10.0_m, 25.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+
+            {
+                auto [z, p] = g.最大比エネルギー差({15.0_m, 15.0_m});
+                Assert::AreEqual(15.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({15.0_m, 20.0_m});
+                Assert::AreEqual(20.0, z.value, 0.001);
+                auto e = g.比エネルギー差({15.0_m, 20.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({15.0_m, 25.0_m});
+                Assert::AreEqual(25.0, z.value, 0.001);
+                auto e = g.比エネルギー差({15.0_m, 25.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+
+            {
+                auto [z, p] = g.最大比エネルギー差({20.0_m, 20.0_m});
+                Assert::AreEqual(20.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({20.0_m, 25.0_m});
+                Assert::AreEqual(25.0, z.value, 0.001);
+                auto e = g.比エネルギー差({20.0_m, 25.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+
+            {
+                auto [z, p] = g.最大比エネルギー差({22.5_m, 25.0_m});
+                Assert::AreEqual(25.0, z.value, 0.001);
+                auto e = g.比エネルギー差({22.5_m, 25.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({25.0_m, 25.0_m});
+                Assert::AreEqual(25.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+        }
+
+        TEST_METHOD(負の部分的勾配のグラフの最大比エネルギー差)
+        {
+            勾配加速度グラフ g;
+            g.勾配変化追加({10.0_m, 20.0_m}, 0.01);
+            g.勾配変化追加({30.0_m, 40.0_m}, -0.01);
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 5.0_m});
+                Assert::AreEqual(5.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 10.0_m});
+                Assert::AreEqual(10.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 50.0_m});
+                Assert::AreEqual(10.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+        }
+
+        TEST_METHOD(正の部分的勾配のグラフの最大比エネルギー差)
+        {
+            勾配加速度グラフ g;
+            g.勾配変化追加({10.0_m, 20.0_m}, -0.01);
+            g.勾配変化追加({30.0_m, 40.0_m}, 0.01);
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 5.0_m});
+                Assert::AreEqual(5.0, z.value, 0.001);
+                auto e = g.比エネルギー差({0.0_m, 5.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 10.0_m});
+                Assert::AreEqual(10.0, z.value, 0.001);
+                auto e = g.比エネルギー差({0.0_m, 10.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 50.0_m});
+                Assert::AreEqual(50.0, z.value, 0.001);
+                auto e = g.比エネルギー差({0.0_m, 50.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+        }
+
+        TEST_METHOD(負から正になる勾配のグラフの最大比エネルギー差)
+        {
+            勾配加速度グラフ g;
+            g.勾配変化追加({10.0_m, 20.0_m}, 0.01);
+            g.勾配変化追加({30.0_m, 40.0_m}, -0.04);
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 5.0_m});
+                Assert::AreEqual(5.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 10.0_m});
+                Assert::AreEqual(10.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 30.0_m});
+                Assert::AreEqual(10.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 40.0_m});
+                Assert::AreEqual(10.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 41.6_m});
+                Assert::AreEqual(10.0, z.value, 0.001);
+                Assert::AreEqual(0.0, p.value, 0.0);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 41.7_m});
+                Assert::AreEqual(41.7, z.value, 0.001);
+                auto e = g.比エネルギー差({0.0_m, 41.7_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+        }
+
+        TEST_METHOD(正から負になる勾配のグラフの最大比エネルギー差)
+        {
+            勾配加速度グラフ g;
+            g.勾配変化追加({0.0_m, 10.0_m}, -0.01);
+            g.勾配変化追加({20.0_m, 30.0_m}, 0.05);
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 20.0_m});
+                Assert::AreEqual(20.0, z.value, 0.001);
+                auto e = g.比エネルギー差({0.0_m, 20.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 21.9_m});
+                Assert::AreEqual(21.9, z.value, 0.001);
+                auto e = g.比エネルギー差({0.0_m, 21.9_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 22.0_m});
+                Assert::AreEqual(22.0, z.value, 0.001);
+                auto e = g.比エネルギー差({0.0_m, 22.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 25.0_m});
+                Assert::AreEqual(22.0, z.value, 0.001);
+                auto e = g.比エネルギー差({0.0_m, 22.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 30.0_m});
+                Assert::AreEqual(22.0, z.value, 0.001);
+                auto e = g.比エネルギー差({0.0_m, 22.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 35.0_m});
+                Assert::AreEqual(22.0, z.value, 0.001);
+                auto e = g.比エネルギー差({0.0_m, 22.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+        }
+
+        TEST_METHOD(最初の極大点が最大点であるグラフの最大比エネルギー差)
+        {
+            勾配加速度グラフ g;
+            g.勾配変化追加({0.0_m, 10.0_m}, -0.01);
+            g.勾配変化追加({10.0_m, 30.0_m}, 0.02);
+            g.勾配変化追加({30.0_m, 40.0_m}, -0.01);
+            g.勾配変化追加({40.0_m, 45.0_m}, -0.005);
+            g.勾配変化追加({45.0_m, 55.0_m}, 0.01);
+            g.勾配変化追加({55.0_m, 60.0_m}, -0.005);
+            g.勾配変化追加({60.0_m, 65.0_m}, -0.005);
+            g.勾配変化追加({65.0_m, 75.0_m}, 0.01);
+            g.勾配変化追加({75.0_m, 80.0_m}, -0.005);
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 20.0_m});
+                Assert::AreEqual(20.0, z.value, 0.001);
+                auto e = g.比エネルギー差({0.0_m, 20.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 45.0_m});
+                Assert::AreEqual(20.0, z.value, 0.001);
+                auto e = g.比エネルギー差({0.0_m, 20.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 80.0_m});
+                Assert::AreEqual(20.0, z.value, 0.001);
+                auto e = g.比エネルギー差({0.0_m, 20.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 90.0_m});
+                Assert::AreEqual(20.0, z.value, 0.001);
+                auto e = g.比エネルギー差({0.0_m, 20.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+        }
+
+        TEST_METHOD(最後の極大点が最大点であるグラフの最大比エネルギー差)
+        {
+            勾配加速度グラフ g;
+            g.勾配変化追加({0.0_m, 5.0_m}, -0.005);
+            g.勾配変化追加({5.0_m, 15.0_m}, 0.01);
+            g.勾配変化追加({15.0_m, 20.0_m}, -0.005);
+            g.勾配変化追加({20.0_m, 25.0_m}, -0.005);
+            g.勾配変化追加({25.0_m, 35.0_m}, 0.01);
+            g.勾配変化追加({35.0_m, 40.0_m}, -0.005);
+            g.勾配変化追加({40.0_m, 50.0_m}, -0.01);
+            g.勾配変化追加({50.0_m, 70.0_m}, 0.02);
+            g.勾配変化追加({70.0_m, 80.0_m}, -0.01);
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 50.0_m});
+                Assert::AreEqual(50.0, z.value, 0.001);
+                auto e = g.比エネルギー差({0.0_m, 50.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 60.0_m});
+                Assert::AreEqual(60.0, z.value, 0.001);
+                auto e = g.比エネルギー差({0.0_m, 60.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 90.0_m});
+                Assert::AreEqual(60.0, z.value, 0.001);
+                auto e = g.比エネルギー差({0.0_m, 60.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+        }
+
+        TEST_METHOD(等しい極大点を持つグラフの最大比エネルギー差)
+        {
+            勾配加速度グラフ g;
+            g.勾配変化追加({0.0_m, 5.0_m}, -0.005);
+            g.勾配変化追加({5.0_m, 15.0_m}, 0.01);
+            g.勾配変化追加({15.0_m, 20.0_m}, -0.005);
+            g.勾配変化追加({20.0_m, 25.0_m}, -0.005);
+            g.勾配変化追加({25.0_m, 35.0_m}, 0.01);
+            g.勾配変化追加({35.0_m, 40.0_m}, -0.005);
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 29.9_m});
+                Assert::AreEqual(10.0, z.value, 0.001);
+                auto e = g.比エネルギー差({0.0_m, 10.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+            {
+                auto [z, p] = g.最大比エネルギー差({0.0_m, 30.1_m});
+                Assert::AreEqual(30.0, z.value, 0.001);
+                auto e = g.比エネルギー差({0.0_m, 30.0_m});
+                Assert::AreEqual(e.value, p.value, 0.001);
+            }
+        }
+
     };
 }
