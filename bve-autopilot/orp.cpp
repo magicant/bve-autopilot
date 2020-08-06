@@ -108,8 +108,7 @@ namespace autopilot
             パターン速度;
 
         using namespace std::placeholders;
-        _出力ノッチ = 出力制御::出力ノッチ(
-            std::bind(&orp::出力制動ノッチ, this, _1, _2), 状態);
+        _出力ノッチ = 出力制御::出力ノッチ(*this, 状態);
     }
 
     mps2 orp::照査下パターン出力減速度(const 運動状態 &運動状態) const

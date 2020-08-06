@@ -18,6 +18,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include "制動指令計算.h"
 #include "減速パターン.h"
 #include "物理量.h"
 #include "運動状態.h"
@@ -28,7 +29,7 @@ namespace autopilot
     class 勾配グラフ;
     class 共通状態;
 
-    class 減速目標
+    class 減速目標 : public 制動指令計算
     {
     public:
         constexpr static mps 速度マージン = 0.5_kmph;
@@ -50,7 +51,8 @@ namespace autopilot
 
         /// 制限速度を維持するために適したノッチを計算します
         自動制動自然数ノッチ 出力制動ノッチ(
-            const 運動状態 &運動状態, const 共通状態 &状態) const;
+            const 運動状態 &運動状態, const 共通状態 &状態) const
+            final override;
 
     private:
         m _位置;

@@ -144,6 +144,9 @@
     <ClInclude Include="力行特性.h">
       <Filter>ヘッダー ファイル\コア\車両物理</Filter>
     </ClInclude>
+    <ClInclude Include="制動指令計算.h">
+      <Filter>ヘッダー ファイル\コア\車両物理</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

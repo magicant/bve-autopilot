@@ -19,6 +19,7 @@
 
 #pragma once
 #include <functional>
+#include "制動指令計算.h"
 #include "制御指令.h"
 #include "物理量.h"
 
@@ -31,26 +32,23 @@ namespace autopilot
     class 出力制御
     {
     public:
-        using 制動計算 = std::function<自動制動自然数ノッチ(
-            const 運動状態 &運動状態, const 共通状態 &状態)>;
-
         static 自動制御指令 出力ノッチ(
-            const 制動計算 &出力制動ノッチ, const 共通状態 &状態)
+            const 制動指令計算 &減速, const 共通状態 &状態)
         {
-            return 出力制御{出力制動ノッチ, 状態}.出力ノッチ();
+            return 出力制御{減速, 状態}.出力ノッチ();
         }
 
     private:
-        const 制動計算 &_出力制動ノッチ;
+        const 制動指令計算 &_計算;
         const 共通状態 &_状態;
 
         constexpr 出力制御(
-            const 制動計算 &出力制動ノッチ, const 共通状態 &状態) noexcept :
-            _出力制動ノッチ{出力制動ノッチ}, _状態{状態}
+            const 制動指令計算 &計算, const 共通状態 &状態) noexcept :
+            _計算{計算}, _状態{状態}
         {}
 
         自動制動自然数ノッチ 出力制動ノッチ(const 運動状態 &運動状態) const {
-            return _出力制動ノッチ(運動状態, _状態);
+            return _計算.出力制動ノッチ(運動状態, _状態);
         }
 
         bool 制動を緩める余裕あり(自動制動自然数ノッチ 新制動ノッチ) const;
