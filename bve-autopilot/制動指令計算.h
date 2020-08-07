@@ -19,6 +19,7 @@
 
 #pragma once
 #include "制御指令.h"
+#include "区間.h"
 
 namespace autopilot
 {
@@ -31,6 +32,11 @@ namespace autopilot
     public:
         virtual 自動制動自然数ノッチ 出力制動ノッチ(
             const 運動状態 &運動状態, const 共通状態 &状態) const = 0;
+
+        /// 引数の範囲の中で許容速度 (制限速度または減速パターンの速度) が
+        /// 最低となる区間を返す。
+        /// 引数は負の長さを持つ可能性があるが、戻り値は必ず非負の長さ。
+        virtual 区間 最低速度区間(区間 範囲) const = 0;
 
     protected:
         ~制動指令計算() = default;

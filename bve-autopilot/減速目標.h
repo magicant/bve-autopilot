@@ -54,6 +54,8 @@ namespace autopilot
             const 運動状態 &運動状態, const 共通状態 &状態) const
             final override;
 
+        区間 最低速度区間(区間 範囲) const final override;
+
     private:
         m _位置;
         mps _速度;
