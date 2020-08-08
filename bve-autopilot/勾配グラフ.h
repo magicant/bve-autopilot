@@ -80,9 +80,9 @@ namespace autopilot
         mutable const_iterator _累積下り勾配比エネルギー未計算位置 =
             _変化点リスト.begin();
 
-        /// i == upper_bound(位置)
+        /// i == lower_bound(位置) or upper_bound(位置)
         mps2 勾配加速度(const_iterator i, m 位置) const;
-        /// i == upper_bound(位置)
+        /// i == lower_bound(位置) or upper_bound(位置)
         m2ps2 比エネルギー(const_iterator i, m 位置) const;
         m2ps2 比エネルギー(m 位置) const;
         m2ps2 下り勾配比エネルギー(m 位置) const;

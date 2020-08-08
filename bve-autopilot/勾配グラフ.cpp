@@ -181,7 +181,7 @@ namespace autopilot
         }
         m h位置 = h->first, i位置 = i->first;
         assert(h位置 <= 位置);
-        assert(位置 < i位置);
+        assert(位置 <= i位置);
         double 比 = (位置 - h位置) / (i位置 - h位置);
         return h->second.勾配加速度 +
             比 * (i->second.勾配加速度 - h->second.勾配加速度);
