@@ -43,6 +43,9 @@ namespace autopilot
     {
         m2ps2 通過位置比エネ = 0.5 * _通過速度 * _通過速度;
         m2ps2 平坦行路比エネ = (_通過地点 - 位置) * _基準減速度;
+        if (isnan(平坦行路比エネ)) {
+            return 0.0_mps;
+        }
         if (平坦行路比エネ == m2ps2::無限大()) {
             return mps::無限大();
         }
