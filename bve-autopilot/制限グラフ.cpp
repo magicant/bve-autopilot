@@ -141,7 +141,6 @@ namespace autopilot
                 目標減速度 = mps2::無限大();
             }
 
-            using namespace std::placeholders;
             減速目標 目標 = 区間.目標(目標減速度);
             自動制御指令 ノッチ2 = 出力制御::出力ノッチ(目標, 状態);
             ノッチ = std::min(ノッチ, ノッチ2);

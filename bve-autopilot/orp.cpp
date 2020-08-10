@@ -107,7 +107,6 @@ namespace autopilot
             std::min(パターン速度, 照査速度下限) :
             パターン速度;
 
-        using namespace std::placeholders;
         _出力ノッチ = 出力制御::出力ノッチ(*this, 状態);
     }
 

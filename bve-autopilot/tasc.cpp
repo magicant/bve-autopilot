@@ -121,7 +121,6 @@ namespace autopilot {
             _調整した次駅停止位置 = m::無限大();
         }
 
-        using namespace std::placeholders;
         m 計算用目標停止位置 =
             std::min(名目の目標停止位置, _調整した次駅停止位置);
         減速目標 目標{計算用目標停止位置, 0.0_mps, 状態.目安減速度()};
