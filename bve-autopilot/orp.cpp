@@ -108,8 +108,7 @@ namespace autopilot
             パターン速度;
 
         using namespace std::placeholders;
-        _出力ノッチ = 出力制御::出力ノッチ(
-            std::bind(&orp::出力制動ノッチ, this, _1, _2), 状態);
+        _出力ノッチ = 出力制御::出力ノッチ(*this, 状態);
     }
 
     mps2 orp::照査下パターン出力減速度(const 運動状態 &運動状態) const
@@ -176,6 +175,11 @@ namespace autopilot
         mps2 補正減速度 = 平坦時減速度 + 勾配加速度;
         自動制動実数ノッチ ノッチ = 状態.制動().自動ノッチ(補正減速度);
         return std::min(ノッチ.ceil(), 状態.制動().自動最大ノッチ());
+    }
+
+    区間 orp::最低速度区間(区間 範囲) const
+    {
+        return {範囲.終点, 範囲.終点};
     }
 
  }

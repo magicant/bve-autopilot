@@ -18,6 +18,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include "制動指令計算.h"
 #include "制御指令.h"
 #include "減速パターン.h"
 #include "物理量.h"
@@ -29,7 +30,7 @@ namespace autopilot
     class 信号順守;
     class 運動状態;
 
-    class orp
+    class orp : private 制動指令計算
     {
     public:
         using 信号インデックス = int;
@@ -67,7 +68,9 @@ namespace autopilot
             const 運動状態 &運動状態, const 共通状態 &状態) const;
         mps2 下限照査出力減速度(const 運動状態 &運動状態) const;
         自動制動自然数ノッチ 出力制動ノッチ(
-            const 運動状態 &運動状態, const 共通状態 &状態) const;
+            const 運動状態 &運動状態, const 共通状態 &状態) const
+            final override;
+        区間 最低速度区間(区間 範囲) const final override;
     };
 
 }

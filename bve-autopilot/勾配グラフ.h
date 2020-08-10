@@ -19,6 +19,7 @@
 
 #pragma once
 #include <map>
+#include <utility>
 #include "区間.h"
 #include "物理量.h"
 
@@ -40,32 +41,51 @@ namespace autopilot
         m2ps2 比エネルギー差(区間 変位) const {
             return 比エネルギー(変位.終点) - 比エネルギー(変位.始点);
         }
+        m2ps2 下り勾配比エネルギー差(区間 変位) const {
+            return 下り勾配比エネルギー(変位.終点) -
+                下り勾配比エネルギー(変位.始点);
+        }
+        std::pair<m, m2ps2> 最大比エネルギー差(区間 区間) const;
 
         void clear() noexcept {
             _変化点リスト.clear();
-            _累積比エネルギー未計算位置 = -m::無限大();
+            _累積比エネルギー未計算位置 = _変化点リスト.begin();
+            _累積下り勾配比エネルギー未計算位置 = _変化点リスト.begin();
         }
         void 勾配変化追加(区間 変化区間, 勾配 勾配変化量);
 
     private:
         struct 変化点 {
             mps2 勾配加速度;
-            mutable m2ps2 累積比エネルギー; // 未計算なら NaN
+            mutable m2ps2 累積比エネルギー = m2ps2::quiet_NaN();
+            mutable m2ps2 累積下り勾配比エネルギー = m2ps2::quiet_NaN();
+
+            constexpr explicit 変化点() noexcept = default;
+            constexpr explicit 変化点(const mps2 &勾配加速度) noexcept :
+                勾配加速度{勾配加速度} {}
         };
 
         using const_iterator = std::map<m, 変化点>::const_iterator;
         using iterator = std::map<m, 変化点>::iterator;
 
         /// 加速度が a1 から a2 に変化するときの比エネルギーを求める。
-        /// ただし加速度が正の範囲のみ計算に加える。
         static m2ps2 比エネルギー差(mps2 a2, mps2 a1, m 変位);
+        /// 加速度が a1 から a2 に変化するときの比エネルギーを求める。
+        /// ただし加速度が正の範囲のみ計算に加える。
+        static m2ps2 下り勾配比エネルギー差(mps2 a2, mps2 a1, m 変位);
 
         std::map<m, 変化点> _変化点リスト;
-        mutable m _累積比エネルギー未計算位置 = -m::無限大();
+        mutable const_iterator _累積比エネルギー未計算位置 =
+            _変化点リスト.begin();
+        mutable const_iterator _累積下り勾配比エネルギー未計算位置 =
+            _変化点リスト.begin();
 
-        /// i == upper_bound(位置)
+        /// i == lower_bound(位置) or upper_bound(位置)
         mps2 勾配加速度(const_iterator i, m 位置) const;
+        /// i == lower_bound(位置) or upper_bound(位置)
+        m2ps2 比エネルギー(const_iterator i, m 位置) const;
         m2ps2 比エネルギー(m 位置) const;
+        m2ps2 下り勾配比エネルギー(m 位置) const;
     };
 
     class 勾配グラフ
@@ -84,7 +104,9 @@ namespace autopilot
         void 通過(m 位置);
 
         mps2 列車勾配加速度(m 列車先頭位置) const;
-        m2ps2 下り勾配比エネルギー(区間 変位) const;
+        m2ps2 比エネルギー差(区間 変位) const;
+        m2ps2 下り勾配比エネルギー差(区間 変位) const;
+        std::pair<m, m2ps2> 最大比エネルギー差(区間 区間) const;
 
     private:
         // 区間の始点からその区間の勾配への写像
