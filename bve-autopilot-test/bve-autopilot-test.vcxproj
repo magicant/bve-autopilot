@@ -180,6 +180,7 @@
     </ClCompile>
     <ClCompile Include="tascテスト.cpp" />
     <ClCompile Include="勾配グラフテスト.cpp" />
+    <ClCompile Include="減速目標テスト.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
