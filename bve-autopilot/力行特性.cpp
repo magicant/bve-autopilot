@@ -50,7 +50,7 @@ namespace autopilot
         return 力行ノッチ{static_cast<unsigned>(_加速度一覧.size())};
     }
 
-    mps2 力行特性::加速度(力行ノッチ ノッチ) const
+    mps2 力行特性::加速度(力行ノッチ ノッチ, mps 速度) const
     {
         if (ノッチ.value == 0u) {
             return 0.0_mps2;
