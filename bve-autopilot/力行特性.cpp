@@ -29,7 +29,7 @@ namespace autopilot
     void 力行特性::性能設定(
         const std::vector<mps2> &加速度一覧, 力行ノッチ 最大ノッチ)
     {
-        _加速度一覧 = 加速度一覧;
+        _加速度一覧[0.0_mps] = 加速度一覧;
         _最大ノッチ = 最大ノッチ;
     }
 
@@ -41,8 +41,12 @@ namespace autopilot
         }
         --n;
 
-        if (n < _加速度一覧.size()) {
-            return _加速度一覧[n];
+        auto i = _加速度一覧.upper_bound(速度);
+        if (i != _加速度一覧.begin()) {
+            --i;
+            if (n < i->second.size()) {
+                return i->second[n];
+            }
         }
 
         // デフォルト値
