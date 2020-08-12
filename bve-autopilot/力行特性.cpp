@@ -47,7 +47,9 @@ namespace autopilot
 
         // デフォルト値
         if (n == 0u && _最大ノッチ >= 力行ノッチ{2}) {
-            return 2.5_kmphps;
+            // 抵抗器保護のため第一ノッチは低速域でしか使わないようにする
+            constexpr mps 上限速度 = 10.0_kmph;
+            return 速度 > 上限速度 ? 0.0_kmphps : 2.5_kmphps;
         }
         return 5.0_kmphps;
     }
