@@ -35,7 +35,7 @@ namespace autopilot
         ~力行特性();
 
         void 性能設定(
-            const std::vector<mps2> &加速度一覧, 力行ノッチ 最大ノッチ);
+            const 加速度一覧型 &加速度一覧, 力行ノッチ 最大ノッチ);
 
         力行ノッチ 最大力行ノッチ() const noexcept {
             return _最大ノッチ;
