@@ -298,11 +298,14 @@ namespace autopilot
         }
 
         // 力行加速度
-        size = GetPrivateProfileStringW(
-            L"power", L"acceleration", L"", buffer, buffer_size,
-            設定ファイル名);
-        if (0 < size && size < buffer_size - 1) {
-            _加速度一覧 = 加速度列(buffer);
+        // _加速度一覧.clear();
+        for (auto 設定 : セクション内全設定(設定ファイル名, L"acceleration")) {
+            double 速度 = std::wcstod(設定.first.c_str(), nullptr);
+            if (!(速度 >= 0.0)) {
+                continue;
+            }
+            _加速度一覧[static_cast<kmph>(速度)] =
+                加速度列(設定.second.c_str());
         }
 
         // 常用最大減速度

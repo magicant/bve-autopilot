@@ -20,6 +20,7 @@
 #pragma once
 #include <bitset>
 #include <cstddef>
+#include <map>
 #include <unordered_map>
 #include <vector>
 #include "パネル出力.h"
@@ -84,7 +85,7 @@ namespace autopilot
         }
         m 車両長() const noexcept { return _車両長; }
         s 加速終了遅延() const noexcept { return _加速終了遅延; }
-        const std::vector<mps2> &加速度一覧() const noexcept {
+        const std::map<mps, std::vector<mps2>> &加速度一覧() const noexcept {
             return _加速度一覧;
         }
         mps2 常用最大減速度() const noexcept { return _常用最大減速度; }
@@ -136,7 +137,7 @@ namespace autopilot
         std::vector<稼働状態> _稼働状態切替順序;
         m _車両長;
         s _加速終了遅延;
-        std::vector<mps2> _加速度一覧;
+        std::map<mps, std::vector<mps2>> _加速度一覧;
         mps2 _常用最大減速度;
         s _制動反応時間;
         自動制動自然数ノッチ _制動最大拡張ノッチ;

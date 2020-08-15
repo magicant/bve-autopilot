@@ -58,7 +58,7 @@ namespace autopilot {
     {
         _車両仕様 = 仕様;
         _力行特性.性能設定(
-            {{0.0_mps, _設定.加速度一覧()}},
+            _設定.加速度一覧(),
             力行ノッチ{static_cast<unsigned>(仕様.PowerNotches)});
         _制動特性.性能設定(
             手動制動自然数ノッチ{static_cast<unsigned>(仕様.BrakeNotches)},
