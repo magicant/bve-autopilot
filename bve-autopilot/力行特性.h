@@ -18,6 +18,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #pragma once
+#include <map>
 #include <vector>
 #include "制御指令.h"
 #include "物理量.h"
@@ -28,17 +29,25 @@ namespace autopilot
     class 力行特性
     {
     public:
+        using 加速度一覧型 = std::map<mps, std::vector<mps2>>;
+
         力行特性();
         ~力行特性();
 
         void 性能設定(
-            const std::vector<mps2> &加速度一覧, 力行ノッチ 最大ノッチ);
+            const 加速度一覧型 &加速度一覧, 力行ノッチ 最大ノッチ);
 
-        力行ノッチ 最大力行ノッチ() const noexcept;
-        mps2 加速度(力行ノッチ ノッチ) const;
+        力行ノッチ 最大力行ノッチ() const noexcept {
+            return _最大ノッチ;
+        }
+        mps2 加速度(力行ノッチ ノッチ, mps 速度) const;
 
     private:
-        std::vector<mps2> _加速度一覧; // P0 は含まない
+        力行ノッチ _最大ノッチ;
+        /// いくつかの速度において、
+        /// その速度以上の範囲における各力行ノッチの最大加速度の一覧。
+        /// P0 ノッチは含まない。
+        加速度一覧型 _加速度一覧;
     };
 
 }

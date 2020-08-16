@@ -27,35 +27,35 @@ namespace autopilot
     力行特性::~力行特性() = default;
 
     void 力行特性::性能設定(
-        const std::vector<mps2> &加速度一覧, 力行ノッチ 最大ノッチ)
+        const 加速度一覧型 &加速度一覧, 力行ノッチ 最大ノッチ)
     {
-        if (!加速度一覧.empty()) {
-            _加速度一覧 = 加速度一覧;
-            return;
-        }
-
-        // デフォルトの加速度一覧を生成する
-        auto n = static_cast<std::size_t>(最大ノッチ.value);
-        _加速度一覧.reserve(n);
-        if (n > 1u) {
-            _加速度一覧.push_back(2.5_kmphps);
-        }
-        while (_加速度一覧.size() < n) {
-            _加速度一覧.push_back(5.0_kmphps);
-        }
+        _加速度一覧 = 加速度一覧;
+        _最大ノッチ = 最大ノッチ;
     }
 
-    力行ノッチ 力行特性::最大力行ノッチ() const noexcept
+    mps2 力行特性::加速度(力行ノッチ ノッチ, mps 速度) const
     {
-        return 力行ノッチ{static_cast<unsigned>(_加速度一覧.size())};
-    }
-
-    mps2 力行特性::加速度(力行ノッチ ノッチ) const
-    {
-        if (ノッチ.value == 0u) {
+        auto n = static_cast<std::size_t>(ノッチ.value);
+        if (n == 0u) {
             return 0.0_mps2;
         }
-        return _加速度一覧[static_cast<std::size_t>(ノッチ.value - 1)];
+        --n;
+
+        auto i = _加速度一覧.upper_bound(速度);
+        if (i != _加速度一覧.begin()) {
+            --i;
+            if (n < i->second.size()) {
+                return i->second[n];
+            }
+        }
+
+        // デフォルト値
+        if (n == 0u && _最大ノッチ >= 力行ノッチ{2}) {
+            // 抵抗器保護のため第一ノッチは低速域でしか使わないようにする
+            constexpr mps 上限速度 = 10.0_kmph;
+            return 速度 > 上限速度 ? 0.0_kmphps : 2.5_kmphps;
+        }
+        return 5.0_kmphps;
     }
 
 }

@@ -136,7 +136,7 @@ namespace autopilot {
             return true;
         }
 
-        mps2 出力加速度 = 状態.力行().加速度(力行ノッチ);
+        mps2 出力加速度 = 状態.力行().加速度(力行ノッチ, 運動状態.速度());
         if (出力加速度 <= 0.0_mps2) {
             return false;
         }
