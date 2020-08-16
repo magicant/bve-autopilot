@@ -44,6 +44,9 @@ namespace autopilot
         constexpr bool 空である() const noexcept {
             return 始点 > 終点;
         }
+        constexpr bool 真区間である() const noexcept {
+            return 始点 < 終点;
+        }
 
         constexpr bool 通過済(m 列車最後尾位置) const noexcept {
             return 終点 < 列車最後尾位置;

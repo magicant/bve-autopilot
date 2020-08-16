@@ -176,9 +176,9 @@ namespace autopilot
         return std::min(ノッチ.ceil(), 状態.制動().自動最大ノッチ());
     }
 
-    区間 orp::最低許容速度区間(区間 範囲) const
+    std::pair<mps, 区間> orp::最低許容速度区間(区間 範囲) const
     {
-        return {範囲.終点, 範囲.終点};
+        return {mps::無限大(), {範囲.終点, 範囲.終点}};
     }
 
  }

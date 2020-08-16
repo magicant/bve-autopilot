@@ -32,19 +32,22 @@ namespace bveautopilottest
 
         TEST_METHOD(無限大な基準減速度での最低許容速度区間)
         {
-            減速目標 t{100.0_m, 40.0_kmph, mps2::無限大()};
+            減速目標 t{100.0_m, 20.0_mps, mps2::無限大()};
             {
-                区間 i = t.最低許容速度区間({80.0_m, 90.0_m});
+                auto [v, i] = t.最低許容速度区間({80.0_m, 90.0_m});
+                Assert::AreEqual(mps::無限大().value, v.value);
                 Assert::AreEqual(90.0, i.始点.value, 0.001);
                 Assert::AreEqual(90.0, i.終点.value, 0.001);
             }
             {
-                区間 i = t.最低許容速度区間({90.0_m, 110.0_m});
+                auto [v, i] = t.最低許容速度区間({90.0_m, 110.0_m});
+                Assert::AreEqual(20.0, v.value, 0.001);
                 Assert::AreEqual(100.0, i.始点.value, 0.001);
                 Assert::AreEqual(110.0, i.終点.value, 0.001);
             }
             {
-                区間 i = t.最低許容速度区間({110.0_m, 120.0_m});
+                auto [v, i] = t.最低許容速度区間({110.0_m, 120.0_m});
+                Assert::AreEqual(20.0, v.value, 0.001);
                 Assert::AreEqual(110.0, i.始点.value, 0.001);
                 Assert::AreEqual(120.0, i.終点.value, 0.001);
             }
