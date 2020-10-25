@@ -66,6 +66,7 @@ namespace autopilot
         ato無効設定音,
         ato有効設定音,
         ato発進音,
+        インチング開始音,
     };
 
     using 音声出力先 = int;

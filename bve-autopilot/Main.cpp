@@ -178,6 +178,7 @@ namespace autopilot
             case キー操作::tascインチング:
                 if (tasc有効() && !ato有効() && _tasc.インチング可能(_状態)) {
                     _インチング状態 = インチング状態::発進;
+                    _音声状態[音声::インチング開始音].次に出力(ATS_SOUND_PLAY);
                 }
                 break;
             }
