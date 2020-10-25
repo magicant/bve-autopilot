@@ -255,8 +255,17 @@ namespace autopilot
         for (auto パネル出力 : _状態.設定().パネル出力対象登録簿()) {
             出力値[パネル出力.first] = パネル出力.second.出力(*this);
         }
+
+        // 複数の音声が同じ音声出力先を共有している場合に互いに上書きしないように
+        // ATS_SOUND_CONTINUE でないものだけ後で書き換える
         for (const auto &i : _状態.設定().音声割り当て()) {
-            音声状態[i.second] = _音声状態[i.first].出力();
+            音声状態[i.second] = ATS_SOUND_CONTINUE;
+        }
+        for (const auto &i : _状態.設定().音声割り当て()) {
+            auto 出力 = _音声状態[i.first].出力();
+            if (出力 != ATS_SOUND_CONTINUE) {
+                音声状態[i.second] = 出力;
+            }
         }
 
         return ハンドル位置;
