@@ -72,8 +72,12 @@ namespace autopilot
         _出力ノッチ = {};
     }
 
-    void 早着防止::発進(const 共通状態 &状態)
+    void 早着防止::発進(発進方式 方式, const 共通状態 &状態)
     {
+        if (方式 != 発進方式::手動) {
+            return;
+        }
+
         // 通過済みの予定を消す
         _予定表.remove_if([&](const 運動状態 &予定) {
             return 予定.位置() <= 状態.現在位置() + 5.0_m;

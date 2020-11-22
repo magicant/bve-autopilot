@@ -19,6 +19,7 @@
 
 #pragma once
 #include <forward_list>
+#include "信号順守.h"
 #include "制御指令.h"
 #include "物理量.h"
 #include "運動状態.h"
@@ -31,8 +32,10 @@ namespace autopilot
     class 早着防止
     {
     public:
+        using 発進方式 = 信号順守::発進方式;
+
         void リセット() noexcept;
-        void 発進(const 共通状態 &状態);
+        void 発進(発進方式 方式, const 共通状態 &状態);
         void 地上子通過(
             const ATS_BEACONDATA &地上子, m 直前位置, const 共通状態 &状態);
         void 経過(const 共通状態 &状態);
