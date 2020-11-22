@@ -110,7 +110,6 @@ namespace autopilot
             // リセット前後に std::numeric_limits<int>::max() が
             // 信号インデックスとして送られてくることがあるが無視する
         }
-        bool 発進可能(const 共通状態 &状態) const;
         bool orp照査中(const 共通状態 &状態) const noexcept;
         mps orp照査速度(const 共通状態 &状態) const noexcept;
         mps 現在制限速度(const 共通状態 &状態) const;
