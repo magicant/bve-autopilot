@@ -50,6 +50,7 @@ namespace autopilot
         mps 制限速度(m 位置) const {
             return 制限速度(区間{ 位置, 位置 });
         }
+        bool 進行可能(m 位置) const;
 
         mps 現在常用パターン速度(const 共通状態 &状態) const;
 

@@ -97,6 +97,14 @@ namespace autopilot
             });
     }
 
+    bool 制限グラフ::進行可能(m 位置) const
+    {
+        return std::all_of(_区間リスト.begin(), _区間リスト.end(),
+            [=](auto &区間) {
+                return 区間.second.速度 > 0.0_mps ||
+                    区間.second.減速目標地点 > 位置; });
+    }
+
     mps 制限グラフ::現在常用パターン速度(const 共通状態 &状態) const
     {
         if (!_事前減速) {
