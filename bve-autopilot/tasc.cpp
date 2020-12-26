@@ -86,9 +86,14 @@ namespace autopilot {
             break;
         }
 
+        // 「停車場へ移動」時は無視する
         if (!状態.戸閉()) {
-            return; // 「停車場へ移動」時は無視する
+            return;
         }
+        if (状態.現在位置() == 0.0_m && 状態.現在速度() == 0.0_mps) {
+            return;
+        }
+
         switch (地上子.Type)
         {
         case 30: // TASC 目標停止位置設定
