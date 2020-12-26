@@ -87,9 +87,13 @@ namespace autopilot {
         case 1003: // 自動発進待ち時間設定
             if (地上子.Optional >= 0) {
                 _自動発進待ち時間 = static_cast<s>(地上子.Optional * 0.1);
+                if (_戸閉) {
+                    _自動発進時刻 = 現在時刻();
+                }
             }
             else {
                 _自動発進待ち時間 = s::quiet_NaN();
+                _自動発進時刻 = static_cast<時刻>(s::quiet_NaN());
             }
             break;
         case 1008: // 勾配設定
