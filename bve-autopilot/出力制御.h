@@ -53,6 +53,7 @@ namespace autopilot
 
         bool 制動を緩める余裕あり(自動制動自然数ノッチ 新制動ノッチ) const;
         自動制動自然数ノッチ 出力制動強めノッチ() const;
+        s 惰行時間(力行ノッチ 力行ノッチ, mps 速度) const;
         bool 力行する余裕あり(力行ノッチ ノッチ) const;
         力行ノッチ 出力力行ノッチ() const;
         自動制御指令 出力ノッチ() const;
