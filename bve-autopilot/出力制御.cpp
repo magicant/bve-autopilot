@@ -141,7 +141,9 @@ namespace autopilot
 
         double tb = 2.0 * (速度 * 到着時間差).value;
         double ta = 1.0 / 想定加速度.value + 1.0 / _状態.目安減速度().value;
-        return 到着時間差 + static_cast<s>(std::sqrt(ta * tb));
+        s 加減速時間 = static_cast<s>(std::sqrt(ta * tb));
+        const s 接近時間 = 2.0_s;
+        return std::max(到着時間差 + 加減速時間 - 接近時間, 0.1_s);
     }
 
     bool 出力制御::力行する余裕あり(力行ノッチ ノッチ) const
