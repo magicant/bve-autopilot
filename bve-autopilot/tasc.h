@@ -50,6 +50,7 @@ namespace autopilot {
 
         m 目標停止位置() const;
         bool 制御中(時刻 現在時刻) const;
+        bool 発進可能(const 共通状態 &状態) const;
         bool インチング可能(const 共通状態 &状態) const;
 
         自動制御指令 出力ノッチ() const noexcept { return _出力ノッチ; }

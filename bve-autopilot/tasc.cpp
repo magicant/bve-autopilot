@@ -190,6 +190,13 @@ namespace autopilot {
             isfinite(_次駅停止位置のある範囲.get().始点);
     }
 
+    bool tasc::発進可能(const 共通状態 &状態) const
+    {
+        m 名目の目標停止位置 = 目標停止位置();
+        m 残距離 = 名目の目標停止位置 - 状態.現在位置();
+        return 残距離 > _最大許容誤差;
+    }
+
     bool tasc::インチング可能(const 共通状態 &状態) const
     {
         if (!状態.停車中()) {
