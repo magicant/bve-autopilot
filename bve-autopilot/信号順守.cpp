@@ -492,7 +492,7 @@ namespace autopilot
         return ノッチ;
     }
 
-    bool 信号順守::発進可能(const 共通状態 &状態) const
+    bool 信号順守::自動発進可能(const 共通状態 &状態) const
     {
         区間 範囲 = 状態.現在範囲();
         // 停止位置のすぐ手前に止まっている間に再発進するのを避けるため
