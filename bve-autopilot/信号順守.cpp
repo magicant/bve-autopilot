@@ -36,6 +36,8 @@ namespace autopilot
     namespace
     {
 
+        constexpr m 目前距離 = 1.0_m;
+
         void 信号速度設定(
             std::map<信号順守::信号インデックス, mps> &速度表, int 地上子値)
         {
@@ -473,7 +475,7 @@ namespace autopilot
 
         // 停止位置が目前ならもう加速しない
         if (ノッチ > 自動制御指令{}) {
-            m 目前 = 状態.現在位置() + 1.0_m;
+            m 目前 = 状態.現在位置() + 目前距離;
             if (!_信号グラフ.進行可能(目前) || !_照査グラフ.進行可能(目前)) {
                 ノッチ = 自動制御指令{};
             }
@@ -490,6 +492,12 @@ namespace autopilot
         }
 
         return ノッチ;
+    }
+
+    bool 信号順守::自動発進可能(const 共通状態 &状態) const
+    {
+        m 目前 = 状態.現在位置() + 目前距離;
+        return _信号グラフ.進行可能(目前) && _照査グラフ.進行可能(目前);
     }
 
     bool 信号順守::orp照査中(const 共通状態 &状態) const noexcept
