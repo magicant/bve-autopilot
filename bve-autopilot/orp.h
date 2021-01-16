@@ -28,7 +28,7 @@ namespace autopilot
 
     class 共通状態;
     class 信号順守;
-    class 運動状態;
+    struct 運動状態;
 
     class orp : private 制動指令計算
     {

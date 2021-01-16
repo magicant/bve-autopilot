@@ -25,7 +25,7 @@
 namespace autopilot
 {
 
-    class 運動状態;
+    struct 運動状態;
     class 共通状態;
 
     class 制動指令計算

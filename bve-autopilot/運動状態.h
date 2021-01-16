@@ -23,51 +23,39 @@
 
 namespace autopilot {
 
-    class 運動状態
+    struct 運動状態
     {
     public:
         using 時刻型 = autopilot::時刻;
 
+        m 位置;
+        mps 速度;
+        時刻型 時刻;
+
         constexpr explicit 運動状態(
             m 位置 = {}, mps 速度 = {}, 時刻型 時刻 = {}) noexcept :
-            _位置(位置), _速度(速度), _時刻(時刻) { }
-        ~運動状態() = default;
-
-        constexpr m 位置() const noexcept { return _位置; }
-        constexpr void 位置変更(m 位置) noexcept { _位置 = 位置; }
-        constexpr mps 速度() const noexcept { return _速度; }
-        constexpr void 速度変更(mps 速度) noexcept { _速度 = 速度; }
-        constexpr 時刻型 時刻() const noexcept { return _時刻; }
-        constexpr void 時刻変更(時刻型 時刻) noexcept { _時刻 = 時刻; }
-
-        constexpr void 変更(m 位置 = {}, mps 速度 = {}, 時刻型 時刻 = {})
-            noexcept
-        {
-            _位置 = 位置;
-            _速度 = 速度;
-            _時刻 = 時刻;
-        }
+            位置(位置), 速度(速度), 時刻(時刻) { }
 
         // 等加加速度運動
         mps2 指定時間走行(s 時間, mps2 初加速度 = {}, mps3 加加速度 = {})
             noexcept;
         mps2 指定時刻まで走行(
-            時刻型 時刻, mps2 初加速度 = {}, mps3 加加速度 = {})
+            時刻型 新時刻, mps2 初加速度 = {}, mps3 加加速度 = {})
             noexcept;
 
         // 等加速度運動
         void 指定距離走行(m 距離, mps2 加速度 = {}, bool 後退 = false);
-        void 指定位置まで走行(m 位置, mps2 加速度 = {}, bool 後退 = false);
-        void 指定速度まで走行(mps 速度, mps2 加速度 = {}) noexcept;
+        void 指定位置まで走行(m 新位置, mps2 加速度 = {}, bool 後退 = false);
+        void 指定速度まで走行(mps 新速度, mps2 加速度 = {}) noexcept;
 
         // 等加加速度運動
 #if 0
-        mps2 指定位置まで走行(m 位置, mps2 初加速度, mps3 加加速度);
+        mps2 指定位置まで走行(m 新位置, mps2 初加速度, mps3 加加速度);
         void 等加加速度で指定加速度まで走行(
             mps2 初加速度, mps2 終加速度, mps3 加加速度) noexcept;
 #endif
         mps2 指定速度まで走行(
-            mps 速度, mps2 初加速度, mps3 加加速度, bool 減速);
+            mps 新速度, mps2 初加速度, mps3 加加速度, bool 減速);
 
         // 等加速度運動
         constexpr static mps2 距離と速度による加速度(
@@ -76,10 +64,6 @@ namespace autopilot {
             return (終速度 * 終速度 - 初速度 * 初速度) / 距離 / 2.0;
         }
 
-    private:
-        m _位置;
-        mps _速度;
-        時刻型 _時刻;
     };
 
     class 共通状態;
