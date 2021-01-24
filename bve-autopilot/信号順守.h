@@ -51,6 +51,7 @@ namespace autopilot
             区間 始点のある範囲 = 区間{m::無限大(), m::無限大()};
             int 信号インデックス一覧 = 0; // 信号現示受信地上子の値
             bool 停止解放 = false;
+            時刻 開通時刻 = 時刻{s::無限大()};
             // この閉塞の信号速度が 0 の時にだけ有効な制限速度の一覧
             std::map<m, mps> 停止信号前照査一覧;
             // この閉塞の中で動作する ORP 減速パターン
@@ -68,6 +69,7 @@ namespace autopilot
                 制限グラフ &信号グラフ, 制限グラフ &照査グラフ,
                 m tasc目標停止位置, bool is_atc) const;
 
+            bool 経過(const 共通状態 &状態);
             void 信号速度更新(
                 const std::map<信号インデックス, mps> &速度表);
             void 信号指示設定(
