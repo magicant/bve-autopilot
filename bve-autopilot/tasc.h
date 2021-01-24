@@ -50,6 +50,7 @@ namespace autopilot {
 
         m 目標停止位置() const;
         bool 制御中(時刻 現在時刻) const;
+        bool 定位置内(m 位置) const;
         bool 発進可能(const 共通状態 &状態) const;
         bool インチング可能(const 共通状態 &状態) const;
 
