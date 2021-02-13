@@ -127,18 +127,7 @@ namespace autopilot
 
         速度 = std::max(速度, 0.0_mps);
 
-        mps2 想定加速度;
-        if (_状態.前回力行ノッチ() >= static_cast<int>(力行ノッチ.value)) {
-            // 現在行っている力行の加速度
-            想定加速度 = _状態.加速度();
-        }
-        else {
-            // これから力行を開始する場合の加速度
-            想定加速度 =
-                _状態.力行().加速度(力行ノッチ, 速度);
-        }
-        想定加速度 = std::max(想定加速度, 0.1_mps2);
-
+        mps2 想定加速度 =_状態.力行().加速度(力行ノッチ, 速度);
         double tb = 2.0 * (速度 * 到着時間差).value;
         double ta = 1.0 / 想定加速度.value + 1.0 / _状態.目安減速度().value;
         s 加減速時間 = static_cast<s>(std::sqrt(ta * tb));
