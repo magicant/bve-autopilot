@@ -29,7 +29,7 @@ namespace autopilot
 
     namespace
     {
-        constexpr s 閾 = 2.0_s;
+        constexpr s 力行制動切替時間 = 2.0_s;
     }
 
     void 急動作抑制::経過(
@@ -54,7 +54,7 @@ namespace autopilot
         自動制御指令 入力ノッチ, const 共通状態 &状態, bool is_atc) const
     {
         // 力行をやめた直後は制動しない
-        if (is_atc && 状態.現在時刻() - _最終力行時刻 < 閾) {
+        if (is_atc && 状態.現在時刻() - _最終力行時刻 < 力行制動切替時間) {
             return {0.0_mps2, 0.0_mps2};
         }
 
@@ -87,7 +87,7 @@ namespace autopilot
     {
         if (入力ノッチ.力行成分() > 力行ノッチ{0}) {
             // 制動をやめた直後は力行しない
-            if (状態.現在時刻() - _最終制動時刻 >= 閾) {
+            if (状態.現在時刻() - _最終制動時刻 >= 力行制動切替時間) {
                 return 入力ノッチ;
             }
         }
