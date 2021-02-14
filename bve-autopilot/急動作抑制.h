@@ -31,7 +31,7 @@ namespace autopilot
     {
     public:
         constexpr void リセット() noexcept { *this = 急動作抑制{}; }
-        void 経過(自動制御指令 入力ノッチ, const 共通状態 &状態, bool is_atc);
+        void 経過(自動制御指令 入力ノッチ, const 共通状態 &状態);
 
         constexpr 自動制御指令 出力ノッチ() const noexcept {
             return _出力ノッチ;
@@ -46,7 +46,7 @@ namespace autopilot
         時刻 _最終制動時刻 = static_cast<時刻>(-s::無限大());
 
         std::pair<mps2, mps2> 新出力減速度(
-            自動制御指令 入力ノッチ, const 共通状態 &状態, bool is_atc) const;
+            自動制御指令 入力ノッチ, const 共通状態 &状態) const;
         自動制御指令 新出力ノッチ(
             自動制御指令 入力ノッチ, const 共通状態 &状態) const;
     };
