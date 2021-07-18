@@ -132,7 +132,7 @@ namespace autopilot
         double ta = 1.0 / 想定加速度.value + 1.0 / _状態.目安減速度().value;
         s 加減速時間 = static_cast<s>(std::sqrt(ta * tb));
         const s 接近時間 = 2.0_s;
-        return std::max(到着時間差 + 加減速時間 - 接近時間, 0.1_s);
+        return std::clamp(到着時間差 + 加減速時間 - 接近時間, 0.1_s, 1000.0_s);
     }
 
     mps 出力制御::パターン接点に移動(運動状態 &状態, s 惰行時間) const
