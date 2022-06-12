@@ -71,6 +71,12 @@ namespace autopilot
             {L"power", パネル出力対象([](const Main & main) {
                 return main.状態().前回力行ノッチ();
             })},
+            {L"brakein", パネル出力対象([](const Main &main) {
+                return main.状態().入力制動ノッチ().value;
+            })},
+            {L"powerin", パネル出力対象([](const Main &main) {
+                return main.状態().入力力行ノッチ();
+            })},
 
             {L"tascenabled", パネル出力対象([](const Main & main) {
                 return main.tasc有効();
