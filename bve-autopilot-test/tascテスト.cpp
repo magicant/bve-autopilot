@@ -62,7 +62,7 @@ namespace bveautopilottest
             _状態.リセット();
             _tasc.リセット();
 
-            ATS_VEHICLESPEC 仕様;
+            ATS_VEHICLESPEC 仕様{};
             仕様.BrakeNotches = 8;
             仕様.PowerNotches = 4;
             仕様.AtsNotch = 1;
@@ -93,7 +93,7 @@ namespace bveautopilottest
 
         TEST_METHOD(制御リセット条件なしなら戸閉まで制御中)
         {
-            auto デフォルト条件 = _状態.設定().tasc制御リセット条件();
+            auto &デフォルト条件 = _状態.設定().tasc制御リセット条件();
             Assert::AreEqual(イベント::なし, デフォルト条件.タイミング);
             Assert::AreEqual(0.0, デフォルト条件.遅延.value);
 
@@ -224,7 +224,7 @@ namespace bveautopilottest
 
         TEST_METHOD(停止許容範囲内に停止したら転動防止)
         {
-            auto デフォルト条件 = _状態.設定().tasc緩解条件();
+            auto &デフォルト条件 = _状態.設定().tasc緩解条件();
             Assert::AreEqual(
                 イベント::手動ブレーキ, デフォルト条件.タイミング);
             Assert::AreEqual(0.0, デフォルト条件.遅延.value);
@@ -378,7 +378,7 @@ namespace bveautopilottest
         {
             using ms = std::chrono::duration<int, std::milli>;
 
-            ATS_VEHICLESTATE state;
+            ATS_VEHICLESTATE state{};
             state.Location = 位置.value;
             state.Speed = static_cast<float>(速度.value);
             state.Time = std::chrono::duration_cast<ms>(
