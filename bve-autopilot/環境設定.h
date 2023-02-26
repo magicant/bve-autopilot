@@ -85,6 +85,9 @@ namespace autopilot
             return _稼働状態切替順序;
         }
         m 車両長() const noexcept { return _車両長; }
+        const std::vector<力行ノッチ> &ノッチ変換表() const noexcept {
+            return _ノッチ変換表;
+        }
         s 加速終了遅延() const noexcept { return _加速終了遅延; }
         const std::map<mps, std::vector<mps2>> &加速度一覧() const noexcept {
             return _加速度一覧;
@@ -137,6 +140,7 @@ namespace autopilot
         稼働状態 _初期稼働状態;
         std::vector<稼働状態> _稼働状態切替順序;
         m _車両長;
+        std::vector<力行ノッチ> _ノッチ変換表;
         s _加速終了遅延;
         std::map<mps, std::vector<mps2>> _加速度一覧;
         mps2 _常用最大減速度;

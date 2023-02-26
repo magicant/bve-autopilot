@@ -88,6 +88,21 @@ namespace autopilot
             return r;
         }
 
+        std::vector<力行ノッチ> 力行ノッチ列(LPCWSTR s) {
+            std::vector<力行ノッチ> values;
+            while (*s != L'\0') {
+                LPWSTR s2;
+                unsigned long value = std::wcstoul(s, &s2, 0);
+                if (s2 == s) {
+                    ++s;
+                    continue;
+                }
+                values.emplace_back(value);
+                s = s2;
+            }
+            return values;
+        }
+
         std::vector<mps2> 加速度列(LPCWSTR s) {
             std::vector<mps2> values;
             while (*s != L'\0') {
@@ -218,6 +233,7 @@ namespace autopilot
         _稼働状態切替順序{
             稼働状態::ato有効, 稼働状態::tascのみ有効, 稼働状態::切},
         _車両長(20),
+        _ノッチ変換表{},
         _加速終了遅延(2.0_s),
         _加速度一覧{},
         _常用最大減速度(3.0_kmphps),
@@ -284,6 +300,15 @@ namespace autopilot
             if (0 < 車両長 && std::isfinite(車両長)) {
                 _車両長 = static_cast<m>(車両長);
             }
+        }
+
+        // ノッチ変換表
+        // _ノッチ変換表.clear();
+        size = GetPrivateProfileStringW(
+            L"power", L"translation", L"", buffer, buffer_size,
+            設定ファイル名);
+        if (0 < size && size < buffer_size - 1) {
+            _ノッチ変換表 = 力行ノッチ列(buffer);
         }
 
         // 加速終了遅延

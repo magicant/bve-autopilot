@@ -78,6 +78,23 @@ namespace autopilot
             }
         }
 
+        int 変換済入力力行ノッチ(const 共通状態 &状態) {
+            int ノッチ = 状態.入力力行ノッチ();
+            auto &変換表 = 状態.設定().ノッチ変換表();
+            if (ノッチ <= 0 || 変換表.empty()) {
+                return ノッチ;
+            }
+
+            auto ノッチインデックス =
+                static_cast<std::vector<力行ノッチ>::size_type>(ノッチ) - 1;
+            if (ノッチインデックス < 変換表.size()) {
+                return 変換表[ノッチインデックス].value;
+            }
+            else {
+                return 変換表.back().value;
+            }
+        }
+
     }
 
     Main::Main() :
@@ -242,7 +259,7 @@ namespace autopilot
         if (_状態.入力力行ノッチ() >= 0) {
             ハンドル位置.Power = std::max(
                 static_cast<int>(自動ノッチ.力行成分().value),
-                _状態.入力力行ノッチ());
+                変換済入力力行ノッチ(_状態));
         }
         else {
             ハンドル位置.Power = _状態.入力力行ノッチ();
