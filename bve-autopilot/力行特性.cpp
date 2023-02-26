@@ -30,7 +30,19 @@ namespace autopilot
         const 加速度一覧型 &加速度一覧, 力行ノッチ 最大ノッチ)
     {
         _加速度一覧 = 加速度一覧;
-        _最大ノッチ = 最大ノッチ;
+
+        加速度一覧型::mapped_type::size_type 加速度一覧最大ノッチ = 0;
+        for (auto &i : 加速度一覧) {
+            加速度一覧最大ノッチ =
+                std::max(加速度一覧最大ノッチ, i.second.size());
+        }
+        if (加速度一覧最大ノッチ > 0) {
+            _最大ノッチ =
+                力行ノッチ{static_cast<unsigned>(加速度一覧最大ノッチ)};
+        }
+        else {
+            _最大ノッチ = 最大ノッチ;
+        }
     }
 
     mps2 力行特性::加速度(力行ノッチ ノッチ, mps 速度) const
