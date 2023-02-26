@@ -299,7 +299,7 @@ namespace autopilot
 
         // 力行加速度
         // _加速度一覧.clear();
-        for (auto 設定 : セクション内全設定(設定ファイル名, L"acceleration")) {
+        for (auto &設定 : セクション内全設定(設定ファイル名, L"acceleration")) {
             double 速度 = std::wcstod(設定.first.c_str(), nullptr);
             if (!(速度 >= 0.0)) {
                 continue;
@@ -426,7 +426,7 @@ namespace autopilot
         }
 
         // パネル出力対象
-        for (auto 設定 : セクション内全設定(設定ファイル名, L"panel")) {
+        for (auto &設定 : セクション内全設定(設定ファイル名, L"panel")) {
             try {
                 int index = std::stoi(設定.first);
                 if (index < 0 || 256 <= index) {
