@@ -84,6 +84,11 @@ namespace autopilot {
         case 255: // TASC 目標停止位置設定
             停止位置を追加(static_cast<m>(地上子.Optional), 状態);
             break;
+        case 200: // TASC 目標停止位置設定（追加:小田急PIのATO互換）
+            if (状態.互換モード() == 互換モード型::メトロ総合 || 状態.互換モード() == 互換モード型::小田急PI) {
+                停止位置を追加(static_cast<m>(地上子.Optional / 10), 状態);
+            }
+            break;
         case 1031: // TASC 停止位置許容誤差設定
             最大許容誤差を設定(static_cast<cm>(地上子.Optional));
             break;
@@ -102,6 +107,14 @@ namespace autopilot {
 
         switch (地上子.Type)
         {
+        case 21:
+            //case 22:（小田急PIのATSと干渉するため暫定コメントアウト）
+        case 23:// TASC 目標停止位置設定（追加:メトロ対応TASC互換）
+            if (状態.互換モード() == 互換モード型::メトロ総合) {
+                次駅停止位置を設定(
+                    static_cast<m>(地上子.Optional % 1000), 直前位置, 状態);
+            }
+            break;
         case 30: // TASC 目標停止位置設定
             if (状態.互換モード() == 互換モード型::汎用ats) {
                 次駅停止位置を設定(

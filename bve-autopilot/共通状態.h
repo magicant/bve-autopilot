@@ -39,6 +39,7 @@ namespace autopilot {
         汎用ats,
         メトロ総合,
         swp2,
+        小田急PI,
     };
 
     class 共通状態
