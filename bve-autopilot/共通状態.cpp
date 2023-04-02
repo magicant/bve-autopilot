@@ -156,9 +156,7 @@ namespace autopilot {
     {
         制動力割合 割合 = _設定.転動防止制動割合();
         自動制動実数ノッチ ノッチ = _制動特性.自動ノッチ(割合);
-        自動制動自然数ノッチ ノッチi{
-            static_cast<unsigned>(std::ceil(ノッチ.value))};
-        return std::min(ノッチi, _制動特性.自動最大ノッチ());
+        return ノッチ.ceil();
     }
 
     mps2 共通状態::車両勾配加速度() const

@@ -187,7 +187,7 @@ namespace autopilot
             return 0.0;
         }
         if (i == end()) {
-            return 割合.value * size();
+            return size() - 1;
         }
 
         double 次ノッチ割合 = i->value;
