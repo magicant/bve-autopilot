@@ -208,8 +208,10 @@ namespace autopilot
 
         auto s1 = size() - 1;
         if (ノッチ >= s1) {
-            return {制動力割合{ノッチ / s1},
-                制動力割合{static_cast<double>(s1)}};
+            制動力割合 最大ノッチ割合 = back();
+            制動力割合 割合 = 最大ノッチ割合;
+            割合.value *= ノッチ / s1;
+            return {割合, 最大ノッチ割合};
         }
 
         size_type i = static_cast<size_type>(ノッチ);
