@@ -206,25 +206,23 @@ namespace autopilot
             return {制動力割合{0.0}, 制動力割合{0.0}};
         }
 
-        auto 最大ノッチ = size() - 1;
-        if (ノッチ >= 最大ノッチ) {
+        auto s1 = size() - 1;
+        if (ノッチ >= s1) {
             制動力割合 最大ノッチ割合 = back();
             制動力割合 割合 = 最大ノッチ割合;
-            割合.value *= ノッチ / 最大ノッチ;
+            割合.value *= ノッチ / s1;
             return {割合, 最大ノッチ割合};
         }
 
         size_type i = static_cast<size_type>(ノッチ);
-        assert(i < 最大ノッチ);
+        assert(i < s1);
         double 前ノッチ割合 = (*this)[i].value;
         double 次ノッチ割合 = (*this)[i + 1].value;
-        double 割合 = 前ノッチ割合, 丸め閾値 = 前ノッチ割合;
-        double 割合差 = 次ノッチ割合 - 前ノッチ割合;
-        if (割合差 > 0.0) {
-            double d = static_cast<double>(i);
-            割合 += (ノッチ - d) * 割合差;
-            丸め閾値 += (最大ノッチ - d) / (最大ノッチ + 1) * 割合差;
+        double 割合 = 前ノッチ割合;
+        if (前ノッチ割合 < 次ノッチ割合) {
+            割合 += (ノッチ - i) * (次ノッチ割合 - 前ノッチ割合);
         }
+        double 丸め閾値 = 次ノッチ割合 / (次ノッチ割合 - 前ノッチ割合 + 1);
         return {制動力割合{割合}, 制動力割合{丸め閾値}};
     }
 
