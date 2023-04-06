@@ -206,16 +206,16 @@ namespace autopilot
             return {制動力割合{0.0}, 制動力割合{0.0}};
         }
 
-        auto s1 = size() - 1;
-        if (ノッチ >= s1) {
+        auto 最大ノッチ = size() - 1;
+        if (ノッチ >= 最大ノッチ) {
             制動力割合 最大ノッチ割合 = back();
             制動力割合 割合 = 最大ノッチ割合;
-            割合.value *= ノッチ / s1;
+            割合.value *= ノッチ / 最大ノッチ;
             return {割合, 最大ノッチ割合};
         }
 
         size_type i = static_cast<size_type>(ノッチ);
-        assert(i < s1);
+        assert(i < 最大ノッチ);
         double 前ノッチ割合 = (*this)[i].value;
         double 次ノッチ割合 = (*this)[i + 1].value;
         double 割合 = 前ノッチ割合;
