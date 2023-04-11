@@ -436,7 +436,25 @@ namespace autopilot
             break;
         case 22: // 信号現示受信（小田急PI互換）
             if (状態.互換モード() == 互換モード型::小田急PI) {
-                信号現示受信(地上子, 直前位置, 状態, false);
+                ATS_BEACONDATA Option;
+                Option = 地上子; //代入する
+                switch (地上子.Optional)
+                {
+                case 4:
+                    Option.Optional = 7654320;
+                    break;
+                case 5:
+                    Option.Optional = 76543210;
+                    break;
+                case -4:
+                    Option.Optional = 7654210;
+                    break;
+                case 3:
+                default:
+                    Option.Optional = 765420;
+                    break;
+                }
+                信号現示受信(Option, 直前位置, 状態, true);
             }
             break;
         case 31: // 信号現示受信 (メトロ総合プラグイン互換)
