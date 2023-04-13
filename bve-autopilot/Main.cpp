@@ -273,7 +273,7 @@ namespace autopilot
         ハンドル位置.Reverser = _状態.入力逆転器ノッチ();
         ハンドル位置.ConstantSpeed = ATS_CONSTANTSPEED_CONTINUE;
 
-        _状態.出力(ハンドル位置);
+        _状態.出力(ハンドル位置, 自動ノッチ);
 
         for (auto &パネル出力 : _状態.設定().パネル出力対象登録簿()) {
             出力値[パネル出力.first] = パネル出力.second.出力(*this);

@@ -110,13 +110,15 @@ namespace autopilot {
         _制動特性.経過(*this);
     }
 
-    void 共通状態::出力(const ATS_HANDLES & 出力) noexcept
+    void 共通状態::出力(const ATS_HANDLES &出力, 自動制御指令 自動出力)
+        noexcept
     {
         if (_前回出力.Power > 0 && 出力.Power <= 0) {
             _力行をやめた時刻 = 現在時刻();
         }
 
         _前回出力 = 出力;
+        _前回自動出力 = 自動出力;
     }
 
     void 共通状態::戸閉(bool 戸閉) noexcept

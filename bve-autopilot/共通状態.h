@@ -51,7 +51,7 @@ namespace autopilot {
         void 車両仕様設定(const ATS_VEHICLESPEC & 仕様);
         void 地上子通過(const ATS_BEACONDATA &地上子, m 直前位置);
         void 経過(const ATS_VEHICLESTATE & 状態);
-        void 出力(const ATS_HANDLES & 出力) noexcept;
+        void 出力(const ATS_HANDLES &出力, 自動制御指令 自動出力) noexcept;
         void 戸閉(bool 戸閉) noexcept;
         void 逆転器操作(int ノッチ) noexcept;
         void 力行操作(int ノッチ) noexcept;
@@ -114,6 +114,9 @@ namespace autopilot {
         制動指令 前回制動指令() const noexcept {
             return 制動指令{_前回出力.Brake};
         }
+        自動制御指令 前回自動出力() const noexcept {
+            return _前回自動出力;
+        }
         bool 力行をやめた直後である() const noexcept;
         キー組合せ 押しているキー() const noexcept { return _押しているキー; }
 
@@ -134,6 +137,7 @@ namespace autopilot {
         制動特性 _制動特性;
         勾配グラフ _勾配グラフ;
         ATS_HANDLES _前回出力 = {};
+        自動制御指令 _前回自動出力 = {};
         時刻 _力行をやめた時刻 = static_cast<時刻>(-s::無限大());
 
         void 勾配追加(int 地上子値, m 直前位置);
