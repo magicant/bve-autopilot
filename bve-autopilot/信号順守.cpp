@@ -450,8 +450,10 @@ namespace autopilot
                     Option.Optional = 7654210;
                     break;
                 case 3:
-                default:
                     Option.Optional = 765420;
+                    break;
+                default:
+                    Option.Optional = 0;
                     break;
                 }
                 信号現示受信(Option, 直前位置, 状態, true);
