@@ -52,8 +52,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,17,0,0
- PRODUCTVERSION 1,17,0,0
+ FILEVERSION 1,18,0,0
+ PRODUCTVERSION 1,18,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -70,12 +70,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "magicant"
             VALUE "FileDescription", "BVE autopilot plug-in"
-            VALUE "FileVersion", "1.17.0.0"
+            VALUE "FileVersion", "1.18.0.0"
             VALUE "InternalName", "bve-autopilot.dll"
             VALUE "LegalCopyright", "Copyright (C) 2019-2023 magicant"
             VALUE "OriginalFilename", "bve-autopilot.dll"
             VALUE "ProductName", "bve-autopilot"
-            VALUE "ProductVersion", "1.17.0.0"
+            VALUE "ProductVersion", "1.18.0.0"
         END
     END
     BLOCK "VarFileInfo"
