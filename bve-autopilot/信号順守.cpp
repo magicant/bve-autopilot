@@ -428,14 +428,14 @@ namespace autopilot
             }
             break;
         case 12: // ORP 起動 (メトロ総合プラグイン互換)
-            if (状態.互換モード() == 互換モード型::メトロ総合) {
+            if (cs_atc互換モードである(状態.互換モード())) {
                 if (_現在閉塞.信号指示 == orp::orp信号インデックス) {
                     _現在閉塞.orp.設定(地上子.Optional, 直前位置);
                 }
             }
             break;
         case 22: // 信号現示受信（小田急PI互換）
-            if (状態.互換モード() == 互換モード型::小田急PI) {
+            if (状態.互換モード() == 互換モード型::小田急d_ats_p) {
                 ATS_BEACONDATA Option;
                 Option = 地上子; //代入する
                 switch (地上子.Optional)
@@ -460,7 +460,7 @@ namespace autopilot
             }
             break;
         case 31: // 信号現示受信 (メトロ総合プラグイン互換)
-            if (状態.互換モード() == 互換モード型::メトロ総合) {
+            if (cs_atc互換モードである(状態.互換モード())) {
                 信号現示受信(地上子, 直前位置, 状態, false);
             }
             break;
@@ -533,7 +533,7 @@ namespace autopilot
             }
         }
 
-        if (状態.互換モード() == 互換モード型::メトロ総合) {
+        if (cs_atc互換モードである(状態.互換モード())) {
             // ORP の出力ノッチを取り込む
             ノッチ = std::min(ノッチ, _現在閉塞.orp.出力ノッチ());
             ノッチ = std::accumulate(
@@ -554,7 +554,7 @@ namespace autopilot
 
     bool 信号順守::orp照査中(const 共通状態 &状態) const noexcept
     {
-        return 状態.互換モード() == 互換モード型::メトロ総合 &&
+        return cs_atc互換モードである(状態.互換モード()) &&
             _現在閉塞.orp.制御中();
     }
 
@@ -612,7 +612,7 @@ namespace autopilot
         auto 閉塞 = 対応する閉塞(受信した閉塞始点のある範囲, _前方閉塞一覧);
         閉塞->状態更新(地上子, _信号速度表, 信号インデックスを更新する);
 
-        if (状態.互換モード() == 互換モード型::メトロ総合) {
+        if (cs_atc互換モードである(状態.互換モード())) {
             const auto &直前閉塞 =
                 閉塞 == _前方閉塞一覧.begin() ? _現在閉塞 : *std::prev(閉塞);
             閉塞->orp状態更新(直前閉塞.信号速度);

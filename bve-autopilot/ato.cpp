@@ -159,7 +159,7 @@ namespace autopilot
             }
         }
 
-        if (状態.互換モード() == 互換モード型::小田急PI) {
+        if (状態.互換モード() == 互換モード型::小田急d_ats_p) {
             switch (地上子.Type) {
             case 4: //制限速度設定
                 if(地上子.Optional % 100 == 0)//制限解除
