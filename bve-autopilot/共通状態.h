@@ -39,7 +39,21 @@ namespace autopilot {
         汎用ats,
         メトロ総合,
         swp2,
+        小田急d_ats_p,
+        小田急cs_atc,
+        メトロtasc,
     };
+
+    constexpr bool cs_atc互換モードである(互換モード型 互換モード) noexcept {
+        switch (互換モード) {
+        case autopilot::互換モード型::メトロ総合:
+        case autopilot::互換モード型::小田急cs_atc:
+        case autopilot::互換モード型::メトロtasc:
+            return true;
+        default:
+            return false;
+        }
+    }
 
     class 共通状態
     {
