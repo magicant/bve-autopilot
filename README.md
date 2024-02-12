@@ -101,4 +101,4 @@ Bve trainsim 5.8.7554.391 および BVE Trainsim 6.0.7554.619 で動作確認し
 
 - [ツイッター](https://twitter.com/tnacigam)で
 - [メール](mailto:magicant@wonderwand.net)で
-- [Issues](https://github.com/magicant/bve-autopilot/issues/new) で
+- [Discussions](https://github.com/magicant/bve-autopilot/discussions/new/choose) で
