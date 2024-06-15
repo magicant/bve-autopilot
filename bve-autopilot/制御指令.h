@@ -217,7 +217,7 @@ namespace autopilot
         using 制動力::制動力;
 
         constexpr 自動制動実数ノッチ(const 自動制動自然数ノッチ &v) noexcept :
-            制動力{v.value} {}
+            制動力(v.value) {}
 
         自動制動自然数ノッチ ceil() const
         {
